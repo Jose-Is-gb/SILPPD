@@ -30,7 +30,7 @@ La plataforma está diseñada para mejorar la accesibilidad y facilitar la inter
 - FontAwesome
 
 ## Estructura del proyecto
-
+```
 SILPPD
 │
 ├── Login
@@ -42,6 +42,12 @@ SILPPD
 │ ├── perfil.html
 │ ├── perfil.css
 │ ├── perfil.js
+│ ├── user_home.html
+│ ├── user_home.css
+│ ├── user_home.js
+│ ├── validacion_ofertas.html
+│ ├── validacion_ofertas.css
+│ ├── validacion_ofertas.js
 │ ├── mensajeria.html
 │ ├── mensajeria.css
 │ ├── mensajeria.js
@@ -49,9 +55,28 @@ SILPPD
 │ ├── seguimiento.css
 │ └── seguimiento.js
 │
+├── Admin
+│ ├── admin.css
+│ ├── admin.html
+│ ├── admin.js
+│ ├── config_admin.css
+│ ├── config_admin.html
+│ ├── config_admin.js
+│ ├── gestion.css
+│ ├── gestion.html
+│ ├── gestion.js
+│ ├── reporte.css
+│ ├── reporte.html
+│ ├── reporte.js
+│ ├── usuario.css
+│ ├── usuario.html
+│ ├── usuario.js
+│ ├── validacion_empresas.css
+│ ├── validacion_empresas.html
+│ ├── validacion_empresas.js
 └── assets
 └── imágenes / iconos
-
+```
 
 ## Instalación
 

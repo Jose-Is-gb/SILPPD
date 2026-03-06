@@ -31,7 +31,7 @@ La plataforma está diseñada para mejorar la accesibilidad y facilitar la inter
 
 ## Estructura del proyecto
 
-SILPPD
+#SILPPD
 │
 ├── Login
 │ ├── login.html

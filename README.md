@@ -92,6 +92,10 @@ user: admin@talentoinclusivo.com
 
 password: admin123
 
+## 🌐 Demo
+
+[🚀 Ver aplicación en línea](https://jose-is-gb.github.io/SILPPD/login.html)
+
 ## Autor
 
 **José Gerónimo Benavides**  

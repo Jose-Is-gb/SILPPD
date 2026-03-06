@@ -61,6 +61,10 @@ git clone https://github.com/Jose-Is-gb/SILPPD.git
 2. Abrir el archivo:
 login.html en el navegador.
 
+3.Crear perfil de usuario propio o entrar como administrador con:
+user: admin@talentoinclusivo.com
+password: admin123
+
 ## Autor
 
 **José Gerónimo Benavides**  

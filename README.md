@@ -75,7 +75,7 @@ SILPPD
 │ ├── validacion_empresas.html
 │ ├── validacion_empresas.js
 └── assets
-└── imágenes / iconos
+└── preview.png
 ```
 
 ## Instalación

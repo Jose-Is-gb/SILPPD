@@ -1,0 +1,22 @@
+body {
+    background-color: #f7f9fc;
+}
+
+.navbar-brand {
+    font-size: 1.4rem;
+}
+
+.card-module {
+    border-radius: 16px;
+    transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.card-module:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.module-icon {
+    font-size: 3rem;
+    color: #1976d2;
+}

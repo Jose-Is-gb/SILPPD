@@ -1,0 +1,27 @@
+body {
+    background-color: #1976d2 !important;
+}
+
+.btn-group label{
+transition: all .25s ease;
+}
+
+#togglePassword{
+user-select:none;
+}
+
+.info-circle {
+    width: 40px;
+    height: 40px;
+    background: white;
+    border-radius: 50%;
+}
+
+#loginBox, #registerBox {
+    border-radius: 18px;
+}
+
+.active-mode {
+    background-color: #1976d2 !important;
+    color: #fff !important;
+}

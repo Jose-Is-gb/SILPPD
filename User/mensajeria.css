@@ -1,0 +1,114 @@
+/* ==============================
+   MENSAJERÍA — Estilo moderno
+   ============================== */
+
+.chat-list {
+    border-radius: 14px;
+    overflow: hidden;
+    height: 70vh;
+    background-color: #fff;
+}
+
+.chat-list .card-header {
+    font-size: 1.1rem;
+    letter-spacing: 0.3px;
+}
+
+.chat-list .list-group-item {
+    cursor: pointer;
+    transition: background 0.2s;
+    border: none;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 12px 16px;
+}
+
+.chat-list .list-group-item:hover {
+    background-color: #f0f4ff;
+}
+
+.list-group-item.active-chat {
+    background: #1976d2 !important;
+    color: white;
+}
+
+/* Ventana del chat */
+.chat-window {
+    height: 70vh;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+}
+
+/* Encabezado del chat */
+#chatHeader {
+    background-color: #f8f9fa;
+    padding: 14px 18px;
+    font-size: 1.1rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Área de mensajes */
+.chat-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px 18px;
+    background: #f7f9fc;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Mensajes */
+.message {
+    max-width: 75%;
+    margin-bottom: 12px;
+    padding: 10px 14px;
+    border-radius: 18px;
+    display: inline-block;
+    word-wrap: break-word;
+    line-height: 1.4;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Mensajes del usuario */
+.message.me {
+    background: #1976d2;
+    color: white;
+    margin-left: auto;
+    border-bottom-right-radius: 4px;
+}
+
+/* Mensajes del soporte */
+.message.other {
+    background: #e8e8e8;
+    color: #333;
+    border-bottom-left-radius: 4px;
+}
+
+/* Footer del chat */
+.chat-window .card-footer {
+    background: #fff;
+    border-top: 1px solid #dee2e6;
+}
+
+#messageInput {
+    border-radius: 8px 0 0 8px;
+    border: 1px solid #ced4da;
+}
+
+#sendBtn {
+    border-radius: 0 8px 8px 0;
+}
+
+/* Scroll suave */
+.chat-body::-webkit-scrollbar {
+    width: 6px;
+}
+.chat-body::-webkit-scrollbar-thumb {
+    background: #cfd8dc;
+    border-radius: 3px;
+}
+.chat-body::-webkit-scrollbar-thumb:hover {
+    background: #b0bec5;
+}

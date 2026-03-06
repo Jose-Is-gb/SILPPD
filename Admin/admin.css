@@ -1,0 +1,183 @@
+/* ==============================
+   ESTILOS GENERALES
+============================== */
+body {
+    background: #f5f7fa;
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+}
+
+/* ==============================
+   SIDEBAR (Lateral Izquierda)
+============================== */
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background: #1976d2;
+    color: white;
+    position: fixed;
+    left: 0;
+    top: 0;
+    padding-top: 20px;
+}
+
+.sidebar-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.sidebar-header h3 {
+    margin: 0;
+    font-weight: 700;
+}
+
+.sidebar-header p {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.85;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-menu li {
+    padding: 15px 25px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.sidebar-menu li i {
+    margin-right: 10px;
+}
+
+.sidebar-menu li:hover,
+.sidebar-menu li.active {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-menu .logout {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    color: #ffdddd;
+}
+
+/* ==============================
+   CONTENIDO PRINCIPAL
+============================== */
+.main-content {
+    margin-left: 250px;
+    padding: 20px;
+}
+
+/* ==============================
+   TARJETAS DEL DASHBOARD
+============================== */
+.dashboard-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    transition: 0.2s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-card .icon {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.dashboard-card .value {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+/* ==============================
+   TARJETA GENERAL (CARD)
+============================== */
+.card.shadow {
+    border-radius: 15px;
+    border: none;
+    background: white;
+}
+
+/* ==============================
+   ACTIVIDAD RECIENTE
+============================== */
+#actividadReciente {
+    margin-top: 15px;
+    list-style: none;
+    padding: 0;
+}
+
+#actividadReciente li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    transition: background 0.2s;
+}
+
+#actividadReciente li:last-child {
+    border-bottom: none;
+}
+
+#actividadReciente li:hover {
+    background: #f9fafb;
+}
+
+#actividadReciente i {
+    color: #1976d2;
+    margin-right: 10px;
+}
+
+#actividadReciente small {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+/* ==============================
+   NAVBAR SUPERIOR
+============================== */
+.navbar {
+    border-radius: 10px;
+}
+
+.navbar .navbar-brand {
+    font-size: 1.2rem;
+}
+
+/* ==============================
+   RESPONSIVE
+============================== */
+@media (max-width: 992px) {
+    .sidebar {
+        width: 200px;
+    }
+
+    .main-content {
+        margin-left: 200px;
+    }
+
+    .dashboard-card .icon {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        display: none;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+}

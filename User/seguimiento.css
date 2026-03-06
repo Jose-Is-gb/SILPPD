@@ -1,0 +1,27 @@
+.status-card {
+    border-radius: 18px;
+    transition: 0.25s all;
+}
+
+.status-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+.status-icon {
+    font-size: 2.7rem;
+}
+
+.count-number {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+table tbody tr:hover {
+    background: #f2f6ff;
+}
+
+.badge {
+    font-size: 0.85rem;
+}

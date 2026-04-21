@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Empresa - Talento Inclusivo</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        body {
+            background-color: #ff9800;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .progress-bar-custom {
+            height: 6px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            margin: 0 4px;
+            flex-grow: 1;
+            transition: all 0.3s ease;
+        }
+
+        .progress-bar-custom.active {
+            background-color: white;
+        }
+
+        .top-nav {
+            padding: 2rem 0;
+        }
+
+        .top-nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .top-nav a:hover {
+            color: #fff3e0;
+        }
+
+        .form-card {
+            background: white;
+            color: #212529;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ff9800;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .step-container {
+            display: none;
+        }
+
+        .step-container.active {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .form-label {
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #495057;
+        }
+
+        .form-control,
+        .form-select {
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            background-color: #fff;
+            box-shadow: 0 0 0 0.25rem rgba(255, 152, 0, 0.2);
+            border-color: #ff9800;
+        }
+
+        .info-box {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .btn-empresa {
+            background-color: #ff9800;
+            border-color: #ff9800;
+            color: white;
+        }
+
+        .btn-empresa:hover {
+            background-color: #e68900;
+            border-color: #e68900;
+            color: white;
+        }
+
+        .text-empresa {
+            color: #ff9800;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container py-4" style="max-width: 900px;">
+
+        <div class="top-nav">
+            <a href="login.html"><i class="fa-solid fa-arrow-left me-2"></i> Volver al inicio de sesión</a>
+        </div>
+
+        <h1 class="display-5 fw-bold mb-2">Registro de Empresa</h1>
+        <p class="lead mb-4">Únete a la red de empresas comprometidas con la inclusión laboral.</p>
+
+        <!-- Progress Bar Segments -->
+        <div class="d-flex w-100 mb-4 px-2">
+            <div class="progress-bar-custom active" id="pb-step-1"></div>
+            <div class="progress-bar-custom" id="pb-step-2"></div>
+            <div class="progress-bar-custom" id="pb-step-3"></div>
+            <div class="progress-bar-custom" id="pb-step-4"></div>
+        </div>
+
+        <div class="form-card p-4 p-md-5 mb-5">
+
+            <form id="empresaForm" onsubmit="return false;">
+
+                <!-- ================= PASO 1: Datos de la Empresa ================= -->
+                <div class="step-container active" id="step-1">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="step-icon me-3">1</div>
+                        <div>
+                            <h4 class="mb-0 text-empresa">Paso 1: Datos de la Empresa</h4>
+                            <small class="text-muted">Información legal y partida registral (ISO 9001)</small>
+                        </div>
+                    </div>
+
+                    <div id="error-step-1" class="alert alert-danger d-none small"></div>
+
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label">Razón social / Nombre legal de la empresa *</label>
+                            <input type="text" class="form-control" id="emp-razon-social"
+                                placeholder="Ej: Tech Solutions Sociedad Anónima" required>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Nombre comercial</label>
+                            <input type="text" class="form-control" id="emp-nombre-comercial"
+                                placeholder="Ej: Tech Solutions">
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">RUC *</label>
+                            <input type="text" class="form-control" id="emp-ruc" placeholder="Ej: 20123456789" required>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Sector / Industria *</label>
+                            <select class="form-select" id="emp-sector" required>
+                                <option value="" selected disabled>Seleccionar sector</option>
+                                <option value="Tecnología">Tecnología e Informática</option>
+                                <option value="Salud">Salud y Bienestar</option>
+                                <option value="Educación">Educación</option>
+                                <option value="Manufactura">Manufactura e Industria</option>
+                                <option value="Servicios">Servicios Profesionales</option>
+                                <option value="Comercio">Comercio y Retail</option>
+                                <option value="Finanzas">Finanzas y Banca</option>
+                                <option value="Construcción">Construcción e Inmobiliaria</option>
+                                <option value="Transporte">Transporte y Logística</option>
+                                <option value="Hostelería">Hostelería y Turismo</option>
+                                <option value="ONG">ONG / Sector Social</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Tamaño de la empresa *</label>
+                            <select class="form-select" id="emp-tamano" required>
+                                <option value="" selected disabled>Número de empleados</option>
+                                <option value="1-10">1 - 10 (Microempresa)</option>
+                                <option value="11-50">11 - 50 (Pequeña)</option>
+                                <option value="51-200">51 - 200 (Mediana)</option>
+                                <option value="201-500">201 - 500 (Grande)</option>
+                                <option value="500+">Más de 500</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Año de fundación</label>
+                            <input type="number" class="form-control" id="emp-fundacion" placeholder="2020" min="1800"
+                                max="2026">
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Sitio web corporativo *</label>
+                            <input type="url" class="form-control" id="emp-web" placeholder="https://www.ejemplo.com"
+                                required>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Descripción de la empresa *</label>
+                            <textarea class="form-control" id="emp-descripcion" rows="3"
+                                placeholder="Breve descripción de las actividades principales de la empresa..."
+                                required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end mt-4 pt-3 border-top">
+                        <button type="button" class="btn btn-empresa px-4" onclick="nextStep(2)">Continuar</button>
+                    </div>
+                </div>
+
+                <!-- ================= PASO 2: Datos de Contacto y Ubicación ================= -->
+                <div class="step-container" id="step-2">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="step-icon me-3">2</div>
+                        <div>
+                            <h4 class="mb-0 text-empresa">Paso 2: Datos de Contacto y Ubicación</h4>
+                            <small class="text-muted">Información de contacto y sede principal</small>
+                        </div>
+                    </div>
+
+                    <div id="error-step-2" class="alert alert-danger d-none small"></div>
+
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label">Dirección de la sede principal *</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-location-dot"></i></span>
+                                <input type="text" class="form-control" id="emp-direccion"
+                                    placeholder="Calle, número, piso" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Ciudad *</label>
+                            <input type="text" class="form-control" id="emp-ciudad" placeholder="Madrid" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Provincia/Estado</label>
+                            <input type="text" class="form-control" id="emp-provincia" placeholder="Madrid">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Código postal *</label>
+                            <input type="text" class="form-control" id="emp-cp" placeholder="28001" required>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">País *</label>
+                            <input type="text" class="form-control" id="emp-pais" placeholder="España" required>
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <h6 class="fw-bold text-muted">Datos del representante legal / Contacto RRHH</h6>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Nombre completo *</label>
+                            <input type="text" class="form-control" id="emp-contacto-nombre"
+                                placeholder="Nombre y apellidos" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Cargo *</label>
+                            <input type="text" class="form-control" id="emp-contacto-cargo"
+                                placeholder="Ej: Director de RRHH" required>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Correo electrónico corporativo *</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-regular fa-envelope"></i></span>
+                                <input type="email" class="form-control" id="emp-email" placeholder="rrhh@empresa.com"
+                                    required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Teléfono de contacto *</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-phone"></i></span>
+                                <input type="tel" class="form-control" id="emp-telefono" placeholder="+34 900 000 000"
+                                    required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Teléfono alternativo</label>
+                            <input type="tel" class="form-control" id="emp-telefono-alt" placeholder="+34 600 000 000">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Contraseña *</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+                                <input type="password" class="form-control" id="emp-password"
+                                    placeholder="Mínimo 8 caracteres" required minlength="8">
+                                <span class="input-group-text" style="cursor:pointer;"
+                                    onclick="togglePasswordEmp('emp-password', this)">
+                                    <i class="fa-solid fa-eye"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label text-danger">Confirmar Contraseña *</label>
+                            <div class="input-group">
+                                <span class="input-group-text text-danger border-danger"><i
+                                        class="fa-solid fa-shield-halved"></i></span>
+                                <input type="password" class="form-control border-danger" id="emp-confirm-password"
+                                    placeholder="Mínimo 8 caracteres" required minlength="8">
+                                <span class="input-group-text text-danger border-danger" style="cursor:pointer;"
+                                    onclick="togglePasswordEmp('emp-confirm-password', this)">
+                                    <i class="fa-solid fa-eye"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+                        <button type="button" class="btn btn-outline-secondary px-4"
+                            onclick="prevStep(1)">Atrás</button>
+                        <button type="button" class="btn btn-empresa px-4" onclick="nextStep(3)">Continuar</button>
+                    </div>
+                </div>
+
+                <!-- ================= PASO 3: Compromiso con la Inclusión ================= -->
+                <div class="step-container" id="step-3">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="step-icon me-3">3</div>
+                        <div>
+                            <h4 class="mb-0 text-empresa">Paso 3: Compromiso con la Inclusión</h4>
+                            <small class="text-muted">Políticas de diversidad e inclusión (ISO 30415)</small>
+                        </div>
+                    </div>
+
+                    <div class="info-box" style="background-color: #1565c0; color: white;">
+                        <h6 class="fw-bold mb-1">ISO 30415 - Gestión de Diversidad e Inclusión</h6>
+                        <small>Esta normativa establece directrices para crear entornos de trabajo inclusivos. Tu
+                            empresa debe demostrar compromiso real con la diversidad.</small>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label">¿Su empresa cuenta con una política formal de inclusión? *</label>
+                            <select class="form-select" id="emp-politica-inclusion" required>
+                                <option value="" selected disabled>Seleccionar opción</option>
+                                <option value="Sí, implementada">Sí, está implementada</option>
+                                <option value="Sí, en desarrollo">Sí, en desarrollo</option>
+                                <option value="No, pero interesados">No, pero estamos interesados</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">¿Cuántos empleados con discapacidad tiene actualmente?</label>
+                            <input type="number" class="form-control" id="emp-empleados-discapacidad"
+                                placeholder="Número de empleados" min="0">
+                            <small class="text-muted">En España, empresas con +50 empleados deben tener al menos 2% con
+                                discapacidad (LGD)</small>
+                        </div>
+
+                        <div class="col-md-12 mt-3">
+                            <label class="form-label fw-bold">Adaptaciones de accesibilidad disponibles (ISO 21542)
+                                *</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="adapt-fisica" value="fisica">
+                                <label class="form-check-label text-muted" for="adapt-fisica">Accesibilidad física
+                                    (rampas, ascensores, baños adaptados)</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="adapt-tecnologia"
+                                    value="tecnologia">
+                                <label class="form-check-label text-muted" for="adapt-tecnologia">Tecnologías de
+                                    asistencia (lectores de pantalla, software adaptado)</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="adapt-lengua" value="lengua">
+                                <label class="form-check-label text-muted" for="adapt-lengua">Interpretación en lengua
+                                    de señas disponible</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="adapt-remoto" value="remoto">
+                                <label class="form-check-label text-muted" for="adapt-remoto">Modalidad remota/híbrida y
+                                    horarios flexibles</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="adapt-transporte"
+                                    value="transporte">
+                                <label class="form-check-label text-muted" for="adapt-transporte">Transporte o parking
+                                    adaptado</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="adapt-formacion" value="formacion">
+                                <label class="form-check-label text-muted" for="adapt-formacion">Formación en diversidad
+                                    e inclusión para el equipo</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Describe el compromiso de tu empresa con la inclusión *</label>
+                            <textarea class="form-control" id="emp-compromiso" rows="3"
+                                placeholder="Explica las acciones, programas o iniciativas que tu empresa ha implementado o planea implementar para fomentar un entorno inclusivo..."
+                                required></textarea>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Certificaciones de inclusión o responsabilidad social</label>
+                            <input type="text" class="form-control" id="emp-certificaciones"
+                                placeholder="Ej: ISO 30415, Distintivo de Igualdad, B Corp, etc.">
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">¿Destina presupuesto específico para adaptaciones de
+                                accesibilidad?</label>
+                            <select class="form-select" id="emp-presupuesto">
+                                <option value="" selected disabled>Seleccionar opción</option>
+                                <option value="Sí">Sí, se destina presupuesto</option>
+                                <option value="En proceso">En proceso de asignación</option>
+                                <option value="No">No actualmente</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">¿Cuenta con un responsable de diversidad e inclusión?</label>
+                            <select class="form-select" id="emp-responsable">
+                                <option value="" selected disabled>Seleccionar opción</option>
+                                <option value="Sí">Sí, hay un responsable designado</option>
+                                <option value="Compartido">Funciones compartidas con RRHH</option>
+                                <option value="No">No actualmente</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+                        <button type="button" class="btn btn-outline-secondary px-4"
+                            onclick="prevStep(2)">Atrás</button>
+                        <button type="button" class="btn btn-empresa px-4" onclick="nextStep(4)">Continuar</button>
+                    </div>
+                </div>
+
+                <!-- ================= PASO 4: Consentimientos y Verificación ================= -->
+                <div class="step-container" id="step-4">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="step-icon me-3">4</div>
+                        <div>
+                            <h4 class="mb-0 text-empresa">Paso 4: Consentimientos y Verificación</h4>
+                            <small class="text-muted">Protección de datos y verificación legal (RGPD / ISO
+                                27001)</small>
+                        </div>
+                    </div>
+
+                    <div class="info-box" style="background-color: #1565c0; color: white;">
+                        <h6 class="fw-bold mb-1">Proceso de Verificación</h6>
+                        <small>Todas las empresas pasan por un proceso de verificación para garantizar la autenticidad y
+                            compromiso con la inclusión. Esto incluye:</small>
+                        <ul class="small mt-2 mb-0 ps-3">
+                            <li>Validación de documentos legales (RUC y Partida Registral)</li>
+                            <li>Verificación de políticas de inclusión declaradas</li>
+                            <li>Revisión por equipo de administración (48-72 horas)</li>
+                        </ul>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold">RUC y Partida Registral (PDF) *</label>
+                            <input type="file" class="form-control" id="emp-doc-ruc" accept=".pdf,.jpg,.png" required>
+                            <small class="text-muted">Adjunta tu ficha RUC y copia de partida registral (máx.
+                                5MB)</small>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Certificados de inclusión (si aplica)</label>
+                            <input type="file" class="form-control" id="emp-doc-inclusion" accept=".pdf,.jpg,.png"
+                                multiple>
+                            <small class="text-muted">Ej: ISO 30415, Distintivo de Igualdad, certificados de
+                                accesibilidad</small>
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold mt-4 mb-3">Consentimientos Legales</h6>
+
+                    <div class="border rounded p-3 mb-3 bg-light">
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="emp-chk-terminos" required>
+                            <label class="form-check-label" for="emp-chk-terminos">
+                                <strong>Acepto los términos y condiciones para empresas *</strong><br>
+                                <span class="text-muted small">He leído y acepto los términos de uso, políticas de
+                                    privacidad y el código de conducta para empresas de Talento Inclusivo.</span>
+                            </label>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="emp-chk-rgpd" required>
+                            <label class="form-check-label" for="emp-chk-rgpd">
+                                <strong>Tratamiento de datos de candidatos (RGPD) *</strong><br>
+                                <span class="text-muted small">Me comprometo a tratar los datos personales de candidatos
+                                    conforme al RGPD, utilizándolos exclusivamente para procesos de selección
+                                    legítimos.</span>
+                            </label>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="emp-chk-nodiscriminacion" required>
+                            <label class="form-check-label" for="emp-chk-nodiscriminacion">
+                                <strong>Compromiso de no discriminación (ISO 30415) *</strong><br>
+                                <span class="text-muted small">Me comprometo a no discriminar por motivos de
+                                    discapacidad, raza, género, orientación sexual, religión o cualquier otra
+                                    característica protegida.</span>
+                            </label>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="emp-chk-accesibilidad" required>
+                            <label class="form-check-label" for="emp-chk-accesibilidad">
+                                <strong>Compromiso de accesibilidad *</strong><br>
+                                <span class="text-muted small">Me comprometo a proporcionar adaptaciones razonables
+                                    según lo requiera la legislación vigente (ISO 21542) y las necesidades individuales
+                                    de los candidatos.</span>
+                            </label>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="emp-chk-seguridad" required>
+                            <label class="form-check-label" for="emp-chk-seguridad">
+                                <strong>Seguridad de la información (ISO 27001) *</strong><br>
+                                <span class="text-muted small">Me comprometo a implementar medidas de seguridad
+                                    apropiadas para proteger los datos de candidatos contra accesos no
+                                    autorizados.</span>
+                            </label>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="emp-chk-veracidad" required>
+                            <label class="form-check-label" for="emp-chk-veracidad">
+                                <strong>Veracidad de la información *</strong><br>
+                                <span class="text-muted small">Certifico que toda la información proporcionada es veraz
+                                    y precisa. Entiendo que información falsa puede resultar en la suspensión de mi
+                                    cuenta.</span>
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="emp-chk-verificacion" required>
+                            <label class="form-check-label" for="emp-chk-verificacion">
+                                <strong>Autorización para verificación *</strong><br>
+                                <span class="text-muted small">Autorizo a Talento Inclusivo a verificar la información
+                                    proporcionada, incluyendo documentos legales y certificaciones de inclusión.</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="info-box bg-success text-white">
+                        <h6 class="fw-bold mb-2">Responsabilidades de la Empresa</h6>
+                        <ul class="mb-0 small ps-3">
+                            <li>Cumplir con la legislación laboral y de inclusión vigente</li>
+                            <li>Proporcionar información veraz en las ofertas laborales</li>
+                            <li>Mantener confidencialidad de datos de candidatos</li>
+                            <li>Responder a postulaciones en tiempo razonable</li>
+                            <li>Reportar cualquier incidente de discriminación</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-box" style="background-color: #ff9800; color: white;">
+                        <h6 class="fw-bold mb-2">¿Qué sigue después del registro?</h6>
+                        <ol class="mb-0 small ps-3">
+                            <li>Revisión de documentación por equipo de administración</li>
+                            <li>Verificación de políticas de inclusión declaradas</li>
+                            <li>Aprobación de cuenta (48-72 horas hábiles)</li>
+                            <li>Activación de funcionalidades para publicar ofertas</li>
+                        </ol>
+                    </div>
+
+                    <div id="error-step-4" class="alert alert-danger d-none small"></div>
+                    <div id="success-reg" class="alert alert-success d-none text-center fw-bold"></div>
+
+                    <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+                        <button type="button" class="btn btn-outline-secondary px-4"
+                            onclick="prevStep(3)">Atrás</button>
+                        <button type="button" class="btn btn-success px-4 fw-bold" onclick="submitEmpresa()">
+                            <i class="fa-solid fa-paper-plane me-1"></i> Enviar solicitud de registro
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- DB and Auth -->
+    <script src="BD/data.js"></script>
+    <script src="BD/auth.js"></script>
+    <script src="User/registro_empresa.js"></script>
+</body>
+
+</html>

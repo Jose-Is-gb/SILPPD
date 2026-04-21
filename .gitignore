@@ -1,0 +1,21 @@
+# IDEs y Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Logs y Temporales
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.gemini/
+antigravity/
+
+# Otros
+node_modules/
+dist/
+build/

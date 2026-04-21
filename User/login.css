@@ -1,0 +1,90 @@
+body {
+    background-color: #1976d2 !important;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+
+/* Contenedor principal centrado vertical y horizontalmente */
+.login-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+
+.btn-group label {
+    transition: all .25s ease;
+}
+
+#togglePassword {
+    user-select: none;
+}
+
+.info-circle {
+    width: 40px;
+    height: 40px;
+    background: white;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+#loginBox {
+    border-radius: 18px;
+}
+
+.active-mode {
+    background-color: #1976d2 !important;
+    color: #fff !important;
+}
+
+footer {
+    flex-shrink: 0;
+}
+
+/* ========= RESPONSIVO ========= */
+
+/* Tablets y pantallas medianas */
+@media (max-width: 991px) {
+    .login-wrapper .row {
+        justify-content: center;
+    }
+    
+    .login-wrapper .col-lg-6 {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .login-wrapper .col-lg-5 {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .login-wrapper .d-flex.align-items-start {
+        justify-content: center;
+    }
+}
+
+/* Móviles */
+@media (max-width: 576px) {
+    .login-wrapper {
+        padding: 1rem 0.5rem;
+    }
+
+    #loginBox {
+        padding: 1.25rem !important;
+    }
+
+    h1.display-5 {
+        font-size: 2rem;
+    }
+}
+
+/* Pantallas grandes: limitar ancho */
+@media (min-width: 1400px) {
+    .login-wrapper .container {
+        max-width: 1200px;
+    }
+}

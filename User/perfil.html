@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - Talento Inclusivo</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="perfil.css">
+</head>
+
+<body class="bg-light">
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top shadow-sm px-4">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold d-flex align-items-center" href="user_home.html">
+                <i class="fa fa-shield-halved me-2"></i> Talento Inclusivo
+            </a>
+
+            <button class="navbar-toggler border-0" data-bs-toggle="collapse" data-bs-target="#menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div id="menu" class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link px-3" href="user_home.html"><i class="fa fa-home-alt me-1"></i> Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link active fw-bold px-3" href="perfil.html"><i class="fa fa-user me-1"></i> Perfil</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="mensajeria.html"><i class="fa fa-envelope me-1"></i> Mensajes</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="validacion_ofertas.html"><i class="fa fa-briefcase me-1"></i> Ofertas</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="seguimiento.html"><i class="fa fa-tasks me-1"></i> Seguimiento</a></li>
+                    <li class="nav-item ms-lg-3">
+                        <button class="btn btn-outline-light rounded-pill px-4 shadow-sm" id="logoutBtn">
+                            <i class="fa fa-sign-out-alt me-1"></i> Salir
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTENT -->
+    <div class="container py-5">
+        <div class="row g-4">
+            <!-- SIDEBAR -->
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm rounded-4 mb-4 text-center p-5 profile-sidebar">
+                    <div class="profile-img-wrap mb-4">
+                        <img id="profilePhoto" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Profile Image">
+                    </div>
+                    
+                    <h4 class="fw-bold mb-1" id="sidebarName">Usuario</h4>
+                    <p class="verified-badge mb-4">Usuario verificado</p>
+
+                    <input type="file" id="photoInput" hidden accept="image/*">
+                    <button class="btn btn-cambiar-foto mb-5" onclick="document.getElementById('photoInput').click()">
+                        <i class="fa-regular fa-pen-to-square me-2"></i> Cambiar foto
+                    </button>
+
+                    <div class="text-start border-top pt-4 mb-5">
+                        <div class="sidebar-info-item">
+                            <i class="fa-regular fa-envelope"></i>
+                            <span id="sidebarEmail"></span>
+                        </div>
+                        <div class="sidebar-info-item">
+                            <i class="fa-solid fa-phone"></i>
+                            <span id="sidebarPhone"></span>
+                        </div>
+                        <div class="sidebar-info-item">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span id="sidebarLocation"></span>
+                        </div>
+                        <div class="sidebar-info-item">
+                            <i class="fa-solid fa-briefcase"></i>
+                            <span id="sidebarExperience">5 años de experiencia</span>
+                        </div>
+                    </div>
+
+                    <div class="border-top pt-4">
+                        <p class="text-start text-dark fw-bold mb-3">Actividad</p>
+                        <div class="d-flex justify-content-between align-items-center mb-2 stat-box">
+                            <span class="stat-label">Postulaciones</span>
+                            <span class="stat-value text-primary" id="stat-postulaciones">0</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2 stat-box">
+                            <span class="stat-label">En proceso</span>
+                            <span class="stat-value text-warning" id="stat-proceso">0</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center stat-box">
+                            <span class="stat-label">Miembro desde</span>
+                            <span class="stat-value text-secondary" id="stat-miembro">2024</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MAIN CONTENT AREA -->
+            <div class="col-lg-8">
+                <!-- TABS NAVIGATION -->
+                <div class="bg-white p-2 rounded-4 shadow-sm mb-4 d-flex nav-segmented nav nav-pills">
+                    <button type="button" class="flex-fill nav-link active" data-bs-toggle="pill" data-bs-target="#personal">Datos Personales</button>
+                    <button type="button" class="flex-fill nav-link" data-bs-toggle="pill" data-bs-target="#disability">Discapacidad</button>
+                    <button type="button" class="flex-fill nav-link" data-bs-toggle="pill" data-bs-target="#laboral">Información Laboral</button>
+                    <button type="button" class="flex-fill nav-link" data-bs-toggle="pill" data-bs-target="#preferencias">Preferencias</button>
+                </div>
+
+                <div class="tab-content">
+                    <!-- DATOS PERSONALES -->
+                    <div class="tab-pane fade show active" id="personal">
+                        <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5">
+                            <h5 class="fw-bold mb-5 mt-2">Información Personal</h5>
+                            <form id="formPersonal" class="row g-4">
+                                <div class="col-md-6">
+                                    <label class="form-label">Nombre(s) *</label>
+                                    <input type="text" class="form-control" id="reg-nombre" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Apellido(s) *</label>
+                                    <input type="text" class="form-control" id="reg-apellido" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Tipo de documento *</label>
+                                    <select class="form-select" id="reg-tipo-doc">
+                                        <option value="DNI">DNI</option>
+                                        <option value="Carné de extranjería">Carné de extranjería</option>
+                                        <option value="Pasaporte">Pasaporte</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Número de documento *</label>
+                                    <input type="text" class="form-control" id="reg-num-doc" required>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Fecha de nacimiento *</label>
+                                    <div class="input-icon-wrap">
+                                        <i class="fa-regular fa-calendar"></i>
+                                        <input type="text" class="form-control" id="reg-fecha-nacimiento" placeholder="DD/MM/YYYY">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Correo electrónico *</label>
+                                    <div class="input-icon-wrap">
+                                        <i class="fa-regular fa-envelope"></i>
+                                        <input type="email" class="form-control" id="reg-correo" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Teléfono *</label>
+                                    <div class="input-icon-wrap">
+                                        <i class="fa-solid fa-phone"></i>
+                                        <input type="text" class="form-control" id="reg-telefono">
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <label class="form-label">Dirección</label>
+                                    <div class="input-icon-wrap">
+                                        <i class="fa-solid fa-location-dot"></i>
+                                        <input type="text" class="form-control" id="reg-direccion">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Código postal</label>
+                                    <input type="text" class="form-control" id="reg-cp">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Ciudad *</label>
+                                    <input type="text" class="form-control" id="reg-ciudad">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">País *</label>
+                                    <input type="text" class="form-control" id="reg-pais">
+                                </div>
+
+                                <div class="col-12 mt-5 d-flex gap-3">
+                                    <button type="submit" class="btn btn-primary d-flex align-items-center btn-save text-white">
+                                        <i class="fa-regular fa-floppy-disk me-2"></i> Guardar cambios
+                                    </button>
+                                    <button type="button" class="btn btn-cancel">Cancelar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- DISCAPACIDAD -->
+                    <div class="tab-pane fade" id="disability">
+                        <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5">
+                            <div class="d-flex align-items-start mb-4">
+                                <div class="bg-primary-subtle text-primary p-2 rounded-3 me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fa-solid fa-shield-halved"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold mb-1">Información de Discapacidad</h5>
+                                    <p class="text-muted small">Datos confidenciales según ISO 9999 y RGPD</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Orange Banner -->
+                            <div class="alert alert-orange mb-5 d-flex align-items-start">
+                                <i class="fa-solid fa-circle-info mt-1 me-3"></i>
+                                <div>
+                                    <span class="fw-bold">Confidencialidad:</span> Esta información solo se compartirá con empresas cuando tú autorices explícitamente durante un proceso de postulación.
+                                </div>
+                            </div>
+
+                            <form id="formDisability" class="row g-4">
+                                <div class="col-12">
+                                    <label class="form-label">Tipo de discapacidad *</label>
+                                    <select class="form-select" id="reg-tipo-discapacidad">
+                                        <option value="Visual">Visual</option>
+                                        <option value="Auditiva">Auditiva</option>
+                                        <option value="Fisica">Física / Motora</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Grado de discapacidad (%) *</label>
+                                    <select class="form-select" id="reg-grado-discapacidad">
+                                        <option value="33-49">33% - 49% (Moderada)</option>
+                                        <option value="50-64">50% - 64%</option>
+                                        <option value="65+">65% o más</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Número de certificado de discapacidad</label>
+                                    <input type="text" class="form-control" id="reg-num-certificado">
+                                    <small class="text-muted d-block mt-1">Requerido para validación oficial (ISO 30415)</small>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Fecha de vencimiento del certificado</label>
+                                    <div class="input-icon-wrap">
+                                        <i class="fa-regular fa-calendar"></i>
+                                        <input type="text" class="form-control" id="reg-vencimiento-certificado" placeholder="DD/MM/YYYY">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Adaptaciones o productos de apoyo necesarios (ISO 9999)</label>
+                                    <textarea class="form-control" id="reg-adaptaciones" rows="3"></textarea>
+                                </div>
+
+                                <div class="col-12 mt-4">
+                                    <p class="fw-bold text-dark mb-3">Asistencia requerida en el entorno laboral (ISO 21542)</p>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="assist-accesibilidad">
+                                        <label class="form-check-label small ms-2">Accesibilidad física (rampas, ascensores, baños adaptados)</label>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="assist-tecnologia">
+                                        <label class="form-check-label small ms-2">Tecnología asistiva (lectores de pantalla, magnificadores)</label>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="assist-interprete">
+                                        <label class="form-check-label small ms-2">Intérprete de lengua de señas o subtítulos</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="assist-remoto">
+                                        <label class="form-check-label small ms-2">Horario flexible o trabajo remoto</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 mt-5 d-flex gap-3">
+                                    <button type="submit" class="btn btn-primary d-flex align-items-center btn-save text-white">
+                                        <i class="fa-regular fa-floppy-disk me-2"></i> Guardar cambios
+                                    </button>
+                                    <button type="button" class="btn btn-cancel">Cancelar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- INFORMACIÓN LABORAL -->
+                    <div class="tab-pane fade" id="laboral">
+                        <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5">
+                            <div class="d-flex align-items-center mb-5">
+                                <div class="bg-primary-subtle text-primary p-2 rounded-3 me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fa-solid fa-briefcase"></i>
+                                </div>
+                                <h5 class="fw-bold mb-0">Información Laboral y Académica</h5>
+                            </div>
+
+                            <form id="formLaboral" class="row g-4">
+                                <div class="col-12">
+                                    <label class="form-label">Nivel educativo *</label>
+                                    <select class="form-select" id="reg-educacion">
+                                        <option value="Grado universitario">Grado universitario</option>
+                                        <option value="Máster">Máster</option>
+                                        <option value="Bachillerato">Bachillerato</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Área de especialización</label>
+                                    <input type="text" class="form-control" id="reg-especializacion">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Años de experiencia laboral *</label>
+                                    <select class="form-select" id="reg-exp-years">
+                                        <option value="3-5">3-5 años</option>
+                                        <option value="1-2">1-2 años</option>
+                                        <option value="5+">Más de 5 años</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Habilidades y competencias principales *</label>
+                                    <textarea class="form-control" id="reg-habilidades" rows="3"></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Idiomas</label>
+                                    <input type="text" class="form-control" id="reg-idiomas">
+                                </div>
+
+                                <div class="col-12 mb-4">
+                                    <label class="form-label">Currículum Vitae (PDF) *</label>
+                                    <input type="file" id="cvInput" hidden accept=".pdf">
+                                    <div class="cv-attachment-card d-flex align-items-center">
+                                        <div class="bg-primary-subtle text-primary p-3 rounded-3 me-4">
+                                            <i class="fa-regular fa-file-lines fa-2x"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <p class="fw-bold text-dark mb-1" id="cvFileName">No se ha subido ningún CV</p>
+                                            <p class="text-muted small mb-0" id="cvFileMeta">Sube tu archivo en formato PDF</p>
+                                        </div>
+                                        <button type="button" class="btn btn-reemplazar ms-auto" onclick="document.getElementById('cvInput').click()">
+                                            Subir / Reemplazar
+                                        </button>
+                                    </div>
+                                    <small class="text-muted d-block mt-2">Formato PDF requerido • Máximo 5MB</small>
+                                </div>
+
+                                <div class="col-12 mt-5 border-top pt-5 d-flex gap-3">
+                                    <button type="submit" class="btn btn-primary d-flex align-items-center btn-save text-white">
+                                        <i class="fa-regular fa-floppy-disk me-2"></i> Guardar cambios
+                                    </button>
+                                    <button type="button" class="btn btn-cancel">Cancelar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- PREFERENCIAS (Y PRIVACIDAD) -->
+                    <div class="tab-pane fade" id="preferencias">
+                        <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5">
+                            <div class="d-flex align-items-center mb-5">
+                                <div class="bg-primary-subtle text-primary p-2 rounded-3 me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fa-solid fa-ribbon"></i>
+                                </div>
+                                <h5 class="fw-bold mb-0">Preferencias Laborales y Privacidad</h5>
+                            </div>
+
+                            <form id="formPreferences" class="row g-4">
+                                <div class="col-12 mt-2">
+                                    <p class="fw-bold text-dark mb-4">Preferencias de trabajo</p>
+                                    <div class="mb-4">
+                                        <label class="form-label">Modalidad laboral preferida *</label>
+                                        <select class="form-select" id="reg-modalidad">
+                                            <option value="Híbrido">Híbrido</option>
+                                            <option value="Remoto">Remoto</option>
+                                            <option value="Presencial">Presencial</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">Disponibilidad *</label>
+                                        <select class="form-select" id="reg-disponibilidad">
+                                            <option value="Inmediata">Inmediata</option>
+                                            <option value="15 días">Aviso previo (15 días)</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-5">
+                                        <label class="form-label">Expectativa salarial mensual (Soles)</label>
+                                        <input type="text" class="form-control" id="reg-salario" placeholder="Ej: S/ 3500 - S/ 4500">
+                                    </div>
+                                </div>
+
+                                <div class="col-12 border-top pt-5">
+                                    <p class="fw-bold text-dark mb-4">Configuración de privacidad (RGPD)</p>
+                                    
+                                    <div class="card border-0 bg-white border p-4 rounded-4 mb-5">
+                                        <div class="form-check d-flex mb-4">
+                                            <input class="form-check-input mt-1" type="checkbox" id="privacy-visible" checked>
+                                            <div class="ms-3">
+                                                <label class="form-check-label fw-bold d-block mb-1">Perfil visible para empresas</label>
+                                                <span class="text-muted small">Permitir que empresas certificadas vean mi perfil profesional</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-check d-flex mb-4">
+                                            <input class="form-check-input mt-1" type="checkbox" id="privacy-disability" checked>
+                                            <div class="ms-3">
+                                                <label class="form-check-label fw-bold d-block mb-1">Compartir información de discapacidad</label>
+                                                <span class="text-muted small">Solo durante procesos de postulación activos</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-check d-flex mb-4">
+                                            <input class="form-check-input mt-1" type="checkbox" id="privacy-alerts" checked>
+                                            <div class="ms-3">
+                                                <label class="form-check-label fw-bold d-block mb-1">Alertas de empleo</label>
+                                                <span class="text-muted small">Recibir notificaciones de ofertas que coincidan con mi perfil</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-check d-flex">
+                                            <input class="form-check-input mt-1" type="checkbox" id="privacy-newsletter">
+                                            <div class="ms-3">
+                                                <label class="form-check-label fw-bold d-block mb-1">Boletín informativo</label>
+                                                <span class="text-muted small">Recibir novedades sobre inclusión laboral y formación</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- RGPD Green Box -->
+                                <div class="col-12">
+                                    <div class="bg-rgpd-green shadow-sm">
+                                        <p class="fw-bold mb-3">Tus derechos RGPD</p>
+                                        <ul>
+                                            <li>Puedes acceder, rectificar o eliminar tus datos en cualquier momento</li>
+                                            <li>Tienes derecho a la portabilidad de tus datos</li>
+                                            <li>Puedes revocar consentimientos sin afectar tratamientos previos</li>
+                                            <li>Contacta con nosotros: privacidad@talentoinclusivo.com</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 mt-5 pt-4 d-flex gap-3">
+                                    <button type="submit" class="btn btn-primary d-flex align-items-center btn-save text-white">
+                                        <i class="fa-regular fa-floppy-disk me-2"></i> Guardar cambios
+                                    </button>
+                                    <button type="button" class="btn btn-cancel">Cancelar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast de Éxito -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1100;">
+        <div id="saveAlert" class="toast align-items-center text-white bg-success border-0 rounded-4 shadow-lg" role="alert">
+            <div class="d-flex p-3">
+                <i class="fa-solid fa-circle-check me-3 fa-lg mt-1"></i>
+                <div class="toast-body fw-bold">Perfil actualizado exitosamente.</div>
+                <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../init_data.js"></script>
+    <script src="../BD/auth.js"></script>
+    <script src="../BD/data.js"></script>
+    <script src="perfil.js"></script>
+</body>
+</html>

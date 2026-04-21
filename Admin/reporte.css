@@ -1,0 +1,165 @@
+body {
+    background: #f5f7fa;
+    font-family: "Segoe UI", sans-serif;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background: #1976d2;
+    color: white;
+    position: fixed;
+    left: 0;
+    top: 0;
+    padding-top: 20px;
+    overflow-y: auto;
+}
+
+.sidebar-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.sidebar-menu {
+    padding: 0;
+    list-style: none;
+}
+
+.sidebar-menu li {
+    padding: 15px 25px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.sidebar-menu li:hover, .sidebar-menu li.active {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.sidebar-menu i {
+    margin-right: 10px;
+}
+
+.logout {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    color: #ffdddd;
+}
+
+/* MAIN CONTENT */
+.main-content {
+    flex-grow: 1;
+    margin-left: 250px;
+    padding: 20px;
+    min-height: 100vh;
+    min-width: 0;          /* Prevents flex items from overflowing horizontally */
+    overflow-x: hidden;
+}
+
+/* BACKGROUND COLORS FOR METRIC CARDS */
+.bg-blue { background-color: #1E88E5 !important; }
+.bg-orange { background-color: #FF8F00 !important; }
+.bg-green { background-color: #43A047 !important; }
+.bg-purple { background-color: #8E24AA !important; }
+
+/* TEXT COLORS */
+.text-blue { color: #1E88E5 !important; }
+.text-orange { color: #FF8F00 !important; }
+.text-green { color: #43A047 !important; }
+.text-purple { color: #8E24AA !important; }
+
+/* METRIC CARDS */
+.metric-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+}
+
+/* CUSTOM PILLS NAVIGATION */
+.custom-pills {
+    border: 1px solid #eaeaea;
+}
+
+.custom-pills .nav-link {
+    color: #555;
+    transition: 0.3s;
+}
+
+.custom-pills .nav-link:hover {
+    background-color: #f0f0f0;
+}
+
+.custom-pills .nav-link.active {
+    background-color: #43A047 !important;
+    color: white !important;
+}
+
+/* PROGRESS BARS (DISCAPACIDAD) */
+.custom-progress {
+    height: 10px;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    overflow: hidden;
+}
+.custom-progress-bar {
+    height: 100%;
+    border-radius: 5px;
+}
+
+/* CUSTOM TABLE (EMPRESAS TOP) */
+.custom-table th {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.custom-table tbody tr {
+    transition: background-color 0.2s;
+}
+.custom-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+.rank-circle {
+    width: 35px;
+    height: 35px;
+    background-color: #43A047;
+    color: white;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    opacity: 0.9;
+}
+
+/* PRINT MEDIA QUERIES */
+@media print {
+    body {
+        background-color: white !important;
+    }
+    .sidebar {
+        display: none !important;
+    }
+    .main-content {
+        margin-left: 0 !important;
+        padding: 0 !important;
+    }
+    .nav-pills, .btn {
+        display: none !important;
+    }
+    .tab-pane {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        page-break-after: always;
+        margin-bottom: 30px;
+    }
+    .card {
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+        break-inside: avoid;
+    }
+}

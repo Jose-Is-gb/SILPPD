@@ -1,0 +1,41 @@
+/* Shared styles for Company Module */
+body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: #333;
+}
+
+.text-orange { color: #ff9800 !important; }
+.bg-orange { background-color: #ff9800 !important; }
+.bg-orange-light { background-color: #fff3e0 !important; }
+.btn-orange { background-color: #ff9800; color: white; border: none; }
+.btn-orange:hover { background-color: #e68a00; color: white; }
+.btn-outline-orange { border: 1px solid #ff9800; color: #ff9800; background: transparent; }
+.btn-outline-orange:hover { background-color: #ff9800; color: white; }
+
+.text-blue { color: #0d6efd !important; }
+.bg-blue-light { background-color: #e7f1ff !important; }
+.text-green { color: #198754 !important; }
+.bg-green-light { background-color: #e8f5e9 !important; }
+
+.rounded-4 { border-radius: 1rem !important; }
+.card { transition: transform 0.2s, box-shadow 0.2s; }
+.card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.08) !important; }
+
+.nav-link.active {
+    color: #ff9800 !important;
+    font-weight: 700 !important;
+    border-bottom: 3px solid #ff9800;
+}
+
+.transition-all { transition: all 0.3s ease; }
+
+/* Status Indicators */
+.status-indicator {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+.status-active { background-color: #198754; }
+.status-paused { background-color: #ff9800; }
+
+.border-dashed { border: 2px dashed #dee2e6 !important; }

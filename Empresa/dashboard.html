@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Empresa - Talento Inclusivo</title>
+    
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    
+    <!-- Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body class="bg-light">
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-white py-3 border-bottom sticky-top">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold text-primary d-flex align-items-center" href="dashboard.html">
+                <span style="color: #ff9800;"><i class="fa fa-wheelchair me-2"></i> Talento Inclusivo</span>
+            </a>
+            
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div id="menu" class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item mx-2"><a class="nav-link active text-dark fw-semibold" href="dashboard.html">Inicio</a></li>
+                    <li class="nav-item mx-2"><a class="nav-link text-secondary" href="gestion_ofertas.html">Mis Ofertas</a></li>
+                    <li class="nav-item mx-2"><a class="nav-link text-secondary" href="postulaciones_recibidas.html">Postulaciones</a></li>
+                    <li class="nav-item mx-2"><a class="nav-link text-secondary" href="perfil.html">Perfil</a></li>
+                    <li class="nav-item ms-lg-3">
+                        <a class="nav-link text-danger fw-bold" href="#" id="logoutBtn">Cerrar sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <div class="hero-section text-white py-5" style="background-color: #ff9800;">
+        <div class="container py-3">
+            <h2 class="fw-bold mb-3" id="welcomeMsg">Bienvenido, Empresa</h2>
+            <p class="lead opacity-90 mb-4">Gestiona tus ofertas laborales y conecta con talento inclusivo.</p>
+            <a href="publicar_oferta.html" class="btn btn-white text-orange fw-bold rounded-pill px-4 shadow-sm">
+                <i class="fa fa-plus me-2"></i> Publicar nueva oferta
+            </a>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="container mt-n5" style="margin-top: -30px;">
+        <!-- STATS CARDS -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100">
+                    <div class="stat-icon bg-orange-light text-orange mx-auto mb-3">
+                        <i class="fa fa-briefcase"></i>
+                    </div>
+                    <h6 class="text-secondary mb-1">Ofertas activas</h6>
+                    <h4 class="fw-bold mb-0 text-orange" id="countOfertas">0 publicadas</h4>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100">
+                    <div class="stat-icon bg-blue-light text-blue mx-auto mb-3">
+                        <i class="fa fa-users"></i>
+                    </div>
+                    <h6 class="text-secondary mb-1">Postulaciones</h6>
+                    <h4 class="fw-bold mb-0 text-blue" id="countPostulaciones">0 nuevas</h4>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100">
+                    <div class="stat-icon bg-green-light text-green mx-auto mb-3">
+                        <i class="fa fa-handshake"></i>
+                    </div>
+                    <h6 class="text-secondary mb-1">Contratados</h6>
+                    <h4 class="fw-bold mb-0 text-green" id="countContratados">0 este mes</h4>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100">
+                    <div class="stat-icon bg-orange-light text-orange mx-auto mb-3">
+                        <i class="fa fa-eye"></i>
+                    </div>
+                    <h6 class="text-secondary mb-1">Vistas perfil</h6>
+                    <h4 class="fw-bold mb-0 text-orange">342 este mes</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- RECENT OFFERS -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="fw-bold mb-0">Ofertas recientes</h4>
+            <a href="gestion_ofertas.html" class="text-orange text-decoration-none fw-semibold">Ver todas</a>
+        </div>
+
+        <div id="recentOffersList" class="row g-4 mb-5">
+            <!-- Cargado dinámicamente -->
+        </div>
+    </div>
+
+    <!-- CSS DINAMICO INTERNO PARA RAPIDEZ -->
+    <style>
+        .mt-n5 { margin-top: -3rem !important; }
+        .text-orange { color: #ff9800 !important; }
+        .bg-orange-light { background-color: #fff3e0; }
+        .text-blue { color: #0d6efd !important; }
+        .bg-blue-light { background-color: #e7f1ff; }
+        .text-green { color: #198754 !important; }
+        .bg-green-light { background-color: #e8f5e9; }
+        
+        .btn-white { background-color: white; color: #ff9800; border: none; transition: transform 0.2s; }
+        .btn-white:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        
+        .stat-icon { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        
+        .nav-link.active { color: #ff9800 !important; border-bottom: 2px solid #ff9800; }
+    </style>
+
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- JS -->
+    <script src="../BD/auth.js"></script>
+    <script src="../BD/data.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>

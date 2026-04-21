@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Usuario - Talento Inclusivo</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        body {
+            background-color: #0d6efd;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .progress-bar-custom {
+            height: 6px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            margin: 0 4px;
+            flex-grow: 1;
+            transition: all 0.3s ease;
+        }
+
+        .progress-bar-custom.active {
+            background-color: white;
+        }
+
+        .top-nav {
+            padding: 2rem 0;
+        }
+
+        .top-nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .top-nav a:hover {
+            color: #d1e7dd;
+        }
+
+        .form-card {
+            background: white;
+            color: #212529;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #0d6efd;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .step-container {
+            display: none;
+        }
+
+        .step-container.active {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .form-label {
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #495057;
+        }
+
+        .form-control,
+        .form-select {
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            background-color: #fff;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+        }
+
+        .info-box {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container py-4" style="max-width: 900px;">
+
+        <div class="top-nav">
+            <a href="login.html"><i class="fa-solid fa-arrow-left me-2"></i> Volver al inicio de sesión</a>
+        </div>
+
+        <h1 class="display-5 fw-bold mb-2">Registro de Usuario</h1>
+        <p class="lead mb-4">Completa tu información para acceder a oportunidades laborales inclusivas.</p>
+
+        <!-- Progress Bar Segments -->
+        <div class="d-flex w-100 mb-4 px-2">
+            <div class="progress-bar-custom active" id="pb-step-1"></div>
+            <div class="progress-bar-custom" id="pb-step-2"></div>
+            <div class="progress-bar-custom" id="pb-step-3"></div>
+            <div class="progress-bar-custom" id="pb-step-4"></div>
+        </div>
+
+        <div class="form-card p-4 p-md-5 mb-5">
+
+            <form id="registrationForm" onsubmit="return false;">
+                <!-- ================= PASO 1 ================= -->
+                <div class="step-container active" id="step-1">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="step-icon me-3">1</div>
+                        <div>
+                            <h4 class="mb-0 text-primary">Paso 1: Datos Personales</h4>
+                            <small class="text-muted">Información básica de identificación (ISO 30415)</small>
+                        </div>
+                    </div>
+
+                    <div id="error-step-1" class="alert alert-danger d-none small"></div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Nombre(s) *</label>
+                            <input type="text" class="form-control" id="reg-nombre" placeholder="Ej: María Carmen"
+                                required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Apellido(s) *</label>
+                            <input type="text" class="form-control" id="reg-apellidos" placeholder="Ej: González López"
+                                required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Tipo de documento *</label>
+                            <select class="form-select" id="reg-tipo-doc" required>
+                                <option value="" selected disabled>Seleccionar tipo</option>
+                                <option value="DNI">DNI</option>
+                                <option value="Carnet de Extranjería">Carnet de Extranjería</option>
+                                <option value="Pasaporte">Pasaporte</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Número de documento *</label>
+                            <input type="text" class="form-control" id="reg-num-doc" placeholder="Ej: 12345678A"
+                                required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Fecha de nacimiento *</label>
+                            <input type="date" class="form-control" id="reg-fecha-nac" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Correo electrónico *</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-regular fa-envelope"></i></span>
+                                <input type="email" class="form-control" id="reg-email" placeholder="tu@email.com"
+                                    required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Teléfono *</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-phone"></i></span>
+                                <input type="tel" class="form-control" id="reg-telefono" placeholder="+51 123456789"
+                                    required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-8">
+                            <label class="form-label">Dirección</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-location-dot"></i></span>
+                                <input type="text" class="form-control" id="reg-direccion"
+                                    placeholder="Calle, número, piso">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Código postal</label>
+                            <input type="text" class="form-control" id="reg-cp" placeholder="28001">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Ciudad *</label>
+                            <input type="text" class="form-control" id="reg-ciudad" placeholder="Lima" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">País *</label>
+                            <input type="text" class="form-control" id="reg-pais" placeholder="Perú" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Contraseña *</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+                                <input type="password" class="form-control" id="reg-password"
+                                    placeholder="Mínimo 8 caracteres" required minlength="8">
+                                <span class="input-group-text" style="cursor:pointer;"
+                                    onclick="togglePassword('reg-password', this)">
+                                    <i class="fa-solid fa-eye"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label text-danger">Confirmar Contraseña *</label>
+                            <div class="input-group">
+                                <span class="input-group-text text-danger border-danger"><i
+                                        class="fa-solid fa-shield-halved"></i></span>
+                                <input type="password" class="form-control border-danger" id="reg-confirm-password"
+                                    placeholder="Mínimo 8 caracteres" required minlength="8">
+                                <span class="input-group-text text-danger border-danger" style="cursor:pointer;"
+                                    onclick="togglePassword('reg-confirm-password', this)">
+                                    <i class="fa-solid fa-eye"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end mt-4 pt-3 border-top">
+                        <button type="button" class="btn btn-primary px-4" onclick="nextStep(2)">Continuar</button>
+                    </div>
+                </div>
+
+                <!-- ================= PASO 2 ================= -->
+                <div class="step-container" id="step-2">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="step-icon me-3">2</div>
+                        <div>
+                            <h4 class="mb-0 text-primary">Paso 2: Información de Discapacidad</h4>
+                            <small class="text-muted">Datos confidenciales según ISO 9999 y normativa de protección de
+                                datos</small>
+                        </div>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label">Tipo de discapacidad *</label>
+                            <select class="form-select" id="reg-tipo-discapacidad" required>
+                                <option value="" selected disabled>Seleccionar tipo</option>
+                                <option value="Física">Física / Motora</option>
+                                <option value="Sensorial">Sensorial (Visual / Auditiva)</option>
+                                <option value="Intelectual">Intelectual u Cognitiva</option>
+                                <option value="Psíquica">Psíquica</option>
+                                <option value="Múltiple">Múltiple</option>
+                                <option value="Otra">Otra</option>
+                                <option value="Ninguna">Preferiría no decirlo</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Grado de discapacidad (%) *</label>
+                            <select class="form-select" id="reg-grado-discapacidad" required>
+                                <option value="" selected disabled>Seleccionar grado</option>
+                                <option value="33% - 49%">33% - 49% (Moderada)</option>
+                                <option value="50% - 64%">50% - 64% (Grave)</option>
+                                <option value="65% - 100%">65% - 100% (Muy grave)</option>
+                                <option value="No lo sé">No lo sé</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Número de certificado de discapacidad</label>
+                            <input type="text" class="form-control" id="reg-num-cert"
+                                placeholder="Número de certificado oficial">
+                            <small class="text-muted">Requerido para validación oficial (ISO 30415)</small>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Fecha de vencimiento del certificado</label>
+                            <input type="date" class="form-control" id="reg-vencimiento-cert">
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Adaptaciones o productos de apoyo necesarios (ISO 9999)</label>
+                            <textarea class="form-control" id="reg-adaptaciones" rows="3"
+                                placeholder="Ej: Lector de pantalla, rampa de acceso, intérprete de lengua de señas, horario flexible, etc."></textarea>
+                        </div>
+
+                        <div class="col-md-12 mt-3">
+                            <label class="form-label fw-bold">¿Requiere asistencia en el entorno laboral? (ISO
+                                21542)</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="asist-fisica" value="fisica">
+                                <label class="form-check-label text-muted" for="asist-fisica">Accesibilidad física
+                                    (rampas, ascensores, baños adaptados)</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="asist-tecnologia"
+                                    value="tecnologia">
+                                <label class="form-check-label text-muted" for="asist-tecnologia">Tecnología asistiva
+                                    (lectores de pantalla, magnificadores)</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="asist-interprete"
+                                    value="interprete">
+                                <label class="form-check-label text-muted" for="asist-interprete">Intérprete de lengua
+                                    de señas o subtítulos</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="asist-horario" value="horario">
+                                <label class="form-check-label text-muted" for="asist-horario">Horario flexible o
+                                    trabajo remoto</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+                        <button type="button" class="btn btn-outline-secondary px-4"
+                            onclick="prevStep(1)">Atrás</button>
+                        <button type="button" class="btn btn-primary px-4" onclick="nextStep(3)">Continuar</button>
+                    </div>
+                </div>
+
+                <!-- ================= PASO 3 ================= -->
+                <div class="step-container" id="step-3">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="step-icon me-3">3</div>
+                        <div>
+                            <h4 class="mb-0 text-primary">Paso 3: Información Laboral</h4>
+                            <small class="text-muted">Experiencia y competencias profesionales</small>
+                        </div>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label">Nivel educativo *</label>
+                            <select class="form-select" id="reg-educacion" required>
+                                <option value="" selected disabled>Seleccionar nivel</option>
+                                <option value="Básica">Básica / Primaria</option>
+                                <option value="Secundaria">Secundaria</option>
+                                <option value="Técnico">Técnico / Formación Profesional</option>
+                                <option value="Universitario">Universitario</option>
+                                <option value="Postgrado">Postgrado / Máster</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Área de especialización</label>
+                            <input type="text" class="form-control" id="reg-especializacion"
+                                placeholder="Ej: Tecnologías de la Información">
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Años de experiencia laboral *</label>
+                            <select class="form-select" id="reg-experiencia" required>
+                                <option value="" selected disabled>Seleccionar experiencia</option>
+                                <option value="Sin experiencia">Sin experiencia previa</option>
+                                <option value="Menos de 1 año">Menos de 1 año</option>
+                                <option value="1 a 3 años">1 a 3 años</option>
+                                <option value="3 a 5 años">3 a 5 años</option>
+                                <option value="Más de 5 años">Más de 5 años</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Habilidades y competencias principales *</label>
+                            <textarea class="form-control" id="reg-habilidades" rows="2"
+                                placeholder="Ej: JavaScript, React, trabajo en equipo, comunicación efectiva..."
+                                required></textarea>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Idiomas</label>
+                            <input type="text" class="form-control" id="reg-idiomas"
+                                placeholder="Ej: Español (nativo), Inglés (avanzado)">
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Preferencia de modalidad laboral *</label>
+                            <select class="form-select" id="reg-modalidad" required>
+                                <option value="" selected disabled>Seleccionar modalidad</option>
+                                <option value="Presencial">Presencial</option>
+                                <option value="Híbrido">Híbrido (Mixto)</option>
+                                <option value="Remoto">100% Remoto (Teletrabajo)</option>
+                                <option value="Indiferente">Indiferente</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Disponibilidad *</label>
+                            <select class="form-select" id="reg-disponibilidad" required>
+                                <option value="" selected disabled>Seleccionar disponibilidad</option>
+                                <option value="Completa">Tiempo completo</option>
+                                <option value="Parcial">Tiempo parcial / Medio tiempo</option>
+                                <option value="Fines de semana">Fines de semana</option>
+                                <option value="Turnos">Trabajo por turnos</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-12 mt-3">
+                            <label class="form-label">Currículum Vitae (PDF) *</label>
+                            <input type="file" class="form-control" id="reg-cv" accept=".pdf" required>
+                            <small class="text-muted">Formato accesible requerido (ISO 14289 - PDF/UA)</small>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+                        <button type="button" class="btn btn-outline-secondary px-4"
+                            onclick="prevStep(2)">Atrás</button>
+                        <button type="button" class="btn btn-primary px-4" onclick="nextStep(4)">Continuar</button>
+                    </div>
+                </div>
+
+                <!-- ================= PASO 4 ================= -->
+                <div class="step-container" id="step-4">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="step-icon me-3">4</div>
+                        <div>
+                            <h4 class="mb-0 text-primary">Paso 4: Consentimientos y Privacidad</h4>
+                            <small class="text-muted">Protección de datos según GDPR/RGPD</small>
+                        </div>
+                    </div>
+
+                    <div class="info-box" style="background-color: #1a6fd5; color: white;">
+                        <h6 class="fw-bold mb-1">Protección de Datos Personales</h6>
+                        <small>Tus datos personales serán tratados de acuerdo con el Reglamento General de Protección de
+                            Datos (RGPD) y la normativa ISO 27001 de seguridad de la información.</small>
+                    </div>
+
+                    <div class="border rounded p-3 mb-3 bg-light">
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="chk-terminos" required>
+                            <label class="form-check-label" for="chk-terminos">
+                                <strong>Acepto los términos y condiciones *</strong><br>
+                                <span class="text-muted small">He leído y acepto los términos de uso, políticas de
+                                    privacidad y el tratamiento de mis datos personales conforme a la legislación
+                                    vigente.</span>
+                            </label>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="chk-sensibles" required>
+                            <label class="form-check-label" for="chk-sensibles">
+                                <strong>Consentimiento de tratamiento de datos sensibles *</strong><br>
+                                <span class="text-muted small">Autorizo el tratamiento de mis datos relativos a
+                                    discapacidad exclusivamente para fines de inclusión laboral, conforme al Art. 9
+                                    RGPD.</span>
+                            </label>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="chk-compartir" required>
+                            <label class="form-check-label" for="chk-compartir">
+                                <strong>Compartir perfil con empresas *</strong><br>
+                                <span class="text-muted small">Autorizo que mi perfil profesional sea visible para
+                                    empresas registradas en la plataforma que cumplan con certificaciones de inclusión
+                                    (ISO 30415).</span>
+                            </label>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="chk-comunicaciones">
+                            <label class="form-check-label" for="chk-comunicaciones">
+                                <strong>Comunicaciones comerciales</strong><br>
+                                <span class="text-muted small">Acepto recibir información sobre ofertas laborales,
+                                    eventos y oportunidades de formación (opcional).</span>
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="chk-conservacion" required>
+                            <label class="form-check-label" for="chk-conservacion">
+                                <strong>Conservación de datos *</strong><br>
+                                <span class="text-muted small">Entiendo que mis datos se conservarán mientras mi cuenta
+                                    esté activa y puedo solicitar su eliminación en cualquier momento (derecho al
+                                    olvido).</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="info-box bg-success text-white">
+                        <h6 class="fw-bold mb-2">Tus derechos RGPD</h6>
+                        <ul class="mb-0 small ps-3">
+                            <li>Derecho de acceso, rectificación y supresión de tus datos</li>
+                            <li>Derecho a la limitación y oposición al tratamiento</li>
+                            <li>Derecho a portabilidad de datos</li>
+                            <li>Derecho a retirar el consentimiento en cualquier momento</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-box bg-warning text-dark mt-3">
+                        <h6 class="fw-bold mb-1">Confidencialidad ISO 9999</h6>
+                        <small>Los datos relacionados con tu discapacidad y productos de apoyo son confidenciales y solo
+                            se compartirán con empresas para procesos de selección cuando tú lo autorices
+                            explícitamente.</small>
+                    </div>
+
+                    <div id="error-step-4" class="alert alert-danger d-none small"></div>
+                    <div id="success-reg" class="alert alert-success d-none text-center fw-bold"></div>
+
+                    <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+                        <button type="button" class="btn btn-outline-secondary px-4"
+                            onclick="prevStep(3)">Atrás</button>
+                        <button type="button" class="btn btn-success px-4" onclick="submitRegistration()">Completar
+                            registro</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- DB and Auth -->
+    <script src="BD/data.js"></script>
+    <script src="BD/auth.js"></script>
+    <script src="User/registro.js"></script>
+</body>
+
+</html>

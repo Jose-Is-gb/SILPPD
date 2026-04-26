@@ -44,13 +44,24 @@ const Data = {
                     rol: "usuario"
                 },
                 {
-                    nombre: "María López",
-                    apellido: "Ramírez",
-                    correo: "maria@example.com",
-                    password: "abcdef",
-                    telefono: "912345678",
-                    descripcion: "Profesional con experiencia en diseño accesible.",
-                    discapacidad: "Visual",
+                    nombre: "Empresa de Prueba",
+                    apellido: "S.A.C.",
+                    correo: "empresa@talentoinclusivo.com",
+                    password: "empresa123",
+                    telefono: "900000000",
+                    descripcion: "Empresa de prueba configurada para testing del sistema SILPPD.",
+                    fechaRegistro: new Date().toLocaleDateString(),
+                    rol: "empresa",
+                    ruc: "20123456789"
+                },
+                {
+                    nombre: "Usuario de Prueba",
+                    apellido: "Inclusivo",
+                    correo: "usuario@talentoinclusivo.com",
+                    password: "usuario123",
+                    telefono: "911111111",
+                    descripcion: "Perfil de candidato para pruebas rápidas.",
+                    discapacidad: "Ninguna (Tester)",
                     fechaRegistro: new Date().toLocaleDateString(),
                     foto: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
                     rol: "usuario"

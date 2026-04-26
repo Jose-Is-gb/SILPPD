@@ -22,6 +22,19 @@ const Auth = {
 
     // Iniciar sesión (usuario o empresa)
     login(email, password) {
+        // Cuentas fijas para testing (Sprint 1 - Agile)
+        if (email === "empresa@talentoinclusivo.com" && password === "empresa123") {
+            const fixedEmpresa = { nombre: "Empresa de Prueba", correo: email, rol: "empresa", ruc: "20123456789" };
+            this.setActiveUser(fixedEmpresa);
+            return fixedEmpresa;
+        }
+
+        if (email === "usuario@talentoinclusivo.com" && password === "usuario123") {
+            const fixedUser = { nombre: "Usuario de Prueba", correo: email, rol: "usuario" };
+            this.setActiveUser(fixedUser);
+            return fixedUser;
+        }
+
         const db = JSON.parse(localStorage.getItem("TI_DATABASE")) || { usuarios: [], empresas: [] };
         
         // 1. Buscar en usuarios (donde deberían estar todos con el nuevo sistema de roles)

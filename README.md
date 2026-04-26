@@ -6,91 +6,69 @@
 
 Plataforma web desarrollada como proyecto académico para facilitar la conexión entre personas con discapacidad y oportunidades laborales, promoviendo la inclusión laboral mediante herramientas digitales accesibles.
 
-## Descripción
+## Características Principales
 
-El sistema permite la gestión de usuarios y administradores dentro de una plataforma que centraliza información laboral, perfiles de usuarios, seguimiento de postulaciones y mensajería.
+- **Arquitectura Desacoplada**: Separación estricta de HTML, CSS y JS para mejorar la mantenibilidad (ISO/IEC 25010).
+- **Gestión Multi-rol**: Soporte nativo para Usuarios (Candidatos), Empresas y Administradores.
+- **Seguridad y Privacidad**: Implementación de políticas de protección de datos según Ley 29733 (Perú).
+- **Diseño Inclusivo**: Interfaz optimizada para accesibilidad basada en estándares ISO 21542.
+- **Sistema de Mensajería**: Chat en tiempo real para comunicación directa admin-usuario.
+- **Paneles de Control**: Dashboards analíticos para seguimiento de métricas e inserción laboral.
 
-La plataforma está diseñada para mejorar la accesibilidad y facilitar la interacción entre usuarios y administradores del sistema.
+## Estándares y Normativas
 
-## Características
+El desarrollo de este sistema se rige bajo los siguientes estándares internacionales y nacionales para asegurar la calidad y accesibilidad:
 
-- Inicio de sesión con modo **Usuario** y **Administrador**
-- Registro de usuarios
-- Gestión de perfiles
-- Sistema de mensajería
-- Seguimiento de postulaciones
-- Interfaz accesible y moderna
+- **ISO/IEC 25010**: Modelo de calidad de software (Mantenibilidad y Seguridad).
+- **ISO/IEC 12207**: Calidad en los procesos del ciclo de vida del software.
+- **ISO 27001**: Gestión de la seguridad de la información y ciberseguridad.
+- **ISO 30415**: Gestión de la diversidad e inclusión en entornos laborales.
+- **ISO 9999**: Productos de apoyo para personas con discapacidad.
+- **Ley N.º 29733 & Ley N.º 29973**: Normativa legal peruana de protección de datos y discapacidad.
+
+## Control de Calidad (Metodologías Ágiles)
+
+El proyecto cuenta con un flujo de **Agile Testing** que incluye:
+- Pruebas funcionales E2E para flujos críticos (Registro, Postulación, Validación).
+- Pruebas unitarias para la capa de persistencia local.
+- Auditorías de cumplimiento normativo integradas en el panel de configuración.
+
+## Credenciales de Prueba (Testing Accounts)
+
+Para facilitar el testeo por parte de evaluadores o personal de QA, se han configurado los siguientes accesos directos:
+
+| Rol | Correo Electrónico | Contraseña |
+| :--- | :--- | :--- |
+| **Administrador** | `admin@talentoinclusivo.com` | `admin123` |
+| **Empresa (Demo)** | `empresa@talentoinclusivo.com` | `empresa123` |
+| **Usuario (Demo)** | `usuario@talentoinclusivo.com` | `usuario123` |
 
 ## Tecnologías utilizadas
 
-- HTML5
-- CSS3
-- JavaScript
-- Bootstrap
-- FontAwesome
+- HTML5, CSS3, JavaScript (Vanilla JS & ES6+)
+- Bootstrap 5.3.3
+- FontAwesome 6.5.1
+- Chart.js (Analíticas y Reportes)
 
-## Estructura del proyecto
+## Estructura del Proyecto
+
 ```
 SILPPD
 │
-├── Login
-│ ├── login.html
-│ ├── login.css
-│ └── login.js
-│
-├── User
-│ ├── perfil.html
-│ ├── perfil.css
-│ ├── perfil.js
-│ ├── user_home.html
-│ ├── user_home.css
-│ ├── user_home.js
-│ ├── validacion_ofertas.html
-│ ├── validacion_ofertas.css
-│ ├── validacion_ofertas.js
-│ ├── mensajeria.html
-│ ├── mensajeria.css
-│ ├── mensajeria.js
-│ ├── seguimiento.html
-│ ├── seguimiento.css
-│ └── seguimiento.js
-│
-├── Admin
-│ ├── admin.css
-│ ├── admin.html
-│ ├── admin.js
-│ ├── config_admin.css
-│ ├── config_admin.html
-│ ├── config_admin.js
-│ ├── gestion.css
-│ ├── gestion.html
-│ ├── gestion.js
-│ ├── reporte.css
-│ ├── reporte.html
-│ ├── reporte.js
-│ ├── usuario.css
-│ ├── usuario.html
-│ ├── usuario.js
-│ ├── validacion_empresas.css
-│ ├── validacion_empresas.html
-│ ├── validacion_empresas.js
-└── assets
-└── preview.png
+├── Admin/        # Módulo administrativo (Dashboards, Gestión, Configuración)
+├── User/         # Módulo de candidatos (Perfil, Seguimiento, Mensajería)
+├── Empresa/      # Módulo de empresas (Dashboard, Gestión de Ofertas)
+├── BD/           # Capa de persistencia local y autenticación (Data.js, Auth.js)
+├── scratch/      # Scripts de pruebas unitarias y automatización
+└── login.html    # Punto de entrada principal
 ```
 
-## Instalación
+## Instalación y Uso
 
-1. Clonar el repositorio
-git clone https://github.com/Jose-Is-gb/SILPPD.git
-
-2. Abrir el archivo:
-login.html en el navegador.
-
-3. Crear perfil de usuario propio o entrar como administrador con:
-
-user: admin@talentoinclusivo.com
-
-password: admin123
+1. Clonar el repositorio:
+   `git clone https://github.com/Jose-Is-gb/SILPPD.git`
+2. Abrir el archivo `login.html` en el navegador.
+3. Utilizar las **Credenciales de Prueba** mencionadas arriba para una exploración rápida.
 
 ## 🌐 Demo
 
@@ -101,6 +79,3 @@ password: admin123
 **José Gerónimo Benavides**  
 Estudiante de Ingeniería de Sistemas  
 Lima, Perú
-
-GitHub:  
-https://github.com/Jose-Is-gb

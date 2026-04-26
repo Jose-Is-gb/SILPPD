@@ -12,125 +12,7 @@
     <!-- Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <style>
-        body {
-            background-color: #ff9800;
-            color: white;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .progress-bar-custom {
-            height: 6px;
-            background-color: rgba(255, 255, 255, 0.3);
-            border-radius: 3px;
-            margin: 0 4px;
-            flex-grow: 1;
-            transition: all 0.3s ease;
-        }
-
-        .progress-bar-custom.active {
-            background-color: white;
-        }
-
-        .top-nav {
-            padding: 2rem 0;
-        }
-
-        .top-nav a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .top-nav a:hover {
-            color: #fff3e0;
-        }
-
-        .form-card {
-            background: white;
-            color: #212529;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .step-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #ff9800;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.2rem;
-            flex-shrink: 0;
-        }
-
-        .step-container {
-            display: none;
-        }
-
-        .step-container.active {
-            display: block;
-            animation: fadeIn 0.4s ease-out;
-        }
-
-        .form-label {
-            font-weight: 500;
-            font-size: 0.9rem;
-            color: #495057;
-        }
-
-        .form-control,
-        .form-select {
-            background-color: #f8f9fa;
-            border: 1px solid #ced4da;
-        }
-
-        .form-control:focus,
-        .form-select:focus {
-            background-color: #fff;
-            box-shadow: 0 0 0 0.25rem rgba(255, 152, 0, 0.2);
-            border-color: #ff9800;
-        }
-
-        .info-box {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .btn-empresa {
-            background-color: #ff9800;
-            border-color: #ff9800;
-            color: white;
-        }
-
-        .btn-empresa:hover {
-            background-color: #e68900;
-            border-color: #e68900;
-            color: white;
-        }
-
-        .text-empresa {
-            color: #ff9800;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="User/registro_empresa.css">
 </head>
 
 <body>
@@ -266,20 +148,20 @@
 
                         <div class="col-md-4">
                             <label class="form-label">Ciudad *</label>
-                            <input type="text" class="form-control" id="emp-ciudad" placeholder="Madrid" required>
+                            <input type="text" class="form-control" id="emp-ciudad" placeholder="Lima" required>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Provincia/Estado</label>
-                            <input type="text" class="form-control" id="emp-provincia" placeholder="Madrid">
+                            <input type="text" class="form-control" id="emp-provincia" placeholder="Lima">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Código postal *</label>
-                            <input type="text" class="form-control" id="emp-cp" placeholder="28001" required>
+                            <input type="text" class="form-control" id="emp-cp" placeholder="15001" required>
                         </div>
 
                         <div class="col-md-12">
                             <label class="form-label">País *</label>
-                            <input type="text" class="form-control" id="emp-pais" placeholder="España" required>
+                            <input type="text" class="form-control" id="emp-pais" placeholder="Perú" required>
                         </div>
 
                         <div class="col-12 mt-4">
@@ -310,14 +192,14 @@
                             <label class="form-label">Teléfono de contacto *</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fa-solid fa-phone"></i></span>
-                                <input type="tel" class="form-control" id="emp-telefono" placeholder="+34 900 000 000"
+                                <input type="tel" class="form-control" id="emp-telefono" placeholder="+51 963 852 741"
                                     required>
                             </div>
                         </div>
 
                         <div class="col-md-12">
                             <label class="form-label">Teléfono alternativo</label>
-                            <input type="tel" class="form-control" id="emp-telefono-alt" placeholder="+34 600 000 000">
+                            <input type="tel" class="form-control" id="emp-telefono-alt" placeholder="+51 987 654 321">
                         </div>
 
                         <div class="col-md-6">
@@ -387,8 +269,8 @@
                             <label class="form-label">¿Cuántos empleados con discapacidad tiene actualmente?</label>
                             <input type="number" class="form-control" id="emp-empleados-discapacidad"
                                 placeholder="Número de empleados" min="0">
-                            <small class="text-muted">En España, empresas con +50 empleados deben tener al menos 2% con
-                                discapacidad (LGD)</small>
+                            <small class="text-muted">En Perú, empresas con +50 empleados deben tener al menos 3% con
+                                discapacidad (Ley 29973)</small>
                         </div>
 
                         <div class="col-md-12 mt-3">
@@ -476,7 +358,7 @@
                         <div class="step-icon me-3">4</div>
                         <div>
                             <h4 class="mb-0 text-empresa">Paso 4: Consentimientos y Verificación</h4>
-                            <small class="text-muted">Protección de datos y verificación legal (RGPD / ISO
+                            <small class="text-muted">Protección de datos y verificación legal (Ley 29733 / ISO
                                 27001)</small>
                         </div>
                     </div>

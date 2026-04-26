@@ -12,108 +12,7 @@
     <!-- Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <style>
-        body {
-            background-color: #0d6efd;
-            color: white;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .progress-bar-custom {
-            height: 6px;
-            background-color: rgba(255, 255, 255, 0.3);
-            border-radius: 3px;
-            margin: 0 4px;
-            flex-grow: 1;
-            transition: all 0.3s ease;
-        }
-
-        .progress-bar-custom.active {
-            background-color: white;
-        }
-
-        .top-nav {
-            padding: 2rem 0;
-        }
-
-        .top-nav a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .top-nav a:hover {
-            color: #d1e7dd;
-        }
-
-        .form-card {
-            background: white;
-            color: #212529;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .step-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #0d6efd;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.2rem;
-            flex-shrink: 0;
-        }
-
-        .step-container {
-            display: none;
-        }
-
-        .step-container.active {
-            display: block;
-            animation: fadeIn 0.4s ease-out;
-        }
-
-        .form-label {
-            font-weight: 500;
-            font-size: 0.9rem;
-            color: #495057;
-        }
-
-        .form-control,
-        .form-select {
-            background-color: #f8f9fa;
-            border: 1px solid #ced4da;
-        }
-
-        .form-control:focus,
-        .form-select:focus {
-            background-color: #fff;
-            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
-        }
-
-        .info-box {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="User/registro.css">
 </head>
 
 <body>
@@ -209,7 +108,7 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Código postal</label>
-                            <input type="text" class="form-control" id="reg-cp" placeholder="28001">
+                            <input type="text" class="form-control" id="reg-cp" placeholder="15001">
                         </div>
 
                         <div class="col-md-6">
@@ -284,10 +183,10 @@
                             <label class="form-label">Grado de discapacidad (%) *</label>
                             <select class="form-select" id="reg-grado-discapacidad" required>
                                 <option value="" selected disabled>Seleccionar grado</option>
-                                <option value="33% - 49%">33% - 49% (Moderada)</option>
-                                <option value="50% - 64%">50% - 64% (Grave)</option>
-                                <option value="65% - 100%">65% - 100% (Muy grave)</option>
-                                <option value="No lo sé">No lo sé</option>
+                                <option value="33% - 49%">Leve</option>
+                                <option value="50% - 64%">Moderada</option>
+                                <option value="65% - 100%">Severa</option>
+                                <option value="No lo sé">No especificado</option>
                             </select>
                         </div>
 
@@ -424,7 +323,7 @@
                         <div class="col-md-12 mt-3">
                             <label class="form-label">Currículum Vitae (PDF) *</label>
                             <input type="file" class="form-control" id="reg-cv" accept=".pdf" required>
-                            <small class="text-muted">Formato accesible requerido (ISO 14289 - PDF/UA)</small>
+                            <small class="text-muted">Formato PDF recomendado para mejor accesibilidad</small>
                         </div>
                     </div>
 
@@ -441,14 +340,15 @@
                         <div class="step-icon me-3">4</div>
                         <div>
                             <h4 class="mb-0 text-primary">Paso 4: Consentimientos y Privacidad</h4>
-                            <small class="text-muted">Protección de datos según GDPR/RGPD</small>
+                            <small class="text-muted">Protección de datos según la Ley N.º 29733</small>
                         </div>
                     </div>
 
                     <div class="info-box" style="background-color: #1a6fd5; color: white;">
                         <h6 class="fw-bold mb-1">Protección de Datos Personales</h6>
-                        <small>Tus datos personales serán tratados de acuerdo con el Reglamento General de Protección de
-                            Datos (RGPD) y la normativa ISO 27001 de seguridad de la información.</small>
+                        <small>Tus datos personales serán tratados conforme a la Ley N.º 29733 de Protección de Datos
+                            Personales
+                            y la normativa ISO 27001 de seguridad de la información.</small>
                     </div>
 
                     <div class="border rounded p-3 mb-3 bg-light">
@@ -467,8 +367,8 @@
                             <label class="form-check-label" for="chk-sensibles">
                                 <strong>Consentimiento de tratamiento de datos sensibles *</strong><br>
                                 <span class="text-muted small">Autorizo el tratamiento de mis datos relativos a
-                                    discapacidad exclusivamente para fines de inclusión laboral, conforme al Art. 9
-                                    RGPD.</span>
+                                    discapacidad exclusivamente para fines de inclusión laboral, conforme la Ley N.º
+                                    29733.</span>
                             </label>
                         </div>
 
@@ -503,7 +403,7 @@
                     </div>
 
                     <div class="info-box bg-success text-white">
-                        <h6 class="fw-bold mb-2">Tus derechos RGPD</h6>
+                        <h6 class="fw-bold mb-2">Tus derechos según la Ley N.º 29733</h6>
                         <ul class="mb-0 small ps-3">
                             <li>Derecho de acceso, rectificación y supresión de tus datos</li>
                             <li>Derecho a la limitación y oposición al tratamiento</li>
@@ -513,7 +413,7 @@
                     </div>
 
                     <div class="info-box bg-warning text-dark mt-3">
-                        <h6 class="fw-bold mb-1">Confidencialidad ISO 9999</h6>
+                        <h6 class="fw-bold mb-1">Confidencialidad ISO 27001</h6>
                         <small>Los datos relacionados con tu discapacidad y productos de apoyo son confidenciales y solo
                             se compartirán con empresas para procesos de selección cuando tú lo autorices
                             explícitamente.</small>

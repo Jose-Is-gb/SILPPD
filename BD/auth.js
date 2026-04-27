@@ -79,15 +79,32 @@ const Auth = {
         }
     },
 
-    // Login Admin (usando Firebase)
+    // Login Admin (desglosado para diagnóstico)
     async loginAdmin(email, password) {
-        const user = await this.login(email, password);
-        if (user && user.rol === "admin") {
-            return true;
+        try {
+            const userCredential = await authFirebase.signInWithEmailAndPassword(email, password);
+            const fbUser = userCredential.user;
+            
+            const userDoc = await dbFirestore.collection("usuarios").doc(fbUser.email).get();
+            if (userDoc.exists) {
+                const userData = userDoc.data();
+                if (userData.rol === "admin") {
+                    this.setActiveUser(userData);
+                    return { success: true };
+                } else {
+                    await this.logout();
+                    return { success: false, error: "Tu cuenta no tiene permisos de Administrador (rol: " + userData.rol + ")" };
+                }
+            } else {
+                await this.logout();
+                return { success: false, error: "No existe un perfil de datos para este admin en Firestore." };
+            }
+        } catch (error) {
+            let msg = "Error de autenticación";
+            if (error.code === "auth/user-not-found") msg = "El usuario no existe en Firebase Authentication. Créalo en la consola.";
+            if (error.code === "auth/wrong-password") msg = "La contraseña es incorrecta.";
+            if (error.code === "auth/invalid-email") msg = "El correo no tiene un formato válido.";
+            return { success: false, error: msg };
         }
-        if (user) {
-            await this.logout(); // No es admin
-        }
-        return false;
     }
 };

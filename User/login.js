@@ -130,10 +130,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
             if (mode === "admin") {
-                if (await Auth.loginAdmin(email, password)) {
+                const result = await Auth.loginAdmin(email, password);
+                if (result.success) {
                     window.location.href = ADMIN_URL;
                 } else {
-                    alert("Credenciales de administrador incorrectas o no tienes permisos.");
+                    alert("❌ Bloqueo Admin: " + result.error);
                 }
             } else if (mode === "company") {
                 const user = await Auth.login(email, password);

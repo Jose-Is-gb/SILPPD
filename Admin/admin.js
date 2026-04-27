@@ -82,21 +82,30 @@ document.addEventListener("DOMContentLoaded", () => {
         // --- Mostrar solo los últimos 5 eventos ---
         const recientes = actividades.slice(0, 5);
 
-        listaActividad.innerHTML = recientes.length
-            ? recientes
-                .map(a => {
-                    const info = Data.getContactInfo(a.email);
-                    return `
-                    <li class="list-group-item d-flex align-items-center justify-content-between py-3">
-                        <div class="d-flex align-items-center">
-                            <img src="${info.foto}" class="rounded-circle me-3" style="width: 32px; height: 32px; object-fit: cover;">
-                            <span>${a.mensaje}</span>
-                        </div>
-                        <small class="text-muted pe-2">${a.fecha.toLocaleDateString("es-PE")}</small>
-                    </li>`;
-                })
-                .join("")
-            : `<li class="list-group-item text-muted">No hay actividad reciente.</li>`;
+        listaActividad.innerHTML = "";
+
+        if (recientes.length === 0) {
+            listaActividad.innerHTML = `<li class="list-group-item text-muted">No hay actividad reciente.</li>`;
+            return;
+        }
+
+        recientes.forEach(a => {
+            try {
+                const info = Data.getContactInfo(a.email);
+                const li = document.createElement("li");
+                li.className = "list-group-item d-flex align-items-center justify-content-between py-3";
+                li.innerHTML = `
+                    <div class="d-flex align-items-center">
+                        <img src="${info.foto}" class="rounded-circle me-3" style="width: 32px; height: 32px; object-fit: cover;">
+                        <span>${a.mensaje}</span>
+                    </div>
+                    <small class="text-muted pe-2">${a.fecha ? a.fecha.toLocaleDateString("es-PE") : "—"}</small>
+                `;
+                listaActividad.appendChild(li);
+            } catch (err) {
+                console.error("Error al renderizar actividad:", err);
+            }
+        });
     }
 
     // Ejecutar al cargar

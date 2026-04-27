@@ -126,33 +126,37 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         lista.forEach(u => {
-            const tr = document.createElement("tr");
-            const col3 = rolActual === "empresa" ? (u.discapacidad || "—") : (u.discapacidad || "No especificada");
-            const col5 = rolActual === "empresa" ? (u._region || "—") : (u.fechaRegistro || "—");
-            
-            const info = Data.getContactInfo(u.correo);
+            try {
+                const tr = document.createElement("tr");
+                const col3 = rolActual === "empresa" ? (u.discapacidad || "—") : (u.discapacidad || "No especificada");
+                const col5 = rolActual === "empresa" ? (u._region || "—") : (u.fechaRegistro || "—");
+                
+                const info = Data.getContactInfo(u.correo);
 
-            tr.innerHTML = `
-                <td>
-                    <div class="d-flex align-items-center gap-2">
-                        <img src="${info.foto}" class="rounded-circle" style="width:32px; height:32px; object-fit: cover;">
-                        <span>${u.nombre}</span>
-                    </div>
-                </td>
-                <td>${u.correo}</td>
-                <td>${col3}</td>
-                <td><span class="badge ${u.rol === 'admin' ? 'bg-danger' : u.rol === 'empresa' ? 'bg-success' : 'bg-primary'}">${u.rol ? u.rol.toUpperCase() : "USUARIO"}</span></td>
-                <td>${col5}</td>
-                <td>
-                    <button class="btn btn-sm btn-action btn-outline-primary me-1" onclick="editarUsuario('${u.correo}')">
-                        <i class="fa fa-pen"></i>
-                    </button>
-                    <button class="btn btn-sm btn-action btn-outline-danger" onclick="eliminarUsuario('${u.correo}')">
-                        <i class="fa fa-trash"></i>
-                    </button>
-                </td>
-            `;
-            tablaUsuarios.appendChild(tr);
+                tr.innerHTML = `
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            <img src="${info.foto}" class="rounded-circle" style="width:32px; height:32px; object-fit: cover;">
+                            <span>${u.nombre || "Sin nombre"}</span>
+                        </div>
+                    </td>
+                    <td>${u.correo || "—"}</td>
+                    <td>${col3}</td>
+                    <td><span class="badge ${u.rol === 'admin' ? 'bg-danger' : u.rol === 'empresa' ? 'bg-success' : 'bg-primary'}">${(u.rol || "USUARIO").toUpperCase()}</span></td>
+                    <td>${col5}</td>
+                    <td>
+                        <button class="btn btn-sm btn-action btn-outline-primary me-1" onclick="editarUsuario('${u.correo}')" title="Editar">
+                            <i class="fa fa-pen"></i>
+                        </button>
+                        <button class="btn btn-sm btn-action btn-outline-danger" onclick="eliminarUsuario('${u.correo}')" title="Eliminar">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tablaUsuarios.appendChild(tr);
+            } catch (err) {
+                console.error("Error al renderizar usuario:", err);
+            }
         });
     }
 

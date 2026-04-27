@@ -201,38 +201,40 @@ const Data = {
     // HELPERS DE CONSISTENCIA
     // ===============================
     getContactInfo(email) {
-        if (email === "soporte@talentoinclusivo.com") {
-            return {
-                nombre: "Soporte Talento Inclusivo",
-                foto: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png", // Icono soporte
-                rol: "soporte",
-                color: "bg-primary"
-            };
-        }
+        const supportInfo = {
+            nombre: "Soporte Talento Inclusivo",
+            foto: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+            rol: "soporte",
+            color: "bg-primary"
+        };
 
-        const db = this.getDB();
-        const user = db.usuarios.find(u => u.correo === email);
+        if (email === "soporte@talentoinclusivo.com") return supportInfo;
+
+        const db = Data.getDB();
+        if (!db) return supportInfo;
+
+        const user = (db.usuarios || []).find(u => u.correo === email);
         if (user) {
             return {
-                nombre: (user.nombre + " " + (user.apellido || "")).trim(),
+                nombre: ((user.nombre || "") + " " + (user.apellido || "")).trim() || email,
                 foto: user.foto || "https://cdn-icons-png.flaticon.com/512/149/149071.png",
                 rol: "usuario",
                 color: "bg-blue"
             };
         }
 
-        const empresa = db.empresas.find(e => e.correo === email);
+        const empresa = (db.empresas || []).find(e => e.correo === email);
         if (empresa) {
             return {
-                nombre: empresa.nombre || empresa.razonSocial || "Empresa",
-                foto: empresa.fotoEmpresa || "https://cdn-icons-png.flaticon.com/512/186/186100.png", // Icono empresa
+                nombre: empresa.nombre || empresa.razonSocial || email,
+                foto: empresa.fotoEmpresa || "https://cdn-icons-png.flaticon.com/512/186/186100.png",
                 rol: "empresa",
                 color: "bg-orange"
             };
         }
 
         return {
-            nombre: email,
+            nombre: email || "Usuario",
             foto: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
             rol: "desconocido",
             color: "bg-secondary"

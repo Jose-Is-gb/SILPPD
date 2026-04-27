@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                                     </button>
                                 </div>
                                 <div class="d-flex gap-2">
-                                    <button class="btn btn-light btn-sm rounded-pill px-3" onclick="viewCV('${p.nombreCandidato || info.nombre}')">
+                                    <button class="btn btn-light btn-sm rounded-pill px-3" onclick="viewCV('${p.email}', '${p.nombreCandidato || info.nombre}')">
                                         <i class="fa fa-file-pdf me-1"></i> Ver CV
                                     </button>
                                     <button class="btn btn-light btn-sm rounded-pill px-3" onclick="contactarCandidato('${p.email}', '${info.nombre}', '${info.foto}')">
@@ -134,9 +134,32 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     window.viewProfile = (email) => { alert("Perfil: " + email); };
-    window.viewCV = (nombre) => {
-        document.getElementById("cvModalTitle").textContent = "CV - " + nombre;
-        new bootstrap.Modal(document.getElementById('modalCV')).show();
+
+    window.viewCV = async (email, nombre) => {
+        try {
+            const candidate = await Data.getUserByEmail(email);
+            const modalBody = document.querySelector("#modalCV .modal-body");
+            document.getElementById("cvModalTitle").textContent = "CV - " + (nombre || candidate.nombre);
+
+            if (candidate && candidate.cv && candidate.cv.url) {
+                // El campo 'url' ahora contiene el string Base64 del PDF
+                modalBody.innerHTML = `<iframe src="${candidate.cv.url}" width="100%" height="500px" style="border: none;"></iframe>`;
+            } else if (candidate && candidate.cv && candidate.cv.data) {
+                // Compatibilidad con registros antiguos que usaban .data
+                modalBody.innerHTML = `<iframe src="${candidate.cv.data}" width="100%" height="500px" style="border: none;"></iframe>`;
+            } else {
+                modalBody.innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="fa fa-file-circle-exclamation fa-3x text-warning mb-3"></i>
+                        <p class="text-muted">El candidato no ha subido su currículum aún.</p>
+                    </div>`;
+            }
+            
+            new bootstrap.Modal(document.getElementById('modalCV')).show();
+        } catch (err) {
+            console.error(err);
+            alert("No se pudo cargar el CV.");
+        }
     };
 
     window.contactarCandidato = (email, nombre, foto) => {

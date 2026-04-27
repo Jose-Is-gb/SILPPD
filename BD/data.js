@@ -208,6 +208,19 @@ const Data = {
             rol: "desconocido",
             color: "bg-secondary"
         };
+    },
+
+    // ===============================
+    // STORAGE (SIMULADO CON BASE64 PARA PLAN GRATUITO)
+    // ===============================
+
+    async uploadFile(path, file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (e) => reject(e);
+            reader.readAsDataURL(file);
+        });
     }
 
 };

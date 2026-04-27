@@ -172,7 +172,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    // Cambiar Logo
+    // Cambiar Logo y subir a Cloud Storage
     const logoBtn = document.getElementById("logoBtn");
     const logoInput = document.getElementById("logoInput");
     if (logoBtn && logoInput) {
@@ -180,13 +180,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         logoInput.onchange = async (e) => {
             const file = e.target.files[0];
             if (file) {
-                const reader = new FileReader();
-                reader.onload = async (event) => {
-                    const imgData = event.target.result;
-                    logoContainer.innerHTML = `<img src="${imgData}" style="width:100%; height:100%; object-fit:cover;" class="rounded-circle shadow-sm">`;
-                    await saveAndReload({ fotoEmpresa: imgData, foto: imgData }, "Logo actualizado correctamente.");
-                };
-                reader.readAsDataURL(file);
+                try {
+                    logoContainer.style.opacity = "0.5";
+                    const url = await Data.uploadFile(`empresas/${user.correo}/logo_${Date.now()}`, file);
+                    
+                    logoContainer.innerHTML = `<img src="${url}" style="width:100%; height:100%; object-fit:cover;" class="rounded-circle shadow-sm">`;
+                    await saveAndReload({ fotoEmpresa: url, foto: url }, "Logo actualizado correctamente en la nube.");
+                    logoContainer.style.opacity = "1";
+                } catch (err) {
+                    console.error(err);
+                    alert("Error al subir el logo a la nube.");
+                    logoContainer.style.opacity = "1";
+                }
             }
         };
     }

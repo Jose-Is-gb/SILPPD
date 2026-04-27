@@ -21,5 +21,6 @@ if (!firebase.apps.length) {
 // Referencias globales a servicios para usar en toda la app
 const dbFirestore = firebase.firestore();
 const authFirebase = firebase.auth();
+// const storageFirebase = firebase.storage(); // Desactivado por plan gratuito (usamos Base64)
 
 console.log("🔥 Firebase (Cloud) conectado exitosamente.");

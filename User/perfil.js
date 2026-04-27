@@ -228,24 +228,30 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     });
 
-    // Subir foto
-    photoInput.addEventListener("change", e => {
+    // Subir foto a Cloud Storage
+    photoInput.addEventListener("change", async e => {
         const file = e.target.files[0];
         if (!file) return;
 
-        const reader = new FileReader();
-        reader.onload = async function(event) {
-            const imgData = event.target.result;
-            profilePhoto.src = imgData;
-            user.foto = imgData;
+        try {
+            // Mostrar estado de carga (opcional UX)
+            profilePhoto.style.opacity = "0.5";
+            const url = await Data.uploadFile(`usuarios/${user.correo}/foto_perfil_${Date.now()}`, file);
+            
+            profilePhoto.src = url;
+            user.foto = url;
             await saveAndNotify();
-        };
-        reader.readAsDataURL(file);
+            profilePhoto.style.opacity = "1";
+        } catch (err) {
+            console.error(err);
+            alert("Error al subir la foto a la nube.");
+            profilePhoto.style.opacity = "1";
+        }
     });
 
-    // Subir CV
+    // Subir CV a Cloud Storage
     if (cvInput) {
-        cvInput.addEventListener("change", e => {
+        cvInput.addEventListener("change", async e => {
             const file = e.target.files[0];
             if (!file) return;
 
@@ -254,9 +260,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 return;
             }
 
-            const reader = new FileReader();
-            reader.onload = async function(event) {
-                const base64 = event.target.result;
+            try {
+                if (cvFileName) cvFileName.textContent = "Subiendo archivo...";
+                const url = await Data.uploadFile(`usuarios/${user.correo}/cv_${Date.now()}.pdf`, file);
+                
                 const date = new Date().toLocaleDateString();
                 const size = (file.size / 1024).toFixed(0) + " KB";
                 
@@ -264,15 +271,18 @@ document.addEventListener("DOMContentLoaded", async () => {
                     name: file.name,
                     date: date,
                     size: size,
-                    data: base64
+                    url: url // Guardamos la URL de la nube en lugar del Base64
                 };
 
                 if (cvFileName) cvFileName.textContent = file.name;
                 if (cvFileMeta) cvFileMeta.textContent = `Subido el ${date} • ${size}`;
                 
                 await saveAndNotify();
-            };
-            reader.readAsDataURL(file);
+            } catch (err) {
+                console.error(err);
+                alert("Error al subir el CV a la nube.");
+                if (cvFileName) cvFileName.textContent = "Error al subir";
+            }
         });
     }
 

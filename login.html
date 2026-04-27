@@ -185,27 +185,34 @@
   <script src="BD/data.js"></script>
 
   <script>
-    // SCRIPT TEMPORAL PARA ASEGURAR QUE EL ADMIN EXISTE EN LA NUBE
-    async function ensureAdminExists() {
+    // SCRIPT DE REPARACIÓN DE DATOS (ADMIN Y EMPRESAS)
+    async function repairCloudData() {
         try {
+            // 1. Asegurar Admin
             const adminEmail = "admin@talentoinclusivo.com";
-            const doc = await dbFirestore.collection("usuarios").doc(adminEmail).get();
-            if (!doc.exists) {
-                console.log("🛠️ Creando usuario administrador en Firestore...");
+            const adminDoc = await dbFirestore.collection("usuarios").doc(adminEmail).get();
+            if (!adminDoc.exists) {
+                console.log("🛠️ Creando admin en Firestore...");
                 await dbFirestore.collection("usuarios").doc(adminEmail).set({
-                    nombre: "Administrador Sistema",
-                    correo: adminEmail,
-                    rol: "admin",
-                    fechaRegistro: new Date().toLocaleDateString()
+                    nombre: "Administrador Sistema", correo: adminEmail, rol: "admin", fechaRegistro: new Date().toLocaleDateString()
                 });
-                console.log("✅ Admin creado exitosamente en la nube.");
+            }
+
+            // 2. Asegurar Empresas (Migración desde data global)
+            const empresasSnap = await dbFirestore.collection("empresas").limit(1).get();
+            if (empresasSnap.empty && window.data && window.data.empresas) {
+                console.log("🏭 Migrando empresas a la nube...");
+                for (const emp of window.data.empresas) {
+                    await dbFirestore.collection("empresas").doc(emp.correo).set(emp);
+                }
+                console.log("✅ " + window.data.empresas.length + " empresas migradas.");
             }
         } catch (e) {
-            console.error("Error asegurando admin:", e);
+            console.error("Error en reparación:", e);
         }
     }
     // Ejecutar al cargar
-    window.addEventListener('load', ensureAdminExists);
+    window.addEventListener('load', repairCloudData);
   </script>
 
   <script src="User/login.js"></script>

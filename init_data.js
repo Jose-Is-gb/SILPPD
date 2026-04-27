@@ -1,7 +1,6 @@
 
 // init_data.js — Generado automáticamente por generar_datos.py
-(function () {
-    const data = {
+window.data = {
         "usuarios": [
             {
                 "nombre": "Valeria",
@@ -872,4 +871,4 @@
     } else {
         console.log("ℹ TI_DATABASE ya existía en localStorage, no se sobrescribió.");
     }
-})();
+}

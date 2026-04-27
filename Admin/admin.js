@@ -92,8 +92,100 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
+    // --- Migración automática: sincroniza empresas desde 'usuarios' → 'empresas' ---
+    async function repairAndLoad() {
+        try {
+            console.log("🔍 Verificando colección 'empresas'...");
+
+            // 1. Traer todos los usuarios y filtrar por rol='empresa' en JS (sin necesidad de índice)
+            const todosSnap = await dbFirestore.collection("usuarios").get();
+            const empresasDeUsuarios = todosSnap.docs
+                .map(d => d.data())
+                .filter(u => u.rol === "empresa");
+
+            if (empresasDeUsuarios.length > 0) {
+                // 2. Ver cuáles ya existen en la colección 'empresas'
+                const empresasSnap = await dbFirestore.collection("empresas").get();
+                const correosYaMigrados = new Set(empresasSnap.docs.map(d => d.id));
+
+                let migrados = 0;
+                for (const userData of empresasDeUsuarios) {
+                    const correo = userData.correo || userData.email;
+                    if (correo && !correosYaMigrados.has(correo)) {
+                        await dbFirestore.collection("empresas").doc(correo).set({
+                            correo,
+                            nombre: userData.nombre || userData.razonSocial || "Empresa",
+                            ...userData
+                        });
+                        migrados++;
+                        console.log(`✅ Empresa migrada: ${correo}`);
+                    }
+                }
+
+                if (migrados > 0) {
+                    console.log(`🏭 Migración completa: ${migrados} empresa(s) copiadas.`);
+                } else {
+                    console.log("✔️ Colección 'empresas' ya sincronizada.");
+                }
+            } else {
+                console.log("ℹ️ No hay usuarios con rol=empresa en Firestore.");
+            }
+
+            // 3. También migrar las empresas de ejemplo de window.data (init_data.js) e insertarlas en Auth y 'usuarios'
+            if (window.data && Array.isArray(window.data.empresas)) {
+                // Chequear usuarios de Firebase en lugar de empresas para esta parte
+                const usuariosSnap2 = await dbFirestore.collection("usuarios").get();
+                const usuariosExistentes = new Set(usuariosSnap2.docs.map(d => d.id));
+                const API_KEY = firebase.app().options.apiKey; // Tomar la llave de la config actual
+
+                for (const emp of window.data.empresas) {
+                    const correo = emp.correo;
+                    const password = emp.password || "Empresa123*";
+                    
+                    if (correo && !usuariosExistentes.has(correo)) {
+                        // A) Guardar en 'empresas'
+                        await dbFirestore.collection("empresas").doc(correo).set(emp);
+                        
+                        // B) Guardar en 'usuarios' para que auth.js aplique el rol 'empresa'
+                        await dbFirestore.collection("usuarios").doc(correo).set({
+                           nombre: emp.nombre,
+                           correo: correo,
+                           rol: "empresa" 
+                        });
+
+                        // C) Crear cuenta en Firebase Auth silenciosamente (REST API)
+                        try {
+                            const res = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${API_KEY}`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ email: correo, password: password, returnSecureToken: false })
+                            });
+                            if (res.ok) {
+                                console.log(`✅ Cuenta de Auth creada para: ${correo}`);
+                            } else {
+                                const errData = await res.json();
+                                if (errData.error && errData.error.message !== "EMAIL_EXISTS") {
+                                    console.log(`⚠️ Error auth REST (${correo}): ${errData.error.message}`);
+                                }
+                            }
+                        } catch (e) {
+                            console.log("Error de red creando Auth:", e);
+                        }
+
+                        console.log(`✅ Empresa de ejemplo migrada: ${correo}`);
+                    }
+                }
+            }
+
+
+            await cargarEstadisticas();
+        } catch (e) {
+            console.error("Error en reparación admin:", e);
+        }
+    }
+
     // Inicializar
-    await cargarEstadisticas();
+    await repairAndLoad();
 
     // --- Logout ---
     const logoutBtn = document.getElementById("logoutBtn");

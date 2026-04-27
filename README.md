@@ -8,12 +8,13 @@ Plataforma web desarrollada como proyecto académico para facilitar la conexión
 
 ## Características Principales
 
-- **Arquitectura Desacoplada**: Separación estricta de HTML, CSS y JS para mejorar la mantenibilidad (ISO/IEC 25010).
+- **Arquitectura Basada en la Nube**: Integración completa con Firebase BaaS (Backend as a Service) asegurando alta disponibilidad y escalabilidad.
 - **Gestión Multi-rol**: Soporte nativo para Usuarios (Candidatos), Empresas y Administradores.
+- **Autenticación Segura**: Sistema de encriptación de contraseñas y correos gestionado por Firebase Authentication, con soporte de recuperación de acceso.
 - **Seguridad y Privacidad**: Implementación de políticas de protección de datos según Ley 29733 (Perú).
 - **Diseño Inclusivo**: Interfaz optimizada para accesibilidad basada en estándares ISO 21542.
-- **Sistema de Mensajería**: Chat en tiempo real para comunicación directa admin-usuario.
-- **Paneles de Control**: Dashboards analíticos para seguimiento de métricas e inserción laboral.
+- **Sistema de Mensajería**: Chat en tiempo real, incluyendo soporte para previsualización e intercambio de archivos adjuntos (PDF, Imágenes).
+- **Paneles de Control (Dashboards)**: Reportería e indicadores clave para el seguimiento de métricas, ofertas activas e inserción laboral.
 
 ## Estándares y Normativas
 
@@ -26,16 +27,9 @@ El desarrollo de este sistema se rige bajo los siguientes estándares internacio
 - **ISO 9999**: Productos de apoyo para personas con discapacidad.
 - **Ley N.º 29733 & Ley N.º 29973**: Normativa legal peruana de protección de datos y discapacidad.
 
-## Control de Calidad (Metodologías Ágiles)
-
-El proyecto cuenta con un flujo de **Agile Testing** que incluye:
-- Pruebas funcionales E2E para flujos críticos (Registro, Postulación, Validación).
-- Pruebas unitarias para la capa de persistencia local.
-- Auditorías de cumplimiento normativo integradas en el panel de configuración.
-
 ## Credenciales de Prueba (Testing Accounts)
 
-Para facilitar el testeo por parte de evaluadores o personal de QA, se han configurado los siguientes accesos directos:
+Para facilitar el testeo por parte de evaluadores o personal de QA, estas cuentas están pre-configuradas en la base de datos de Firebase:
 
 | Rol | Correo Electrónico | Contraseña |
 | :--- | :--- | :--- |
@@ -46,33 +40,40 @@ Para facilitar el testeo por parte de evaluadores o personal de QA, se han confi
 ## Tecnologías utilizadas
 
 - HTML5, CSS3, JavaScript (Vanilla JS & ES6+)
-- Bootstrap 5.3.3
+- Bootstrap 5.3.3 (Framework CSS UIUX)
 - FontAwesome 6.5.1
 - Chart.js (Analíticas y Reportes)
+- **Firebase Firestore** (Base de datos NoSQL de tiempo real)
+- **Firebase Authentication** (Gestión de usuarios y cifrado de acceso)
+- **Firebase Cloud Storage** (Almacenamiento en la nube de Archivos, Logotipos y CVs)
+- **Firebase Hosting** (Despliegue y distribución global)
 
 ## Estructura del Proyecto
 
 ```
 SILPPD
 │
-├── Admin/        # Módulo administrativo (Dashboards, Gestión, Configuración)
-├── User/         # Módulo de candidatos (Perfil, Seguimiento, Mensajería)
-├── Empresa/      # Módulo de empresas (Dashboard, Gestión de Ofertas)
-├── BD/           # Capa de persistencia local y autenticación (Data.js, Auth.js)
-├── scratch/      # Scripts de pruebas unitarias y automatización
-└── login.html    # Punto de entrada principal
+├── Admin/        # Módulo administrativo (Dashboards, Gestión de Roles, Validaciones)
+├── User/         # Módulo de candidatos (Perfil Interactivo, Seguimiento, y Mensajería)
+├── Empresa/      # Módulo de corporativo (Publicación Segura, Criba Curricular de Ofertas)
+├── BD/           # Capa conectora a los servicios cloud (Data.js abstract, auth.js)
+├── scratch/      # Scripts y logs (Interno QA)
+├── Config/       # Configuración global del proyecto (.firebaserc, firebase.json)
+└── login.html    # Punto de entrada principal y Gateway al Cloud
 ```
 
-## Instalación y Uso
+## Instalación y Uso de Desarrollo
 
 1. Clonar el repositorio:
    `git clone https://github.com/Jose-Is-gb/SILPPD.git`
-2. Abrir el archivo `login.html` en el navegador.
-3. Utilizar las **Credenciales de Prueba** mencionadas arriba para una exploración rápida.
+2. Si deseas desplegar en tu propio Firebase, reemplaza los datos de configuración en `BD/firebase-config.js` por las keys de tu proyecto de Firebase.
+3. Desplegar usando las CLI de Firebase (Opcional):
+   `firebase deploy --only hosting`
 
 ## 🌐 Demo
 
-[🚀 Ver aplicación en línea](https://jose-is-gb.github.io/SILPPD/login.html)
+El aplicativo cuenta con despliegue automático configurado hacia infraestructura de nube.
+[🚀 Ver aplicación en línea (Firebase Hosting)](https://silppd-4e248.web.app/login.html)
 
 ## Autor
 

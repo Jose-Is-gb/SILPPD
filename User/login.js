@@ -172,34 +172,31 @@ document.addEventListener("DOMContentLoaded", () => {
     if (btnRecover) {
         btnRecover.addEventListener("click", async () => {
             const email = document.getElementById("recoverEmail").value.trim();
-            const pass1 = document.getElementById("recoverPassword").value;
-            const pass2 = document.getElementById("recoverPassword2").value;
 
-            if (!email || !pass1 || !pass2) {
-                alert("Completa todos los campos");
-                return;
-            }
-
-            if (pass1 !== pass2) {
-                alert("Las contraseñas no coinciden");
+            if (!email) {
+                alert("Por favor, ingresa tu correo electrónico.");
                 return;
             }
 
             try {
-                const db = await Data.getDB();
-                const user = (db.usuarios || []).find(u => u.correo === email) || 
-                             (db.empresas || []).find(e => e.correo === email);
-
-                if (!user) {
-                    alert("No existe una cuenta con ese correo");
-                    return;
-                }
-
-                await Data.updateUser(user.correo, { password: pass1 });
-                alert("✓ Contraseña actualizada correctamente en la nube.");
-                location.reload();
+                // Notificar Firebase Auth para enviar correo
+                await authFirebase.sendPasswordResetEmail(email);
+                alert("✓ Te hemos enviado un enlace de recuperación. Revisa tu bandeja de entrada o spam.");
+                document.getElementById("recoverEmail").value = "";
+                
+                // Cerrar modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById("recoverModal"));
+                if (modal) modal.hide();
+                
             } catch (e) {
-                alert("Error al actualizar la contraseña: " + e.message);
+                console.error("Error al recuperar:", e);
+                if (e.code === 'auth/user-not-found') {
+                    alert("No existe una cuenta registrada con ese correo.");
+                } else if (e.code === 'auth/invalid-email') {
+                    alert("Formato de correo inválido.");
+                } else {
+                    alert("Error al enviar el enlace: " + e.message);
+                }
             }
         });
     }

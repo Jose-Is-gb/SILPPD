@@ -39,11 +39,12 @@
                 <li onclick="location.href='admin.html'"><i class="fa fa-chart-line"></i> Dashboard</li>
                 <li onclick="location.href='usuario.html'"><i class="fa fa-users"></i> Usuarios</li>
                 <li onclick="location.href='gestion.html'"><i class="fa fa-briefcase"></i> Ofertas</li>
-                <li onclick="location.href='validacion_empresas.html'"><i class="fa fa-clipboard-check"></i> Validación</li>
+                <li onclick="location.href='validacion_empresas.html'"><i class="fa fa-clipboard-check"></i> Validación
+                </li>
                 <li onclick="location.href='mensajes.html'"><i class="fa fa-envelope"></i> Mensajes</li>
                 <li class="active"><i class="fa fa-chart-pie"></i> Reportes</li>
                 <li onclick="location.href='config_admin.html'"><i class="fa fa-gear"></i> Configuración</li>
-                <li id="logoutBtn" class="logout"><i class="fa fa-right-from-bracket"></i> Salir</li>
+                <li id="logoutBtn" class="logout" onclick="Auth.logout()" style="cursor:pointer;"><i class="fa fa-right-from-bracket"></i> Salir</li>
             </ul>
         </div>
 
@@ -75,16 +76,26 @@
                 <div class="d-flex justify-content-between align-items-center bg-white p-3 rounded-pill shadow-sm mb-4">
                     <div class="d-flex align-items-center gap-3 ms-3">
                         <span class="text-muted"><i class="fa fa-filter me-2"></i>Filtros:</span>
-                        <select class="form-select form-select-sm border-0 bg-light rounded-pill px-3 fw-medium" style="width: 140px; outline:none; box-shadow:none;">
-                            <option>Último mes</option>
+                        <select id="filtroPeriodo"
+                            class="form-select form-select-sm border-0 bg-light rounded-pill px-3 fw-medium"
+                            style="width: 150px; outline:none; box-shadow:none;">
+                            <option value="mes">Último mes</option>
+                            <option value="trimestre">Último trimestre</option>
+                            <option value="anio">Este año</option>
+                            <option value="historico">Histórico total</option>
                         </select>
-                        <select class="form-select form-select-sm border-0 bg-light rounded-pill px-3 fw-medium" style="width: 140px; outline:none; box-shadow:none;">
-                            <option>Solo usuarios</option>
+                        <select id="filtroEntidad"
+                            class="form-select form-select-sm border-0 bg-light rounded-pill px-3 fw-medium"
+                            style="width: 160px; outline:none; box-shadow:none;">
+                            <option value="todos">Todo el ecosistema</option>
+                            <option value="usuarios">Solo usuarios</option>
+                            <option value="empresas">Solo empresas</option>
                         </select>
                     </div>
                     <div class="small me-3">
                         <span class="text-muted me-3">Actualizado: <span id="txtActualizado">--</span></span>
-                        <span class="text-success fw-bold"><i class="fa fa-circle text-success me-1" style="font-size:8px;"></i>En vivo</span>
+                        <span class="text-success fw-bold"><i class="fa fa-circle text-success me-1"
+                                style="font-size:8px;"></i>En vivo</span>
                     </div>
                 </div>
 
@@ -94,78 +105,92 @@
                     <div class="col-md-3">
                         <div class="card metric-card bg-blue text-white shadow-sm h-100 p-4 border-0 rounded-4">
                             <div class="d-flex justify-content-between">
-                                <div class="bg-white rounded-3 mb-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 48px; height: 48px;">
+                                <div class="bg-white rounded-3 mb-3 d-flex align-items-center justify-content-center shadow-sm"
+                                    style="width: 48px; height: 48px;">
                                 </div>
                                 <i class="fa fa-arrow-trend-up opacity-50 mt-1"></i>
                             </div>
                             <p class="mb-1 small text-white-50">Usuarios Activos</p>
                             <h2 class="fw-bold mb-4" id="valUsuariosActivos">0</h2>
-                            <small class="fw-bold"><span class="text-white">+12.5%</span> <span class="text-white-50 fw-normal">mes anterior</span></small>
+                            <small class="fw-bold"><span class="text-white">+12.5%</span> <span
+                                    class="text-white-50 fw-normal">mes anterior</span></small>
                         </div>
                     </div>
                     <!-- Card 2 (Orange) -->
                     <div class="col-md-3">
                         <div class="card metric-card bg-orange text-white shadow-sm h-100 p-4 border-0 rounded-4">
                             <div class="d-flex justify-content-between">
-                                <div class="bg-white rounded-3 mb-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 48px; height: 48px;">
+                                <div class="bg-white rounded-3 mb-3 d-flex align-items-center justify-content-center shadow-sm"
+                                    style="width: 48px; height: 48px;">
                                 </div>
                                 <i class="fa fa-arrow-trend-up opacity-50 mt-1"></i>
                             </div>
                             <p class="mb-1 small text-white-50">Empresas Verificadas</p>
                             <h2 class="fw-bold mb-4" id="valEmpresasVerificadas">0</h2>
-                            <small class="fw-bold"><span class="text-white">+9.2%</span> <span class="text-white-50 fw-normal">mes anterior</span></small>
+                            <small class="fw-bold"><span class="text-white">+9.2%</span> <span
+                                    class="text-white-50 fw-normal">mes anterior</span></small>
                         </div>
                     </div>
                     <!-- Card 3 (Green) -->
                     <div class="col-md-3">
                         <div class="card metric-card bg-green text-white shadow-sm h-100 p-4 border-0 rounded-4">
                             <div class="d-flex justify-content-between">
-                                <div class="bg-white rounded-3 mb-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 48px; height: 48px;">
+                                <div class="bg-white rounded-3 mb-3 d-flex align-items-center justify-content-center shadow-sm"
+                                    style="width: 48px; height: 48px;">
                                 </div>
                                 <i class="fa fa-arrow-trend-up opacity-50 mt-1"></i>
                             </div>
                             <p class="mb-1 small text-white-50">Ofertas Publicadas</p>
                             <h2 class="fw-bold mb-4" id="valOfertasPublicadas">0</h2>
-                            <small class="fw-bold"><span class="text-white">+15.3%</span> <span class="text-white-50 fw-normal">mes anterior</span></small>
+                            <small class="fw-bold"><span class="text-white">+15.3%</span> <span
+                                    class="text-white-50 fw-normal">mes anterior</span></small>
                         </div>
                     </div>
                     <!-- Card 4 (Purple) -->
                     <div class="col-md-3">
                         <div class="card metric-card bg-purple text-white shadow-sm h-100 p-4 border-0 rounded-4">
                             <div class="d-flex justify-content-between">
-                                <div class="bg-white rounded-3 mb-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 48px; height: 48px;">
+                                <div class="bg-white rounded-3 mb-3 d-flex align-items-center justify-content-center shadow-sm"
+                                    style="width: 48px; height: 48px;">
                                 </div>
                                 <i class="fa fa-arrow-trend-up opacity-50 mt-1"></i>
                             </div>
                             <p class="mb-1 small text-white-50">Tasa de Éxito</p>
                             <h2 class="fw-bold mb-4" id="valTasaExito">0%</h2>
-                            <small class="fw-bold"><span class="text-white">+5.1%</span> <span class="text-white-50 fw-normal">mes anterior</span></small>
+                            <small class="fw-bold"><span class="text-white">+5.1%</span> <span
+                                    class="text-white-50 fw-normal">mes anterior</span></small>
                         </div>
                     </div>
                 </div>
 
                 <!-- TABS (PILLS) -->
-                <ul class="nav nav-pills custom-pills nav-fill bg-white p-2 rounded-pill shadow-sm mb-4" id="reportTabs" role="tablist">
+                <ul class="nav nav-pills custom-pills nav-fill bg-white p-2 rounded-pill shadow-sm mb-4" id="reportTabs"
+                    role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active rounded-pill fw-semibold" id="tab-general" data-bs-toggle="pill" data-bs-target="#pane-general" type="button" role="tab">Vista General</button>
+                        <button class="nav-link active rounded-pill fw-semibold" id="tab-general" data-bs-toggle="pill"
+                            data-bs-target="#pane-general" type="button" role="tab">Vista General</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link rounded-pill fw-semibold" id="tab-discapacidad" data-bs-toggle="pill" data-bs-target="#pane-discapacidad" type="button" role="tab">Por Discapacidad</button>
+                        <button class="nav-link rounded-pill fw-semibold" id="tab-discapacidad" data-bs-toggle="pill"
+                            data-bs-target="#pane-discapacidad" type="button" role="tab">Por Discapacidad</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link rounded-pill fw-semibold" id="tab-sector" data-bs-toggle="pill" data-bs-target="#pane-sector" type="button" role="tab">Por Sector</button>
+                        <button class="nav-link rounded-pill fw-semibold" id="tab-sector" data-bs-toggle="pill"
+                            data-bs-target="#pane-sector" type="button" role="tab">Por Sector</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link rounded-pill fw-semibold" id="tab-empresas" data-bs-toggle="pill" data-bs-target="#pane-empresas" type="button" role="tab">Empresas Top</button>
+                        <button class="nav-link rounded-pill fw-semibold" id="tab-empresas" data-bs-toggle="pill"
+                            data-bs-target="#pane-empresas" type="button" role="tab">Empresas Top</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link rounded-pill fw-semibold" id="tab-iso" data-bs-toggle="pill" data-bs-target="#pane-iso" type="button" role="tab">Métricas ISO</button>
+                        <button class="nav-link rounded-pill fw-semibold" id="tab-iso" data-bs-toggle="pill"
+                            data-bs-target="#pane-iso" type="button" role="tab">Métricas ISO</button>
                     </li>
                 </ul>
 
                 <!-- CONTENIDO TABS -->
                 <div class="tab-content pb-4" id="reportTabsContent">
-                    
+
                     <!-- VISTA GENERAL -->
                     <div class="tab-pane fade show active" id="pane-general" role="tabpanel">
                         <div class="row g-4">
@@ -174,9 +199,15 @@
                                     <div class="d-flex justify-content-between align-items-center mb-4">
                                         <h6 class="fw-bold mb-0">Tendencias Mensuales</h6>
                                         <div class="btn-group border rounded-pill p-1">
-                                            <button class="btn btn-sm btn-success rounded-pill px-3 fw-medium chart-type-btn" data-type="line">Línea</button>
-                                            <button class="btn btn-sm btn-light rounded-pill px-3 fw-medium chart-type-btn text-muted" data-type="area">Área</button>
-                                            <button class="btn btn-sm btn-light rounded-pill px-3 fw-medium chart-type-btn text-muted" data-type="bar">Barras</button>
+                                            <button
+                                                class="btn btn-sm btn-success rounded-pill px-3 fw-medium chart-type-btn"
+                                                data-type="line">Línea</button>
+                                            <button
+                                                class="btn btn-sm btn-light rounded-pill px-3 fw-medium chart-type-btn text-muted"
+                                                data-type="area">Área</button>
+                                            <button
+                                                class="btn btn-sm btn-light rounded-pill px-3 fw-medium chart-type-btn text-muted"
+                                                data-type="bar">Barras</button>
                                         </div>
                                     </div>
                                     <div style="height:300px; position: relative;">
@@ -187,7 +218,7 @@
                             <div class="col-md-4">
                                 <div class="card p-4 shadow-sm rounded-4 border-0 h-100">
                                     <h6 class="fw-bold mb-4">Resumen Período</h6>
-                                    
+
                                     <div class="p-4 rounded-3 text-white mb-3 shadow-sm bg-blue">
                                         <p class="small mb-1 text-white-50">Total Postulaciones</p>
                                         <h3 class="fw-bold mb-0" id="resumenPostulaciones">0</h3>
@@ -256,7 +287,8 @@
                                             <th class="py-3 px-3 text-muted fw-semibold">Empresa</th>
                                             <th class="py-3 px-3 text-muted fw-semibold">Sector</th>
                                             <th class="py-3 px-3 text-muted fw-semibold">Contrataciones</th>
-                                            <th class="py-3 px-3 text-muted fw-semibold text-center">Certificación ISO</th>
+                                            <th class="py-3 px-3 text-muted fw-semibold text-center">Certificación ISO
+                                            </th>
                                             <th class="py-3 px-3 text-muted fw-semibold text-center">Acción</th>
                                         </tr>
                                     </thead>
@@ -279,9 +311,11 @@
                                         <span class="text-success small fw-bold" id="isoEmpresasPerc">0%</span>
                                     </div>
                                     <h2 class="fw-bold mb-1" id="isoEmpresasVal">0</h2>
-                                    <small class="text-muted d-block mb-3">de <span id="isoEmpresasTotal">0</span> totales</small>
+                                    <small class="text-muted d-block mb-3">de <span id="isoEmpresasTotal">0</span>
+                                        totales</small>
                                     <div class="custom-progress">
-                                        <div class="custom-progress-bar bg-success" id="isoEmpresasBar" style="width: 0%;"></div>
+                                        <div class="custom-progress-bar bg-success" id="isoEmpresasBar"
+                                            style="width: 0%;"></div>
                                     </div>
                                 </div>
                             </div>
@@ -293,9 +327,11 @@
                                         <span class="text-success small fw-bold" id="isoOfertasPerc">0%</span>
                                     </div>
                                     <h2 class="fw-bold mb-1" id="isoOfertasVal">0</h2>
-                                    <small class="text-muted d-block mb-3">de <span id="isoOfertasTotal">0</span> totales</small>
+                                    <small class="text-muted d-block mb-3">de <span id="isoOfertasTotal">0</span>
+                                        totales</small>
                                     <div class="custom-progress">
-                                        <div class="custom-progress-bar bg-success" id="isoOfertasBar" style="width: 0%;"></div>
+                                        <div class="custom-progress-bar bg-success" id="isoOfertasBar"
+                                            style="width: 0%;"></div>
                                     </div>
                                 </div>
                             </div>
@@ -307,9 +343,11 @@
                                         <span class="text-success small fw-bold" id="isoUsuariosPerc">0%</span>
                                     </div>
                                     <h2 class="fw-bold mb-1" id="isoUsuariosVal">0</h2>
-                                    <small class="text-muted d-block mb-3">de <span id="isoUsuariosTotal">0</span> totales</small>
+                                    <small class="text-muted d-block mb-3">de <span id="isoUsuariosTotal">0</span>
+                                        totales</small>
                                     <div class="custom-progress">
-                                        <div class="custom-progress-bar bg-success" id="isoUsuariosBar" style="width: 0%;"></div>
+                                        <div class="custom-progress-bar bg-success" id="isoUsuariosBar"
+                                            style="width: 0%;"></div>
                                     </div>
                                 </div>
                             </div>
@@ -321,9 +359,11 @@
                                         <span class="text-success small fw-bold" id="isoSatisfaccionPerc">0%</span>
                                     </div>
                                     <h2 class="fw-bold mb-1" id="isoSatisfaccionVal">0</h2>
-                                    <small class="text-muted d-block mb-3">de <span id="isoSatisfaccionTotal">0</span> totales</small>
+                                    <small class="text-muted d-block mb-3">de <span id="isoSatisfaccionTotal">0</span>
+                                        totales</small>
                                     <div class="custom-progress">
-                                        <div class="custom-progress-bar bg-success" id="isoSatisfaccionBar" style="width: 0%;"></div>
+                                        <div class="custom-progress-bar bg-success" id="isoSatisfaccionBar"
+                                            style="width: 0%;"></div>
                                     </div>
                                 </div>
                             </div>
@@ -333,23 +373,27 @@
                             <h6 class="fw-medium mb-4">Cumplimiento de Normativas ISO</h6>
                             <div class="row g-3">
                                 <div class="col-md-3">
-                                    <div class="p-4 rounded-3 text-center text-white h-100 d-flex flex-column justify-content-center" style="background-color: #4CAF50;">
+                                    <div class="p-4 rounded-3 text-center text-white h-100 d-flex flex-column justify-content-center"
+                                        style="background-color: #4CAF50;">
                                         <small class="fw-semibold">ISO 30415 - Diversidad</small>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="p-4 rounded-3 text-center text-white h-100 d-flex flex-column justify-content-center" style="background-color: #1976D2;">
+                                    <div class="p-4 rounded-3 text-center text-white h-100 d-flex flex-column justify-content-center"
+                                        style="background-color: #1976D2;">
                                         <small class="fw-semibold">ISO 9999 - Productos de Apoyo</small>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="p-4 rounded-3 text-center text-white h-100 d-flex flex-column justify-content-center" style="background-color: #FF9800;">
+                                    <div class="p-4 rounded-3 text-center text-white h-100 d-flex flex-column justify-content-center"
+                                        style="background-color: #FF9800;">
                                         <small class="fw-semibold">ISO 21542 - Accesibilidad</small>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="p-4 rounded-3 text-center text-white h-100 d-flex flex-column justify-content-center" style="background-color: #9C27B0;">
-                                        <small class="fw-semibold">RGPD - Protección de Datos</small>
+                                    <div class="p-4 rounded-3 text-center text-white h-100 d-flex flex-column justify-content-center"
+                                        style="background-color: #9C27B0;">
+                                        <small class="fw-semibold">Ley 29733 - Protección de Datos</small>
                                     </div>
                                 </div>
                             </div>
@@ -373,17 +417,19 @@
                 </div>
                 <div class="modal-body pt-3 pb-4 px-4">
                     <div class="d-flex align-items-center mb-3">
-                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center text-primary fs-4 me-3" style="width: 50px; height: 50px;">
+                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center text-primary fs-4 me-3"
+                            style="width: 50px; height: 50px;">
                             <i class="fa fa-building"></i>
                         </div>
                         <div>
-                            <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-2 py-1 mb-1" id="modalEstadoEmpresa"><i class="fa fa-check me-1"></i>Verificada</span>
+                            <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-2 py-1 mb-1"
+                                id="modalEstadoEmpresa"><i class="fa fa-check me-1"></i>Verificada</span>
                             <div class="text-muted small" id="modalRucEmpresa">RUC: 000000000</div>
                         </div>
                     </div>
-                    
+
                     <p class="text-muted mb-4 pb-3 border-bottom" id="modalDescEmpresa">Descripción de la empresa...</p>
-                    
+
                     <div class="row g-3">
                         <div class="col-6">
                             <div class="p-3 bg-light rounded-3 text-center">
@@ -416,8 +462,10 @@
                     </div>
                 </div>
                 <div class="modal-footer border-0 pt-0 justify-content-center">
-                    <button type="button" class="btn btn-light rounded-pill px-4 fw-medium shadow-sm" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary rounded-pill px-4 fw-medium shadow-sm" id="btnIrPerfilEmpresa">Contactar</button>
+                    <button type="button" class="btn btn-light rounded-pill px-4 fw-medium shadow-sm"
+                        data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary rounded-pill px-4 fw-medium shadow-sm"
+                        id="btnIrPerfilEmpresa">Contactar</button>
                 </div>
             </div>
         </div>

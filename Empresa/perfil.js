@@ -207,6 +207,30 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
+    // Documentos y Certificaciones UI
+    document.querySelectorAll(".btn-view-doc").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const docName = btn.getAttribute("data-doc");
+            document.getElementById("modalDocTitle").textContent = "Documento verificado: " + docName;
+            new bootstrap.Modal(document.getElementById("modalDoc")).show();
+        });
+    });
+
+    const uploadCertBtn = document.querySelector(".btn-white.rounded-pill.border");
+    if(uploadCertBtn) {
+        uploadCertBtn.addEventListener("click", () => {
+            alert("✓ Sistema de Carga Protegido abriendo...");
+            // Real implementaría un document.getElementById('certInput').click();
+        });
+    }
+
+    const downloadCopyBtn = document.querySelector("#modalDoc .btn-orange");
+    if (downloadCopyBtn) {
+        downloadCopyBtn.addEventListener("click", () => {
+            alert("Iniciando descarga segura de su copia certificada...");
+        });
+    }
+
     // Inicializar
     await loadProfile();
 

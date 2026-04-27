@@ -39,7 +39,7 @@
             <li onclick="location.href='mensajes.html'"><i class="fa fa-envelope"></i> Mensajes</li>
             <li onclick="location.href='reporte.html'"><i class="fa fa-chart-pie"></i> Reportes</li>
             <li onclick="location.href='config_admin.html'"><i class="fa fa-gear"></i> Configuración</li>
-            <li id="logoutBtn" class="logout"><i class="fa fa-right-from-bracket"></i> Salir</li>
+            <li id="logoutBtn" class="logout" onclick="Auth.logout()" style="cursor:pointer;"><i class="fa fa-right-from-bracket"></i> Salir</li>
         </ul>
     </div>
 
@@ -178,7 +178,8 @@
                         <!-- Correo -->
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Correo</label>
-                            <input id="editCorreo" class="form-control" placeholder="correo@ejemplo.com">
+                            <input id="editCorreo" class="form-control" placeholder="correo@ejemplo.com" disabled>
+                            <small class="text-muted">El identificador no puede modificarse</small>
                         </div>
                         <!-- Teléfono -->
                         <div class="col-md-6">
@@ -187,14 +188,13 @@
                         </div>
                         <!-- Contraseña -->
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold">Nueva Contraseña</label>
-                            <div class="input-group">
-                                <input id="editPassword" type="password" class="form-control" placeholder="Dejar vacío para no cambiar">
-                                <button class="btn btn-outline-secondary" type="button" id="toggleEditPass">
-                                    <i class="fa fa-eye"></i>
+                            <label class="form-label fw-semibold text-danger">Seguridad de la cuenta</label>
+                            <div class="d-grid mt-1">
+                                <button type="button" class="btn btn-outline-danger" id="btnSendReset">
+                                    <i class="fa-solid fa-envelope-circle-check me-2"></i>Enviar enlace de reseteo
                                 </button>
                             </div>
-                            <small class="text-muted">Solo si deseas modificarla</small>
+                            <small class="text-muted">Solo el usuario puede cambiarla.</small>
                         </div>
                         <!-- Rol -->
                         <div class="col-md-6">

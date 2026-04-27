@@ -33,10 +33,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             estado: e.estado || "Pendiente",
             notas: e.notas || []
         }));
-        render();
+        await render();
     }
 
-    function render() {
+    let renderCounter = 0;
+
+    async function render() {
+        const currentRenderId = ++renderCounter; // Incrementar el ID para este ciclo
+        
         let list = empresas;
         const query = searchInput.value.toLowerCase();
 
@@ -49,40 +53,50 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         if (query) {
-            list = list.filter(e => 
-                (e.nombre || "").toLowerCase().includes(query) || 
+            list = list.filter(e =>
+                (e.nombre || "").toLowerCase().includes(query) ||
                 (e.correo || "").toLowerCase().includes(query) ||
                 (e.ruc || "").includes(query)
             );
         }
 
-        empresasContainer.innerHTML = "";
-        if (list.length === 0) {
-            empresasContainer.innerHTML = `<tr><td colspan="7" class="text-center py-5 text-muted">No se encontraron empresas.</td></tr>`;
-        } else {
-            list.forEach(emp => {
-                const info = Data.getContactInfo(emp.correo);
-                const tr = document.createElement("tr");
-                tr.innerHTML = `
+        // 1. Obtener toda la info asíncrona ANTES de tocar el DOM
+        const rowsHtmlPromises = list.map(async (emp) => {
+            const info = await Data.getContactInfo(emp.correo);
+            const fotoSrc = info.foto || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+            return `
+                <tr>
                     <td>
                         <div class="d-flex align-items-center gap-2">
-                            <img src="${info.foto}" class="rounded-circle" style="width:36px; height:36px; object-fit: cover; border:1px solid #eee;">
-                            <div><span class="fw-medium">${emp.nombre}</span><br><small class="text-muted">${emp.correo}</small></div>
+                            <img src="${fotoSrc}" class="rounded-circle" style="width:36px; height:36px; object-fit: cover; border:1px solid #eee;">
+                            <div><span class="fw-medium">${emp.nombre || emp.razonSocial || "—"}</span><br><small class="text-muted">${emp.correo}</small></div>
                         </div>
                     </td>
                     <td><small>${emp.ruc || "—"}</small></td>
-                    <td>${emp.representante || "—"}</td>
+                    <td>${emp.contacto?.nombre || emp.representante || "—"}</td>
                     <td><span class="badge bg-light text-dark border fw-normal">${emp.sector || "General"}</span></td>
-                    <td><small>${emp.region || "—"}</small></td>
+                    <td><small>${emp.ciudad || emp.region || "—"}</small></td>
                     <td><span class="badge ${getBadgeStyle(emp.estado)} rounded-pill">${emp.estado}</span></td>
                     <td class="text-center">
                         <button class="btn btn-sm btn-outline-primary border-0" onclick="verEmpresa('${emp.correo}')"><i class="fa fa-eye"></i></button>
                         <button class="btn btn-sm btn-outline-info border-0" onclick="verNotas('${emp.correo}')"><i class="fa fa-sticky-note"></i></button>
                         <button class="btn btn-sm btn-outline-danger border-0" onclick="eliminarEmpresa('${emp.correo}')"><i class="fa fa-trash"></i></button>
                     </td>
-                `;
-                empresasContainer.appendChild(tr);
-            });
+                </tr>
+            `;
+        });
+
+        // Esperar todo en paralelo
+        const rowsHtml = await Promise.all(rowsHtmlPromises);
+
+        // 2. Race Condition Check: Si el usuario apretó otro botón de filtro mientras esperábamos, abortar
+        if (currentRenderId !== renderCounter) return;
+
+        // 3. Modificar el DOM de un solo golpe (innerHTML)
+        if (list.length === 0) {
+            empresasContainer.innerHTML = `<tr><td colspan="7" class="text-center py-5 text-muted">No se encontraron empresas con esos criterios.</td></tr>`;
+        } else {
+            empresasContainer.innerHTML = rowsHtml.join('');
         }
 
         // Contadores
@@ -129,7 +143,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     window.eliminarEmpresa = async (correo) => {
         if (!confirm("¿Eliminar esta empresa definitivamente?")) return;
+        // Eliminar de ambas colecciones: usuarios y empresas
         await Data.deleteUser(correo);
+        try { await dbFirestore.collection("empresas").doc(correo).delete(); } catch(e) { console.warn("No se pudo borrar de empresas:", e); }
         await reloadData();
         alert("🗑️ Registro eliminado.");
     };
@@ -144,7 +160,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
 
         const nuevasNotas = [...(empresaSeleccionada.notas || []), nota];
-        await Data.updateUser(empresaSeleccionada.correo, { estado: nuevo, notas: nuevasNotas });
+        const updatePayload = { estado: nuevo, notas: nuevasNotas, validada: nuevo === "Verificada" };
+
+        // Actualizar en ambas colecciones: usuarios y empresas
+        await Data.updateUser(empresaSeleccionada.correo, updatePayload);
+        try {
+            await dbFirestore.collection("empresas").doc(empresaSeleccionada.correo).update(updatePayload);
+        } catch(e) {
+            console.warn("No se pudo actualizar colección empresas:", e);
+        }
         await reloadData();
         modalDetalle.hide();
         alert(`✓ Estado actualizado a ${nuevo}`);
@@ -184,14 +208,29 @@ document.addEventListener("DOMContentLoaded", async () => {
         await Auth.logout();
     };
 
-    // Init
+    // Init — Migración automática: sincroniza usuario con rol='empresa' → colección 'empresas'
     async function repairAndLoad() {
         try {
-            const empresasSnap = await dbFirestore.collection("empresas").limit(1).get();
-            if (empresasSnap.empty && window.data && window.data.empresas) {
-                console.log("🏭 Migrando empresas a la nube desde validación...");
-                for (const emp of window.data.empresas) {
-                    await dbFirestore.collection("empresas").doc(emp.correo).set(emp);
+            // Traer todos los usuarios y filtrar en JS (sin índice requerido)
+            const todosSnap = await dbFirestore.collection("usuarios").get();
+            const empresasDeUsuarios = todosSnap.docs
+                .map(d => d.data())
+                .filter(u => u.rol === "empresa");
+
+            if (empresasDeUsuarios.length > 0) {
+                const empresasSnap = await dbFirestore.collection("empresas").get();
+                const correosYaMigrados = new Set(empresasSnap.docs.map(d => d.id));
+
+                for (const userData of empresasDeUsuarios) {
+                    const correo = userData.correo || userData.email;
+                    if (correo && !correosYaMigrados.has(correo)) {
+                        await dbFirestore.collection("empresas").doc(correo).set({
+                            correo,
+                            nombre: userData.nombre || userData.razonSocial || "Empresa",
+                            ...userData
+                        });
+                        console.log(`✅ Empresa sincronizada: ${correo}`);
+                    }
                 }
             }
             await reloadData();
@@ -200,4 +239,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
     await repairAndLoad();
+
+
 });

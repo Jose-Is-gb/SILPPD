@@ -558,66 +558,86 @@ window.data = {
                 "nombre": "InclusiveLab #1",
                 "ruc": "2018612938",
                 "correo": "contacto1@inclusivelab.com",
+                "password": "Empresa123*",
                 "telefono": "989485452",
                 "direccion": "Avenida Principal 896, Arequipa",
-                "descripcion": "Empresa InclusiveLab comprometida con la inclusión laboral.",
+                "descripcion": "Empresa InclusiveLab comprometida con la inclusión.",
                 "representante": "Paola Torres",
                 "sector": "Tecnología",
                 "region": "Arequipa",
                 "fechaRegistro": "12/11/2025",
-                "estado": "Verificada"
+                "estado": "Verificada",
+                "certificaciones": "ISO 30415",
+                "adaptaciones": true,
+                "rol": "empresa"
             },
             {
                 "nombre": "Cloudify #2",
                 "ruc": "2068821488",
                 "correo": "contacto2@cloudify.com",
+                "password": "Empresa123*",
                 "telefono": "965662618",
                 "direccion": "Avenida Principal 837, Lima",
-                "descripcion": "Empresa Cloudify comprometida con la inclusión laboral.",
+                "descripcion": "Empresa Cloudify comprometida con la inclusión.",
                 "representante": "Pedro Torres",
                 "sector": "Tecnología",
                 "region": "Lima",
                 "fechaRegistro": "12/11/2025",
-                "estado": "Verificada"
+                "estado": "Verificada",
+                "certificaciones": "ISO 30415",
+                "adaptaciones": true,
+                "rol": "empresa"
             },
             {
                 "nombre": "Cloudify #3",
                 "ruc": "2078655745",
                 "correo": "contacto3@cloudify.com",
+                "password": "Empresa123*",
                 "telefono": "985638936",
                 "direccion": "Avenida Principal 940, Piura",
-                "descripcion": "Empresa Cloudify comprometida con la inclusión laboral.",
+                "descripcion": "Empresa Cloudify comprometida con la inclusión.",
                 "representante": "Miguel Castillo",
                 "sector": "Educación",
                 "region": "Piura",
                 "fechaRegistro": "12/11/2025",
-                "estado": "Verificada"
+                "estado": "Pendiente",
+                "certificaciones": "",
+                "adaptaciones": false,
+                "rol": "empresa"
             },
             {
                 "nombre": "PixelArt Studio #4",
                 "ruc": "2068964077",
                 "correo": "contacto4@pixelartstudio.com",
+                "password": "Empresa123*",
                 "telefono": "928935674",
                 "direccion": "Avenida Principal 516, Trujillo",
-                "descripcion": "Empresa PixelArt Studio comprometida con la inclusión laboral.",
+                "descripcion": "Empresa PixelArt Studio comprometida con la inclusión.",
                 "representante": "Pedro López",
                 "sector": "Diseño y Marketing",
                 "region": "Trujillo",
                 "fechaRegistro": "12/11/2025",
-                "estado": "Verificada"
+                "estado": "Verificada",
+                "certificaciones": "ISO 30415",
+                "adaptaciones": true,
+                "rol": "empresa"
             },
             {
                 "nombre": "EcoMarket #5",
                 "ruc": "2093211833",
                 "correo": "contacto5@ecomarket.com",
+                "password": "Empresa123*",
                 "telefono": "992684296",
                 "direccion": "Avenida Principal 308, Trujillo",
-                "descripcion": "Empresa EcoMarket comprometida con la inclusión laboral.",
+                "descripcion": "Empresa EcoMarket comprometida con la inclusión.",
                 "representante": "Paola Ruiz",
                 "sector": "Comercio",
                 "region": "Trujillo",
                 "fechaRegistro": "12/11/2025",
-                "estado": "Verificada"
+                "estado": "Verificada",
+                "certificaciones": "ISO 30415",
+                "adaptaciones": true,
+                "rol": "empresa"
             }
         ],
         "ofertas": [
@@ -871,4 +891,3 @@ window.data = {
     } else {
         console.log("ℹ TI_DATABASE ya existía en localStorage, no se sobrescribió.");
     }
-}

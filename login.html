@@ -146,34 +146,27 @@
         </div>
 
         <div class="modal-body">
+          <p class="text-secondary small mb-4">Ingresa tu correo electrónico registrado y te enviaremos un enlace para restablecer tu contraseña.</p>
 
           <div class="mb-3">
-            <label class="form-label">Correo registrado</label>
-            <input type="email" id="recoverEmail" class="form-control">
+            <label class="form-label fw-bold">Correo registrado</label>
+            <input type="email" id="recoverEmail" class="form-control" placeholder="tu@email.com">
           </div>
-
-          <div class="mb-3">
-            <label class="form-label">Nueva contraseña</label>
-            <input type="password" id="recoverPassword" class="form-control">
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Confirmar contraseña</label>
-            <input type="password" id="recoverPassword2" class="form-control">
-          </div>
-
         </div>
 
-        <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button id="btnRecoverPassword" class="btn btn-primary">
-            Cambiar contraseña
+        <div class="modal-footer border-0 pb-4 px-4">
+          <button class="btn btn-light rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Cancelar</button>
+          <button id="btnRecoverPassword" class="btn btn-primary rounded-pill px-4 fw-bold">
+            Enviar enlace
           </button>
         </div>
 
       </div>
     </div>
   </div>
+
+  <!-- Bootstrap JS (necesario para modales y dropdowns) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <!-- SCRIPTS DE FIREBASE (Modo Compat) -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -185,33 +178,53 @@
   <script src="BD/data.js"></script>
 
   <script>
-    // SCRIPT DE REPARACIÓN DE DATOS (ADMIN Y EMPRESAS)
+    // SCRIPT DE SEMBRADO Y REPARACIÓN SILENCIOSA (QA Testing)
     async function repairCloudData() {
+        const demoAccounts = [
+            { correo: "admin@talentoinclusivo.com", pass: "admin123", rol: "admin", nombre: "Administrador Demo" },
+            { 
+               correo: "empresa@talentoinclusivo.com", pass: "empresa123", rol: "empresa", nombre: "Empresa Inclusiva S.A.",
+               sector: "Tecnología e Informática", tamanio: "51-250 empleados", sitioWeb: "https://www.google.com" 
+            },
+            { correo: "usuario@talentoinclusivo.com", pass: "usuario123", rol: "usuario", nombre: "Usuario Candidato Demo" }
+        ];
+
         try {
-            // 1. Asegurar Admin
-            const adminEmail = "admin@talentoinclusivo.com";
-            const adminDoc = await dbFirestore.collection("usuarios").doc(adminEmail).get();
-            if (!adminDoc.exists) {
-                console.log("🛠️ Creando admin en Firestore...");
-                await dbFirestore.collection("usuarios").doc(adminEmail).set({
-                    nombre: "Administrador Sistema", correo: adminEmail, rol: "admin", fechaRegistro: new Date().toLocaleDateString()
-                });
+            // Guardamos un tracking interno del login para no desestabilizar la UI del cliente actual
+            const currentUser = authFirebase.currentUser;
+            let neededReset = false;
+
+            for (const acc of demoAccounts) {
+                try {
+                    // Sembrar en Firebase Auth
+                    await authFirebase.createUserWithEmailAndPassword(acc.correo, acc.pass);
+                    console.log(`✅ Cuenta Demo creada en Auth: ${acc.correo}`);
+                    neededReset = true;
+
+                    // Extender en Firebase Cloud Firestore (Perfil Base)
+                    let docData = { nombre: acc.nombre, correo: acc.correo, rol: acc.rol, fechaRegistro: new Date().toLocaleDateString() };
+                    await dbFirestore.collection("usuarios").doc(acc.correo).set(docData);
+                    
+                    if(acc.rol === "empresa") {
+                       await dbFirestore.collection("empresas").doc(acc.correo).set({ ...docData, sector: acc.sector, tamanio: acc.tamanio, sitioWeb: acc.sitioWeb });
+                    }
+                } catch (e) {
+                    if (e.code !== 'auth/email-already-in-use') {
+                        console.warn("Issue in QA Seeding:", e.code);
+                    }
+                }
             }
 
-            // 2. Asegurar Empresas (Migración desde data global)
-            const empresasSnap = await dbFirestore.collection("empresas").limit(1).get();
-            if (empresasSnap.empty && window.data && window.data.empresas) {
-                console.log("🏭 Migrando empresas a la nube...");
-                for (const emp of window.data.empresas) {
-                    await dbFirestore.collection("empresas").doc(emp.correo).set(emp);
-                }
-                console.log("✅ " + window.data.empresas.length + " empresas migradas.");
+            // Si creamos cuentas nuevas, el Auth por defecto nos "inicia sesión" con la última cuenta creada. Esto nos cierra limpiamente esa sesión fantasma.
+            if(neededReset && !currentUser) {
+                await authFirebase.signOut();
             }
+
         } catch (e) {
-            console.error("Error en reparación:", e);
+            console.error("Error en rutina QA Seed:", e);
         }
     }
-    // Ejecutar al cargar
+    // Ejecutar silenciosamente al cargar el módulo DOM
     window.addEventListener('load', repairCloudData);
   </script>
 

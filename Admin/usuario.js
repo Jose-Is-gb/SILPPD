@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         apellido: document.getElementById("editApellido"),
         correo: document.getElementById("editCorreo"),
         telefono: document.getElementById("editTelefono"),
-        password: document.getElementById("editPassword"),
+        telefono: document.getElementById("editTelefono"),
         descripcion: document.getElementById("editDescripcion"),
         discapacidad: document.getElementById("editDiscapacidad"),
         rol: document.getElementById("editRol")
@@ -31,43 +31,56 @@ document.addEventListener("DOMContentLoaded", async () => {
     let allUsers = [];
     let usuarioActual = null;
 
+    let renderCounter = 0;
+
     // 3. Renderizar Tabla (Asíncrona)
     async function renderUsuarios(lista) {
-        tablaUsuarios.innerHTML = "";
+        const currentRenderId = ++renderCounter;
         const rolActual = filtroRol.value;
 
         // Ajustar headers
-        document.getElementById("thCol3").textContent = rolActual === "empresa" ? "Sector" : "Discapacidad";
-        document.getElementById("thCol5").textContent = rolActual === "empresa" ? "Ubicación" : "Registro";
+        const thCol3 = document.getElementById("thCol3");
+        const thCol5 = document.getElementById("thCol5");
+        if(thCol3) thCol3.textContent = rolActual === "empresa" ? "Sector" : "Discapacidad";
+        if(thCol5) thCol5.textContent = rolActual === "empresa" ? "Ubicación" : "Registro";
 
         if (lista.length === 0) {
-            tablaUsuarios.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">No hay resultados.</td></tr>`;
+            if (currentRenderId === renderCounter) {
+                tablaUsuarios.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">No hay resultados.</td></tr>`;
+            }
             return;
         }
 
-        for (const u of lista) {
+        const promises = lista.map(async (u) => {
             const info = await Data.getContactInfo(u.correo);
+            const fotoSrc = info.foto || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
             const col3 = u.rol === "empresa" ? (u.sector || "General") : (u.discapacidad || "—");
             const col5 = u.rol === "empresa" ? (u.direccion || "—") : (u.fechaRegistro ? u.fechaRegistro.split('T')[0] : "—");
 
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-                <td>
-                    <div class="d-flex align-items-center gap-2">
-                        <img src="${info.foto}" class="rounded-circle shadow-sm" style="width:32px; height:32px; object-fit: cover; border:1px solid #eee;">
-                        <span class="fw-medium">${info.nombre || u.nombre}</span>
-                    </div>
-                </td>
-                <td class="small text-muted">${u.correo}</td>
-                <td><span class="badge ${u.rol === 'empresa' ? 'bg-info-light text-info' : 'bg-light text-dark'} fw-normal">${col3}</span></td>
-                <td><span class="badge ${u.rol === 'admin' ? 'bg-danger' : u.rol === 'empresa' ? 'bg-success' : 'bg-primary'}">${u.rol.toUpperCase()}</span></td>
-                <td class="text-secondary small">${col5}</td>
-                <td>
-                    <button class="btn btn-sm btn-outline-primary border-0" onclick="editarUsuario('${u.correo}')"><i class="fa fa-pen"></i></button>
-                    <button class="btn btn-sm btn-outline-danger border-0" onclick="eliminarUsuario('${u.correo}')"><i class="fa fa-trash"></i></button>
-                </td>
+            return `
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            <img src="${fotoSrc}" class="rounded-circle shadow-sm" style="width:32px; height:32px; object-fit: cover; border:1px solid #eee;">
+                            <span class="fw-medium">${info.nombre || u.nombre}</span>
+                        </div>
+                    </td>
+                    <td class="small text-muted">${u.correo}</td>
+                    <td><span class="badge ${u.rol === 'empresa' ? 'bg-info-light text-info' : 'bg-light text-dark'} fw-normal">${col3}</span></td>
+                    <td><span class="badge ${u.rol === 'admin' ? 'bg-danger' : u.rol === 'empresa' ? 'bg-success' : 'bg-primary'}">${(u.rol || 'usuario').toUpperCase()}</span></td>
+                    <td class="text-secondary small">${col5}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary border-0" onclick="editarUsuario('${u.correo}')"><i class="fa fa-pen"></i></button>
+                        <button class="btn btn-sm btn-outline-danger border-0" onclick="eliminarUsuario('${u.correo}')"><i class="fa fa-trash"></i></button>
+                    </td>
+                </tr>
             `;
-            tablaUsuarios.appendChild(tr);
+        });
+
+        const rowsHTML = await Promise.all(promises);
+        
+        if (currentRenderId === renderCounter) {
+            tablaUsuarios.innerHTML = rowsHTML.join("");
         }
     }
 
@@ -134,8 +147,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             rol: editForm.rol.value
         };
 
-        if (editForm.password.value) newData.password = editForm.password.value;
-
         try {
             await Data.updateUser(usuarioActual.correo, newData);
             await reloadData();
@@ -145,6 +156,22 @@ document.addEventListener("DOMContentLoaded", async () => {
             alert("Error al actualizar.");
         }
     });
+
+    const resetBtn = document.getElementById("btnSendReset");
+    if(resetBtn) {
+        resetBtn.addEventListener("click", async () => {
+            if(!editForm.correo.value) return;
+            try {
+                resetBtn.innerHTML = '<i class="fa fa-spinner fa-spin me-2"></i>Enviando...';
+                await authFirebase.sendPasswordResetEmail(editForm.correo.value);
+                alert("✓ Enlace de recuperación enviado exitosamente a: " + editForm.correo.value);
+            } catch(e) {
+                alert("Error: " + e.message);
+            } finally {
+                resetBtn.innerHTML = '<i class="fa-solid fa-envelope-circle-check me-2"></i>Enviar enlace de reseteo';
+            }
+        });
+    }
 
     // 6. Nuevo Usuario
     document.getElementById("guardarNuevoUsuario").addEventListener("click", async () => {

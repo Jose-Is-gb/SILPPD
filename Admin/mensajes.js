@@ -110,13 +110,26 @@ document.addEventListener("DOMContentLoaded", async () => {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    // 5. Eventos
+    // Eventos
     adminSendBtn.addEventListener("click", async () => {
-        const text = adminMsgInput.value.trim();
+        let text = adminMsgInput.value.trim();
+        
+        // Adjuntar mención si hay archivo
+        const files = document.getElementById("fileInput").files;
+        if (files && files.length > 0) {
+            const fNames = Array.from(files).map(f => f.name).join(", ");
+            text = text ? `${text}\n[📎 Archivo adjuntado: ${fNames}]` : `[📎 Archivo adjuntado: ${fNames}]`;
+        }
+
         if (!text || !activeChatEmail) return;
 
         await Data.sendMessage(soporteEmail, activeChatEmail, text);
         adminMsgInput.value = "";
+        
+        // Limpiar input y vista
+        document.getElementById("fileInput").value = "";
+        const preview = document.getElementById("filePreview");
+        if(preview) { preview.innerHTML = ""; preview.classList.add("d-none"); }
     });
 
     adminMsgInput.addEventListener("keypress", (e) => {
@@ -124,6 +137,41 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     searchInput.addEventListener("input", (e) => renderContacts(e.target.value));
+
+    // Eventos Adjuntos y Mock Actions
+    const btnAdjuntarArchivo = document.getElementById("btnAdjuntarArchivo");
+    const fileInput = document.getElementById("fileInput");
+    
+    if (btnAdjuntarArchivo && fileInput) {
+        btnAdjuntarArchivo.addEventListener("click", () => fileInput.click());
+        
+        fileInput.addEventListener("change", (e) => {
+            const preview = document.getElementById("filePreview");
+            if (!preview) return;
+            if (e.target.files.length > 0) {
+                const names = Array.from(e.target.files).map(f => `<span class="badge bg-light text-dark border p-2"><i class="fa fa-file me-2"></i>${f.name}</span>`).join("");
+                preview.innerHTML = names;
+                preview.classList.remove("d-none");
+            } else {
+                preview.classList.add("d-none");
+            }
+        });
+    }
+
+    const btnPlantilla = document.getElementById("btnPlantilla");
+    if(btnPlantilla) btnPlantilla.addEventListener("click", () => {
+        adminMsgInput.value = "Hola, verificamos tus datos y todo se encuentra en orden. ¿Te podemos ayudar en algo más?";
+    });
+
+    const btnAdjuntarGuia = document.getElementById("btnAdjuntarGuia");
+    if(btnAdjuntarGuia) btnAdjuntarGuia.addEventListener("click", () => {
+        adminMsgInput.value = "Adjunto te enviamos la guía de buenas prácticas ISO 30415: https://www.iso.org/obp/ui/#iso:std:iso:30415:ed-1:v1:en";
+    });
+
+    const btnExportarChat = document.getElementById("btnExportarChat");
+    if(btnExportarChat) btnExportarChat.addEventListener("click", () => {
+        alert("El historial del chat ha sido exportado.");
+    });
 
     // Filtros
     document.querySelectorAll(".filter-btn").forEach(btn => {

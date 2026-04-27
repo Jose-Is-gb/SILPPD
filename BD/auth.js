@@ -69,7 +69,18 @@ const Auth = {
             };
 
             await dbFirestore.collection("usuarios").doc(email).set(profile);
-            
+
+            // Si es empresa, también la guardamos en la colección 'empresas'
+            if (rol === "empresa") {
+                const empresaDoc = {
+                    correo: email,
+                    nombre,
+                    ...extraData,
+                    fechaRegistro: profile.fechaRegistro
+                };
+                await dbFirestore.collection("empresas").doc(email).set(empresaDoc);
+            }
+
             this.setActiveUser(profile);
             return true;
         } catch (error) {

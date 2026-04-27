@@ -28,8 +28,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             misOfertas.map(o => `<option value="${o.id}">${o.titulo}</option>`).join('');
     }
 
+    let renderCounter = 0;
+
     // 4. Renderizar Candidatos de la nube
     async function renderCandidates() {
+        const currentRenderId = ++renderCounter;
+        
         const query = searchInput.value.toLowerCase();
         const offerId = filterOffer.value;
         
@@ -62,61 +66,64 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
             if (postulaciones.length === 0) {
-                candidatesList.innerHTML = `
-                    <div class="col-12 text-center py-5">
-                        <p class="text-muted">No hay postulaciones en esta categoría.</p>
-                    </div>
-                `;
+                if (currentRenderId === renderCounter) {
+                    candidatesList.innerHTML = `
+                        <div class="col-12 text-center py-5">
+                            <p class="text-muted">No hay postulaciones en esta categoría.</p>
+                        </div>
+                    `;
+                }
                 return;
             }
 
-            candidatesList.innerHTML = "";
-            for (const p of postulaciones) {
+            const rowsPromises = postulaciones.map(async (p) => {
                 const oferta = misOfertas.find(o => String(o.id) === String(p.idOferta));
                 const info = await Data.getContactInfo(p.email);
                 
-                const div = document.createElement("div");
-                div.className = "col-12 mb-3";
-                div.innerHTML = `
-                    <div class="card border-0 shadow-sm rounded-4 p-4 candidate-card">
-                        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
-                            <div class="d-flex gap-3 align-items-center">
-                                <img src="${info.foto}" class="rounded-circle shadow-sm" style="width: 60px; height: 60px; object-fit: cover; border: 2px solid #fff;">
-                                <div>
-                                    <h5 class="fw-bold mb-1">${info.nombre || p.nombreCandidato || 'Candidato'}</h5>
-                                    <p class="text-secondary small mb-1">
-                                        Postulación a: <span class="text-orange fw-semibold">${oferta ? oferta.titulo : 'Oferta eliminada'}</span>
-                                    </p>
-                                    <p class="text-muted mb-0" style="font-size: 0.85rem;">
-                                        Fecha: ${p.fecha || "No especificada"}
-                                    </p>
+                return `
+                    <div class="col-12 mb-3">
+                        <div class="card border-0 shadow-sm rounded-4 p-4 candidate-card">
+                            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                                <div class="d-flex gap-3 align-items-center">
+                                    <img src="${info.foto}" class="rounded-circle shadow-sm" style="width: 60px; height: 60px; object-fit: cover; border: 2px solid #fff;">
+                                    <div>
+                                        <h5 class="fw-bold mb-1">${info.nombre || p.nombreCandidato || 'Candidato'}</h5>
+                                        <p class="text-secondary small mb-1">
+                                            Postulación a: <span class="text-orange fw-semibold">${oferta ? oferta.titulo : 'Oferta eliminada'}</span>
+                                        </p>
+                                        <p class="text-muted mb-0" style="font-size: 0.85rem;">
+                                            Fecha: ${p.fecha || "No especificada"}
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="d-flex flex-column gap-2">
-                                <div class="d-flex gap-2">
-                                    <button class="btn btn-green-light text-green btn-sm rounded-pill px-3" onclick="updatePostStatus('${p.id}', 'Aceptado')">
-                                        <i class="fa fa-check me-1"></i> Aceptar
-                                    </button>
-                                    <button class="btn btn-light btn-sm rounded-pill px-3" onclick="viewProfile('${p.email}')">
-                                        <i class="fa fa-user me-1"></i> Perfil
-                                    </button>
+                                <div class="d-flex flex-column gap-2">
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-green-light text-green btn-sm rounded-pill px-3" onclick="updatePostStatus('${p.id}', 'Aceptado')">
+                                            <i class="fa fa-check me-1"></i> Aceptar
+                                        </button>
+                                        <button class="btn btn-light btn-sm rounded-pill px-3" onclick="viewCV('${p.email}', '${p.nombreCandidato || info.nombre}')">
+                                            <i class="fa fa-file-pdf me-1"></i> Ver CV
+                                        </button>
+                                    </div>
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-light btn-sm rounded-pill px-3" onclick="contactarCandidato('${p.email}', '${info.nombre}', '${info.foto}')">
+                                            <i class="fa fa-envelope me-1"></i> Chat
+                                        </button>
+                                        <button class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="updatePostStatus('${p.id}', 'Rechazado')">
+                                            <i class="fa fa-times me-1"></i> Rechazar
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="d-flex gap-2">
-                                    <button class="btn btn-light btn-sm rounded-pill px-3" onclick="viewCV('${p.email}', '${p.nombreCandidato || info.nombre}')">
-                                        <i class="fa fa-file-pdf me-1"></i> Ver CV
-                                    </button>
-                                    <button class="btn btn-light btn-sm rounded-pill px-3" onclick="contactarCandidato('${p.email}', '${info.nombre}', '${info.foto}')">
-                                        <i class="fa fa-envelope me-1"></i> Chat
-                                    </button>
-                                </div>
-                                <button class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="updatePostStatus('${p.id}', 'Rechazado')">
-                                    <i class="fa fa-times me-1"></i> Rechazar
-                                </button>
                             </div>
                         </div>
                     </div>
                 `;
-                candidatesList.appendChild(div);
+            });
+
+            const rowsHtml = await Promise.all(rowsPromises);
+            
+            if (currentRenderId === renderCounter) {
+                candidatesList.innerHTML = rowsHtml.join('');
             }
         } catch (e) {
             console.error("Error renderizando postulaciones:", e);
@@ -132,8 +139,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.error("Error al actualizar:", e);
         }
     };
-
-    window.viewProfile = (email) => { alert("Perfil: " + email); };
 
     window.viewCV = async (email, nombre) => {
         try {

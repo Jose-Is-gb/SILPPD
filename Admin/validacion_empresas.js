@@ -185,5 +185,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     // Init
-    await reloadData();
+    async function repairAndLoad() {
+        try {
+            const empresasSnap = await dbFirestore.collection("empresas").limit(1).get();
+            if (empresasSnap.empty && window.data && window.data.empresas) {
+                console.log("🏭 Migrando empresas a la nube desde validación...");
+                for (const emp of window.data.empresas) {
+                    await dbFirestore.collection("empresas").doc(emp.correo).set(emp);
+                }
+            }
+            await reloadData();
+        } catch (e) {
+            console.error("Error en reparación validación:", e);
+        }
+    }
+    await repairAndLoad();
 });

@@ -21,6 +21,7 @@
                     <li class="nav-item mx-2"><a class="nav-link text-secondary" href="dashboard.html">Inicio</a></li>
                     <li class="nav-item mx-2"><a class="nav-link text-secondary" href="gestion_ofertas.html">Mis Ofertas</a></li>
                     <li class="nav-item mx-2"><a class="nav-link active text-dark fw-semibold" href="postulaciones_recibidas.html">Postulaciones</a></li>
+                    <li class="nav-item mx-2"><a class="nav-link text-secondary" href="mensajeria.html">Mensajes</a></li>
                     <li class="nav-item mx-2"><a class="nav-link text-secondary" href="perfil.html">Perfil</a></li>
                     <li class="nav-item ms-lg-3">
                         <a class="nav-link text-danger fw-bold" href="#" id="logoutBtn">Cerrar sesión</a>
@@ -84,6 +85,30 @@
         <!-- CANDIDATES LIST -->
         <div id="candidatesList" class="row g-3">
             <!-- Cargado dinámicamente -->
+        </div>
+    </div>
+
+    <!-- MODAL CV -->
+    <div class="modal fade" id="modalCV" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow">
+                <div class="modal-header border-0 pb-0 px-4 pt-4">
+                    <h5 class="modal-title fw-bold" id="cvModalTitle">Curriculum Vitae</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div id="cvContainer" class="bg-light rounded-4 p-4 text-center" style="min-height: 400px; border: 2px dashed #ccc;">
+                        <!-- Contenido dinámico -->
+                        <i class="fa fa-file-pdf text-danger mb-3" style="font-size: 4rem;"></i>
+                        <h4 class="fw-bold">Visualización de CV</h4>
+                        <p class="text-secondary">Simulación de documento PDF para testing.</p>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 px-4 pb-4">
+                    <button type="button" class="btn btn-light rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-orange text-white rounded-pill px-4 fw-bold shadow-sm" onclick="alert('Funcionalidad de descarga en curso...')">Descargar PDF</button>
+                </div>
+            </div>
         </div>
     </div>
 

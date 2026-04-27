@@ -105,6 +105,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         lista.forEach(emp => {
+            const info = Data.getContactInfo(emp.correo);
+            
             let estadoBadge, estadoIcon;
             switch (emp.estado) {
                 case "Verificada":
@@ -128,9 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
             row.innerHTML = `
                 <td>
                     <div class="d-flex align-items-center gap-2">
-                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width:36px;height:36px;font-size:0.85rem;font-weight:600;">
-                            ${(emp.nombre || "E").charAt(0)}
-                        </div>
+                        <img src="${info.foto}" class="rounded-circle" style="width:36px; height:36px; object-fit: cover;">
                         <div>
                             <span class="fw-semibold">${emp.nombre}</span>${notasBadge}
                             <br><small class="text-muted">${emp.correo || "—"}</small>

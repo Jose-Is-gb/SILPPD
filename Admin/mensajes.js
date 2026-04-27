@@ -58,28 +58,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Identify user vs company
     function getUserDetails(email) {
-        const db = getDB();
-        const user = db.usuarios?.find(u => u.correo === email);
-        if (user) {
-            return { 
-                name: user.nombre + " " + (user.apellido || ""), 
-                type: "Usuario", 
-                avatarColor: "bg-blue", 
-                initial: (user.nombre || email).charAt(0).toUpperCase(),
-                foto: user.foto || null
-            };
-        }
-        const empresa = db.empresas?.find(e => e.correo === email);
-        if (empresa) {
-            return { 
-                name: empresa.nombre || empresa.razonSocial || email, 
-                type: "Empresa", 
-                avatarColor: "bg-orange", 
-                initial: (empresa.nombre || empresa.razonSocial || email).charAt(0).toUpperCase(),
-                foto: empresa.foto || null
-            };
-        }
-        return { name: email, type: "Desconocido", avatarColor: "bg-teal", initial: email.charAt(0).toUpperCase(), foto: null };
+        const info = Data.getContactInfo(email);
+        return { 
+            name: info.nombre, 
+            type: info.rol === 'empresa' ? 'Empresa' : (info.rol === 'usuario' ? 'Usuario' : 'Desconocido'), 
+            avatarColor: info.color, 
+            initial: info.nombre.charAt(0).toUpperCase(),
+            foto: info.foto
+        };
     }
 
     // ===============================

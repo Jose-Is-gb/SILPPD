@@ -42,6 +42,27 @@ document.addEventListener("DOMContentLoaded", () => {
     countAceptadas.textContent = stats["Aceptado"];
     countRechazadas.textContent = stats["Rechazado"];
 
+    window.showDetails = (idOferta) => {
+        const p = postulaciones.find(x => x.idOferta === idOferta);
+        if (!p) return;
+
+        document.getElementById("infoPuesto").textContent = p.titulo;
+        document.getElementById("infoEmpresa").textContent = p.empresa;
+        document.getElementById("infoFecha").textContent = p.fecha;
+        
+        const badge = document.getElementById("infoEstado");
+        badge.textContent = p.estado;
+        badge.className = "badge " + (
+            p.estado === "Aceptado" ? "bg-success" :
+            p.estado === "Rechazado" ? "bg-danger" :
+            p.estado === "En revisión" ? "bg-primary" :
+            "bg-warning"
+        );
+
+        const modal = new bootstrap.Modal(document.getElementById('detailModal'));
+        modal.show();
+    };
+
     // --- Renderizar tabla ---
     tableBody.innerHTML = "";
     postulaciones.forEach(p => {
@@ -65,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <span class="badge ${badgeClass} text-uppercase px-3">${p.estado}</span>
             </td>
             <td class="text-end pe-4">
-                <button class="btn btn-light btn-sm rounded-pill px-3 fw-bold border shadow-xs" onclick="alert('Funcionalidad próximamente: Ver detalles de la postulación')">
+                <button class="btn btn-light btn-sm rounded-pill px-3 fw-bold border shadow-xs" onclick="showDetails(${p.idOferta})">
                     <i class="fa fa-eye me-1"></i> Detalles
                 </button>
             </td>

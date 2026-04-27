@@ -20,6 +20,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const chatHeader = document.getElementById("chatHeader");
     const messageInput = document.getElementById("messageInput");
     const sendBtn = document.getElementById("sendBtn");
+    const attachBtn = document.getElementById("attachBtn");
+    const attachInput = document.getElementById("attachInput");
+
+    // Lógica de archivos
+    attachBtn.onclick = () => attachInput.click();
+    attachInput.onchange = () => {
+        const file = attachInput.files[0];
+        if (file) {
+            messageInput.value = `[Documento: ${file.name}]`;
+            messageInput.focus();
+        }
+    };
 
     let activeChat = null;
 
@@ -88,10 +100,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         contactos.forEach(contactoCorreo => {
+            const info = Data.getContactInfo(contactoCorreo);
             const li = document.createElement("li");
-            li.className = "list-group-item list-group-item-action";
-            li.innerHTML = `<i class="fa fa-user-circle me-2 text-primary"></i>${getNombrePorCorreo(contactoCorreo)}`;
-            li.onclick = () => openChat(contactoCorreo);
+            li.className = `list-group-item list-group-item-action d-flex align-items-center ${activeChat === contactoCorreo ? 'active bg-primary text-white' : ''}`;
+            li.innerHTML = `
+                <img src="${info.foto}" class="rounded-circle me-3" style="width: 35px; height: 35px; object-fit: cover;">
+                <span>${info.nombre}</span>
+            `;
+            li.onclick = () => openChat(contactoCorreo, info.nombre, info.foto);
             chatList.appendChild(li);
         });
 
@@ -131,10 +147,20 @@ document.addEventListener("DOMContentLoaded", () => {
     // ===============================
     // Abrir conversación existente
     // ===============================
-    function openChat(contactEmail) {
+    function openChat(contactEmail, nombre, foto) {
         activeChat = contactEmail;
-        chatHeader.textContent = `Conversación con ${getNombrePorCorreo(contactEmail)}`;
+        const info = foto ? { nombre, foto } : Data.getContactInfo(contactEmail);
+        chatHeader.innerHTML = `
+            <div class="d-flex align-items-center">
+                <img src="${info.foto}" class="rounded-circle me-3" style="width: 40px; height: 40px; object-fit: cover;">
+                <div>
+                    <h6 class="mb-0">${info.nombre}</h6>
+                    <small class="text-success" style="font-size: 0.75rem;">Online</small>
+                </div>
+            </div>
+        `;
         renderMessages();
+        loadChats();
     }
 
     // ===============================

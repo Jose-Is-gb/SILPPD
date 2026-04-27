@@ -80,21 +80,25 @@ document.addEventListener("DOMContentLoaded", () => {
             const isFeatured = index % 5 === 0;
             const featuredHtml = isFeatured ? '<span class="featured-tag">Nuevo</span>' : '';
 
+            // Obtener logo de la empresa
+            const db = Data.getDB();
+            const empresaInfo = db.empresas.find(e => e.nombre === oferta.empresa) || db.usuarios.find(u => u.nombre === oferta.empresa);
+            const logo = empresaInfo ? (empresaInfo.fotoEmpresa || empresaInfo.foto || "https://cdn-icons-png.flaticon.com/512/186/186100.png") : "https://cdn-icons-png.flaticon.com/512/186/186100.png";
+
             card.innerHTML = `
                 <div class="card offer-card shadow-sm h-100 p-4 border-0 position-relative" data-id="${oferta.id}">
                     ${featuredHtml}
-                    <div class="offer-icon-wrapper mb-3">
-                        <i class="fa-solid fa-briefcase"></i>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <h5 class="fw-bold text-dark mb-1">${oferta.titulo}</h5>
-                        <div class="d-flex align-items-center text-muted small">
-                            <i class="fa-solid fa-hotel me-2"></i>
-                            <span>${oferta.empresa}</span>
+                    <div class="mb-3 d-flex align-items-center">
+                        <img src="${logo}" class="rounded-circle shadow-sm me-3" style="width: 45px; height: 45px; object-fit: cover;">
+                        <div>
+                            <h5 class="fw-bold text-dark mb-1" style="font-size: 1rem;">${oferta.titulo}</h5>
+                            <div class="d-flex align-items-center text-muted small">
+                                <i class="fa-solid fa-hotel me-2"></i>
+                                <span>${oferta.empresa}</span>
+                            </div>
                         </div>
                     </div>
-
+                    
                     <p class="text-muted small mb-4 flex-grow-1">${oferta.descripcion.substring(0, 100)}...</p>
                     
                     <div class="d-flex justify-content-between align-items-center mt-auto">
@@ -103,7 +107,6 @@ document.addEventListener("DOMContentLoaded", () => {
                             <i class="fa-regular fa-calendar-check me-1"></i> ${oferta.fecha}
                         </div>
                     </div>
-                    <button class="btn btn-link stretched-link p-0 d-none"></button>
                 </div>
             `;
 
@@ -127,6 +130,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (modalCompany) modalCompany.textContent = oferta.empresa;
         if (modalDate) modalDate.textContent = oferta.fecha;
         if (modalDiscapacidad) modalDiscapacidad.textContent = oferta.discapacidad;
+        
+        resetModalButtons(oferta.id);
 
         const myModal = new bootstrap.Modal(document.getElementById("offerModal"));
         myModal.show();
@@ -156,6 +161,30 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         renderOffers(filtradas);
+    });
+
+    // 3.2 Guardar / Favoritos
+    const saveBtn = document.getElementById("saveBtn");
+    saveBtn.addEventListener("click", () => {
+        if (!selectedOffer) return;
+
+        const db = Data.getDB();
+        if (!db.favoritos) db.favoritos = [];
+
+        const index = db.favoritos.indexOf(selectedOffer.id);
+        if (index === -1) {
+            db.favoritos.push(selectedOffer.id);
+            saveBtn.innerHTML = '<i class="fa-solid fa-star text-warning"></i> Guardado';
+            saveBtn.classList.add("btn-light");
+            saveBtn.classList.remove("btn-outline-primary");
+        } else {
+            db.favoritos.splice(index, 1);
+            saveBtn.innerHTML = '<i class="fa-regular fa-star"></i> Guardar';
+            saveBtn.classList.remove("btn-light");
+            saveBtn.classList.add("btn-outline-primary");
+        }
+
+        Data.saveDB(db);
     });
 
     // ===============================
@@ -195,10 +224,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
         Data.saveDB(db);
 
-        alert(` Te has postulado correctamente a: ${selectedOffer.titulo}`);
+        // Feedback mejorado
+        postularBtn.disabled = true;
+        postularBtn.innerHTML = '<i class="fa fa-spinner fa-spin me-2"></i> Procesando...';
 
-        bootstrap.Modal.getInstance(document.getElementById("offerModal")).hide();
+        setTimeout(() => {
+            alert(`✅ ¡Éxito! Te has postulado correctamente a: ${selectedOffer.titulo}.\n\nPuedes ver el progreso en la sección de Seguimiento.`);
+            bootstrap.Modal.getInstance(document.getElementById("offerModal")).hide();
+            postularBtn.disabled = false;
+            postularBtn.innerHTML = '<i class="fa fa-check me-2"></i> Postular ahora';
+        }, 1000);
     });
+
+    // Reset buttons when opening modal
+    function resetModalButtons(ofertaId) {
+        const db = Data.getDB();
+        const esFavorito = (db.favoritos || []).includes(ofertaId);
+        
+        if (esFavorito) {
+            saveBtn.innerHTML = '<i class="fa-solid fa-star text-warning"></i> Guardado';
+            saveBtn.classList.add("btn-light");
+            saveBtn.classList.remove("btn-outline-primary");
+        } else {
+            saveBtn.innerHTML = '<i class="fa-regular fa-star"></i> Guardar';
+            saveBtn.classList.remove("btn-light");
+            saveBtn.classList.add("btn-outline-primary");
+        }
+    }
 
     // ===============================
     // Cerrar sesión

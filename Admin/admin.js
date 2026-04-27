@@ -48,17 +48,21 @@ document.addEventListener("DOMContentLoaded", () => {
         db.usuarios.slice(-3).forEach(u => {
             actividades.push({
                 tipo: "Usuario",
-                mensaje: `Nuevo usuario registrado: <strong>${u.nombre}</strong>`,
-                fecha: parseFecha(u.fechaRegistro)
+                mensaje: `Nuevo usuario: <strong>${u.nombre}</strong>`,
+                fecha: parseFecha(u.fechaRegistro),
+                email: u.correo
             });
         });
 
         // --- Últimas ofertas ---
         db.ofertas.slice(-3).forEach(o => {
+            // Busquemos el correo de la empresa por el nombre (en este mock el nombre es el ID usualmente o link)
+            const empresa = db.empresas.find(e => e.nombre === o.empresa);
             actividades.push({
                 tipo: "Oferta",
-                mensaje: `Oferta publicada: <strong>${o.titulo}</strong>`,
-                fecha: parseFecha(o.fecha || o.fechaPublicacion)
+                mensaje: `Oferta: <strong>${o.titulo}</strong>`,
+                fecha: parseFecha(o.fecha || o.fechaPublicacion),
+                email: empresa ? empresa.correo : "soporte@talentoinclusivo.com"
             });
         });
 
@@ -66,8 +70,9 @@ document.addEventListener("DOMContentLoaded", () => {
         db.empresas.slice(-3).forEach(e => {
             actividades.push({
                 tipo: "Empresa",
-                mensaje: `Nueva empresa registrada: <strong>${e.nombre}</strong>`,
-                fecha: parseFecha(e.fechaRegistro)
+                mensaje: `Empresa: <strong>${e.nombre}</strong>`,
+                fecha: parseFecha(e.fechaRegistro),
+                email: e.correo
             });
         });
 
@@ -79,13 +84,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
         listaActividad.innerHTML = recientes.length
             ? recientes
-                .map(
-                    a => `
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span>${a.mensaje}</span>
-                    <small class="text-muted">${a.fecha.toLocaleDateString("es-PE")}</small>
-                </li>`
-                )
+                .map(a => {
+                    const info = Data.getContactInfo(a.email);
+                    return `
+                    <li class="list-group-item d-flex align-items-center justify-content-between py-3">
+                        <div class="d-flex align-items-center">
+                            <img src="${info.foto}" class="rounded-circle me-3" style="width: 32px; height: 32px; object-fit: cover;">
+                            <span>${a.mensaje}</span>
+                        </div>
+                        <small class="text-muted pe-2">${a.fecha.toLocaleDateString("es-PE")}</small>
+                    </li>`;
+                })
                 .join("")
             : `<li class="list-group-item text-muted">No hay actividad reciente.</li>`;
     }

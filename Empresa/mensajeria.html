@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mensajería - Talento Inclusivo</title>
+    <title>Mensajería Empresa - Talento Inclusivo</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
@@ -17,27 +17,25 @@
 <body class="bg-light">
 
     <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top shadow-sm px-4">
-        <div class="container-fluid">
-            <a class="navbar-brand fw-bold d-flex align-items-center" href="user_home.html">
-                <i class="fa fa-shield-halved me-2"></i> Talento Inclusivo
+    <nav class="navbar navbar-expand-lg navbar-dark bg-white py-3 border-bottom sticky-top">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold d-flex align-items-center" href="dashboard.html">
+                <span style="color: #ff9800;"><i class="fa fa-wheelchair me-2"></i> Talento Inclusivo</span>
             </a>
 
-            <button class="navbar-toggler border-0" data-bs-toggle="collapse" data-bs-target="#menu">
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div id="menu" class="collapse navbar-collapse">
                 <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item"><a class="nav-link px-3" href="user_home.html"><i class="fa fa-home-alt me-1"></i> Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link px-3" href="perfil.html"><i class="fa fa-user me-1"></i> Perfil</a></li>
-                    <li class="nav-item"><a class="nav-link active fw-bold px-3" href="mensajeria.html"><i class="fa fa-envelope me-1"></i> Mensajes</a></li>
-                    <li class="nav-item"><a class="nav-link px-3" href="validacion_ofertas.html"><i class="fa fa-briefcase me-1"></i> Ofertas</a></li>
-                    <li class="nav-item"><a class="nav-link px-3" href="seguimiento.html"><i class="fa fa-tasks me-1"></i> Seguimiento</a></li>
+                    <li class="nav-item mx-2"><a class="nav-link text-secondary" href="dashboard.html">Inicio</a></li>
+                    <li class="nav-item mx-2"><a class="nav-link text-secondary" href="gestion_ofertas.html">Mis Ofertas</a></li>
+                    <li class="nav-item mx-2"><a class="nav-link text-secondary" href="postulaciones_recibidas.html">Postulaciones</a></li>
+                    <li class="nav-item mx-2"><a class="nav-link active text-dark fw-bold" href="mensajeria.html">Mensajes</a></li>
+                    <li class="nav-item mx-2"><a class="nav-link text-secondary" href="perfil.html">Perfil</a></li>
                     <li class="nav-item ms-lg-3">
-                        <button class="btn btn-outline-light rounded-pill px-4 shadow-sm" id="logoutBtn">
-                            <i class="fa fa-sign-out-alt me-1"></i> Salir
-                        </button>
+                        <a class="nav-link text-danger fw-bold" href="#" id="logoutBtn">Cerrar sesión</a>
                     </li>
                 </ul>
             </div>
@@ -48,8 +46,8 @@
     <div class="container py-5">
         <div class="row align-items-center mb-4">
             <div class="col-md-6">
-                <h3 class="fw-bold text-dark mb-0">Centro de Mensajes</h3>
-                <p class="text-muted small mb-0">Resuelve tus dudas con las empresas y soporte.</p>
+                <h3 class="fw-bold text-dark mb-0">Centro de Mensajería</h3>
+                <p class="text-muted small mb-0">Comunícate con candidatos y soporte técnico.</p>
             </div>
         </div>
 
@@ -58,12 +56,12 @@
             <div class="col-lg-4">
                 <div class="card border-0 shadow-sm rounded-4 overflow-hidden chat-list-card">
                     <div class="card-header bg-white border-bottom py-3 px-4">
-                        <h6 class="fw-bold mb-0">Mis Conversaciones</h6>
+                        <h6 class="fw-bold mb-0">Bandeja de Entrada</h6>
                     </div>
                     <div class="chat-search p-3 bg-white border-bottom">
                         <div class="input-group input-group-sm">
                             <span class="input-group-text bg-light border-0"><i class="fa fa-search opacity-50"></i></span>
-                            <input type="text" class="form-control bg-light border-0" placeholder="Buscar chat...">
+                            <input type="text" id="chatSearch" class="form-control bg-light border-0" placeholder="Buscar conversación...">
                         </div>
                     </div>
                     <div class="list-group list-group-flush chat-list-items" id="chatList">
@@ -76,19 +74,19 @@
             <div class="col-lg-8">
                 <div class="card border-0 shadow-sm rounded-4 chat-window-card">
                     <div class="card-header bg-white py-3 px-4 border-bottom d-flex align-items-center" id="chatHeader">
-                        <div class="me-3 bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                        <div class="me-3 bg-orange-light text-orange rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background-color: #fff3e0;">
                             <i class="fa fa-comments"></i>
                         </div>
                         <div>
-                            <h6 class="fw-bold mb-0">Chat de Soporte</h6>
-                            <small class="text-success small fw-bold">Online</small>
+                            <h6 class="fw-bold mb-0" id="activeChatName">Selecciona un chat</h6>
+                            <small class="text-success small fw-bold" id="activeChatStatus"></small>
                         </div>
                     </div>
 
                     <div class="card-body chat-body" id="chatBody">
                         <div class="empty-chat text-center my-auto py-5 opacity-50">
-                            <i class="fa fa-comment-dots fa-4x mb-3 text-primary opacity-25"></i>
-                            <p class="fw-medium">Selecciona un chat para comenzar la conversación</p>
+                            <i class="fa fa-comment-dots fa-4x mb-3 text-orange opacity-25"></i>
+                            <p class="fw-medium">Selecciona una conversación para responder a candidatos</p>
                         </div>
                     </div>
 
@@ -99,7 +97,7 @@
                                 <i class="fa fa-paperclip text-muted"></i>
                             </button>
                             <input type="text" id="messageInput" class="form-control border-0 bg-light" placeholder="Escribe un mensaje...">
-                            <button class="btn btn-primary rounded-end-pill px-4 fw-bold shadow-sm" id="sendBtn">
+                            <button class="btn btn-orange rounded-end-pill px-4 fw-bold shadow-sm" id="sendBtn">
                                 <i class="fa fa-paper-plane"></i>
                             </button>
                         </div>
@@ -109,13 +107,12 @@
         </div>
     </div>
 
-    <footer class="bg-white border-top py-5 mt-auto">
-        <div class="container lead text-muted small text-center">© 2025 Talento Inclusivo • Bajo Normativa ISO/IEC</div>
+    <footer class="bg-white border-top py-4 mt-auto">
+        <div class="container text-muted small text-center">© 2025 Talento Inclusivo • Bajo Normativa ISO/IEC 25010</div>
     </footer>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../init_data.js"></script>
     <script src="../BD/auth.js"></script>
     <script src="../BD/data.js"></script>
     <script src="mensajeria.js"></script>

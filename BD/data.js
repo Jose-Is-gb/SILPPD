@@ -195,6 +195,48 @@ const Data = {
     getPostulaciones() {
         const db = this.getDB();
         return db.postulaciones || [];
+    },
+
+    // ===============================
+    // HELPERS DE CONSISTENCIA
+    // ===============================
+    getContactInfo(email) {
+        if (email === "soporte@talentoinclusivo.com") {
+            return {
+                nombre: "Soporte Talento Inclusivo",
+                foto: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png", // Icono soporte
+                rol: "soporte",
+                color: "bg-primary"
+            };
+        }
+
+        const db = this.getDB();
+        const user = db.usuarios.find(u => u.correo === email);
+        if (user) {
+            return {
+                nombre: (user.nombre + " " + (user.apellido || "")).trim(),
+                foto: user.foto || "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+                rol: "usuario",
+                color: "bg-blue"
+            };
+        }
+
+        const empresa = db.empresas.find(e => e.correo === email);
+        if (empresa) {
+            return {
+                nombre: empresa.nombre || empresa.razonSocial || "Empresa",
+                foto: empresa.fotoEmpresa || "https://cdn-icons-png.flaticon.com/512/186/186100.png", // Icono empresa
+                rol: "empresa",
+                color: "bg-orange"
+            };
+        }
+
+        return {
+            nombre: email,
+            foto: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+            rol: "desconocido",
+            color: "bg-secondary"
+        };
     }
 
 };

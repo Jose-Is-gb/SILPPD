@@ -68,14 +68,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         candidatesList.innerHTML = postulaciones.map(p => {
             const oferta = misOfertas.find(o => o.id == p.idOferta);
+            const info = Data.getContactInfo(p.email);
             return `
                 <div class="col-12 mb-3">
                     <div class="card border-0 shadow-sm rounded-4 p-4 candidate-card">
                         <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
                             <div class="d-flex gap-3 align-items-center">
-                                <div class="avatar bg-blue-light text-blue rounded-circle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; font-size: 1.5rem;">
-                                    ${p.nombreCandidato ? p.nombreCandidato.charAt(0) : 'U'}
-                                </div>
+                                <img src="${info.foto}" class="rounded-circle shadow-sm" style="width: 60px; height: 60px; object-fit: cover;">
                                 <div>
                                     <h5 class="fw-bold mb-1">${p.nombreCandidato || 'Candidato'}</h5>
                                     <p class="text-secondary small mb-1">
@@ -92,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             </div>
                             <div class="d-flex flex-column gap-2">
                                 <div class="d-flex gap-2">
-                                    <button class="btn btn-green-light text-green btn-sm rounded-pill px-3" onclick="updateStatus(${p.idOferta}, '${p.email}', 'Aceptado')">
+                                    <button class="btn btn-green-light text-green btn-sm rounded-pill px-3" onclick="updateStatus('${p.idOferta}', '${p.email}', 'Aceptado')">
                                         <i class="fa fa-check me-1"></i> Aceptar
                                     </button>
                                     <button class="btn btn-light btn-sm rounded-pill px-3" onclick="viewProfile('${p.email}')">
@@ -100,14 +99,14 @@ document.addEventListener("DOMContentLoaded", () => {
                                     </button>
                                 </div>
                                 <div class="d-flex gap-2">
-                                    <button class="btn btn-light btn-sm rounded-pill px-3" onclick="alert('Descargando CV...')">
+                                    <button class="btn btn-light btn-sm rounded-pill px-3" onclick="viewCV('${p.nombreCandidato}')">
                                         <i class="fa fa-file-pdf me-1"></i> Ver CV
                                     </button>
-                                    <button class="btn btn-light btn-sm rounded-pill px-3" onclick="alert('Iniciando chat...')">
+                                    <button class="btn btn-light btn-sm rounded-pill px-3" onclick="contactarCandidato('${p.email}', '${p.nombreCandidato}')">
                                         <i class="fa fa-envelope me-1"></i> Contactar
                                     </button>
                                 </div>
-                                <button class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="updateStatus(${p.idOferta}, '${p.email}', 'Rechazado')">
+                                <button class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="updateStatus('${p.idOferta}', '${p.email}', 'Rechazado')">
                                     <i class="fa fa-times me-1"></i> Rechazar
                                 </button>
                             </div>
@@ -130,7 +129,18 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     window.viewProfile = (email) => {
-        alert("Visualizando perfil de: " + email);
+        alert("Visualizando perfil extendido de: " + email);
+    };
+
+    window.viewCV = (nombre) => {
+        document.getElementById("cvModalTitle").textContent = "CV - " + nombre;
+        const modal = new bootstrap.Modal(document.getElementById('modalCV'));
+        modal.show();
+    };
+
+    window.contactarCandidato = (email, nombre) => {
+        // Redirigir a mensajería con el parámetro del contacto
+        window.location.href = `mensajeria.html?sendto=${email}&nombre=${encodeURIComponent(nombre)}`;
     };
 
     // Eventos

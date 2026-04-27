@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="dashboard.css">
 </head>
+
 <body class="bg-light">
 
     <!-- NAVBAR -->
@@ -19,9 +21,14 @@
             <div id="menu" class="collapse navbar-collapse">
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item mx-2"><a class="nav-link text-secondary" href="dashboard.html">Inicio</a></li>
-                    <li class="nav-item mx-2"><a class="nav-link text-secondary" href="gestion_ofertas.html">Mis Ofertas</a></li>
-                    <li class="nav-item mx-2"><a class="nav-link text-secondary" href="postulaciones_recibidas.html">Postulaciones</a></li>
-                    <li class="nav-item mx-2"><a class="nav-link active text-dark fw-semibold" href="perfil.html">Perfil</a></li>
+                    <li class="nav-item mx-2"><a class="nav-link text-secondary" href="gestion_ofertas.html">Mis
+                            Ofertas</a></li>
+                    <li class="nav-item mx-2"><a class="nav-link text-secondary"
+                            href="postulaciones_recibidas.html">Postulaciones</a></li>
+                    <li class="nav-item mx-2"><a class="nav-link text-secondary"
+                            href="mensajeria.html">Mensajes</a></li>
+                    <li class="nav-item mx-2"><a class="nav-link active text-dark fw-semibold"
+                            href="perfil.html">Perfil</a></li>
                     <li class="nav-item ms-lg-3">
                         <a class="nav-link text-danger fw-bold" href="#" id="logoutBtn">Cerrar sesión</a>
                     </li>
@@ -41,7 +48,8 @@
             <div class="col-lg-4">
                 <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
                     <div class="text-center">
-                        <div class="logo-container bg-orange-light text-orange rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 100px; height: 100px; font-size: 2.5rem;">
+                        <div class="logo-container bg-orange-light text-orange rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"
+                            style="width: 100px; height: 100px; font-size: 2.5rem;">
                             <i class="fa fa-building"></i>
                         </div>
                         <h4 class="fw-bold mb-1" id="sideName">Empresa S.A.</h4>
@@ -49,7 +57,8 @@
                         <div class="d-flex align-items-center justify-content-center text-green small fw-semibold mb-3">
                             <i class="fa fa-check-circle me-1"></i> Empresa verificada
                         </div>
-                        <button class="btn btn-outline-secondary btn-sm rounded-pill px-3 mb-4">
+                        <input type="file" id="logoInput" class="d-none">
+                        <button class="btn btn-outline-secondary btn-sm rounded-pill px-3 mb-4" id="logoBtn">
                             <i class="fa fa-edit me-1"></i> Cambiar logo
                         </button>
                     </div>
@@ -57,7 +66,7 @@
                     <div class="company-quick-info small border-top pt-4">
                         <div class="d-flex align-items-center mb-3">
                             <i class="fa fa-location-dot text-muted me-3" style="width: 20px;"></i>
-                            <span class="text-secondary" id="sideLocation">Madrid, España</span>
+                            <span class="text-secondary" id="sideLocation">Lima, Perú</span>
                         </div>
                         <div class="d-flex align-items-center mb-3">
                             <i class="fa fa-users text-muted me-3" style="width: 20px;"></i>
@@ -73,7 +82,7 @@
                         </div>
                         <div class="d-flex align-items-center mb-3">
                             <i class="fa fa-phone text-muted me-3" style="width: 20px;"></i>
-                            <span class="text-secondary" id="sidePhone">+34 912 345 678</span>
+                            <span class="text-secondary" id="sidePhone">+51 912 345 678</span>
                         </div>
                         <div class="d-flex align-items-center">
                             <i class="fa fa-calendar-days text-muted me-3" style="width: 20px;"></i>
@@ -102,7 +111,8 @@
                     </div>
 
                     <div class="certifications-box mt-4 border-top pt-3">
-                        <h6 class="fw-bold mb-3 small text-uppercase tracking-wider"><i class="fa fa-certificate text-orange me-2"></i> Certificaciones</h6>
+                        <h6 class="fw-bold mb-3 small text-uppercase tracking-wider"><i
+                                class="fa fa-certificate text-orange me-2"></i> Certificaciones</h6>
                         <div class="mb-2">
                             <div class="d-flex justify-content-between mb-1 small">
                                 <span class="text-secondary">ISO 30415</span>
@@ -114,7 +124,7 @@
                         </div>
                         <div>
                             <div class="d-flex justify-content-between mb-1 small">
-                                <span class="text-secondary">Distintivo LGD</span>
+                                <span class="text-secondary">Cumplimiento Ley 29973</span>
                                 <span class="text-green fw-bold">Cumple</span>
                             </div>
                             <div class="progress" style="height: 6px;">
@@ -130,16 +140,20 @@
                 <!-- TABS -->
                 <ul class="nav nav-pills bg-white p-1 rounded-4 shadow-sm mb-4" id="perfilTabs" role="tablist">
                     <li class="nav-item flex-fill" role="presentation">
-                        <button class="nav-link active w-100 rounded-pill" data-bs-toggle="pill" data-bs-target="#datosEmpresa" type="button">Datos Empresa</button>
+                        <button class="nav-link active w-100 rounded-pill" data-bs-toggle="pill"
+                            data-bs-target="#datosEmpresa" type="button">Datos Empresa</button>
                     </li>
                     <li class="nav-item flex-fill" role="presentation">
-                        <button class="nav-link w-100 rounded-pill" data-bs-toggle="pill" data-bs-target="#contacto" type="button">Contacto</button>
+                        <button class="nav-link w-100 rounded-pill" data-bs-toggle="pill" data-bs-target="#contacto"
+                            type="button">Contacto</button>
                     </li>
                     <li class="nav-item flex-fill" role="presentation">
-                        <button class="nav-link w-100 rounded-pill" data-bs-toggle="pill" data-bs-target="#inclusion" type="button">Inclusión</button>
+                        <button class="nav-link w-100 rounded-pill" data-bs-toggle="pill" data-bs-target="#inclusion"
+                            type="button">Inclusión</button>
                     </li>
                     <li class="nav-item flex-fill" role="presentation">
-                        <button class="nav-link w-100 rounded-pill" data-bs-toggle="pill" data-bs-target="#verificacion" type="button">Verificación</button>
+                        <button class="nav-link w-100 rounded-pill" data-bs-toggle="pill" data-bs-target="#verificacion"
+                            type="button">Verificación</button>
                     </li>
                 </ul>
 
@@ -154,10 +168,12 @@
                                 <h5 class="fw-bold mb-0">Información Legal y Corporativa</h5>
                             </div>
 
-                            <div class="alert alert-primary border-0 rounded-4 p-3 mb-4" style="background-color: #e3f2fd; color: #0d47a1;">
+                            <div class="alert alert-primary border-0 rounded-4 p-3 mb-4"
+                                style="background-color: #e3f2fd; color: #0d47a1;">
                                 <div class="d-flex align-items-center small">
                                     <i class="fa fa-info-circle me-3 fa-lg"></i>
-                                    <div><strong>Datos según ISO 9001:</strong> Esta información es verificada y debe coincidir con el registro mercantil oficial.</div>
+                                    <div><strong>Datos según ISO 9001:</strong> Esta información es verificada y debe
+                                        coincidir con el registro mercantil oficial.</div>
                                 </div>
                             </div>
 
@@ -165,20 +181,26 @@
                                 <div class="row g-4">
                                     <div class="col-md-12">
                                         <label class="form-label small fw-bold">Razón social / Nombre legal *</label>
-                                        <input type="text" id="razonSocial" class="form-control bg-light border-0 py-2" placeholder="Tech Solutions Sociedad Anónima" required>
+                                        <input type="text" id="razonSocial" class="form-control bg-light border-0 py-2"
+                                            placeholder="Tech Solutions Sociedad Anónima" required>
                                     </div>
                                     <div class="col-md-12">
                                         <label class="form-label small fw-bold">Nombre comercial</label>
-                                        <input type="text" id="nombreComercial" class="form-control bg-light border-0 py-2" placeholder="Tech Solutions">
+                                        <input type="text" id="nombreComercial"
+                                            class="form-control bg-light border-0 py-2" placeholder="Tech Solutions">
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label small fw-bold">RUC *</label>
-                                        <input type="text" id="ruc" class="form-control bg-light border-0 py-2" placeholder="20123456789" required>
-                                        <small class="text-muted" style="font-size: 0.75rem;">El RUC no puede modificarse. Contacte soporte si necesita actualizar.</small>
+                                        <input type="text" id="ruc" class="form-control bg-light border-0 py-2"
+                                            placeholder="20123456789" required>
+                                        <small class="text-muted" style="font-size: 0.75rem;">El RUC no puede
+                                            modificarse. Contacte soporte si necesita actualizar.</small>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label small fw-bold">Número de partida registral *</label>
-                                        <input type="text" id="partidaRegistral" class="form-control bg-light border-0 py-2" placeholder="RM-MAD-2010-8765" required>
+                                        <input type="text" id="partidaRegistral"
+                                            class="form-control bg-light border-0 py-2" placeholder="RM-MAD-2010-8765"
+                                            required>
                                     </div>
                                     <div class="col-md-12">
                                         <label class="form-label small fw-bold">Sector / Industria *</label>
@@ -196,35 +218,44 @@
                                             <option value="1-10 empleados">1-10 empleados (Microempresa)</option>
                                             <option value="11-50 empleados">11-50 empleados (Pequeña empresa)</option>
                                             <option value="51-250 empleados">51-250 empleados (Mediana empresa)</option>
-                                            <option value="251-1000 empleados">251-1000 empleados (Gran empresa)</option>
+                                            <option value="251-1000 empleados">251-1000 empleados (Gran empresa)
+                                            </option>
                                             <option value="1000+ empleados">Más de 1000 empleados</option>
                                         </select>
                                     </div>
                                     <div class="col-md-12">
                                         <label class="form-label small fw-bold">Año de fundación</label>
-                                        <input type="number" id="fundacion" class="form-control bg-light border-0 py-2" placeholder="2010">
+                                        <input type="number" id="fundacion" class="form-control bg-light border-0 py-2"
+                                            placeholder="2010">
                                     </div>
                                     <div class="col-md-12">
                                         <label class="form-label small fw-bold">Sitio web corporativo *</label>
                                         <div class="input-group">
-                                            <span class="input-group-text bg-light border-0"><i class="fa fa-globe text-muted"></i></span>
-                                            <input type="text" id="sitioWeb" class="form-control bg-light border-0 py-2" placeholder="https://www.techsolutions.com" required>
+                                            <span class="input-group-text bg-light border-0"><i
+                                                    class="fa fa-globe text-muted"></i></span>
+                                            <input type="text" id="sitioWeb" class="form-control bg-light border-0 py-2"
+                                                placeholder="https://www.techsolutions.com" required>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <label class="form-label small fw-bold">Descripción de la empresa *</label>
-                                        <textarea id="descripcion" class="form-control bg-light border-0 py-2" rows="4" placeholder="Describe brevemente la trayectoria y objetivo de tu empresa..." required></textarea>
+                                        <textarea id="descripcion" class="form-control bg-light border-0 py-2" rows="4"
+                                            placeholder="Describe brevemente la trayectoria y objetivo de tu empresa..."
+                                            required></textarea>
                                     </div>
                                     <div class="col-md-12">
                                         <label class="form-label small fw-bold">Misión y valores</label>
-                                        <textarea id="mision" class="form-control bg-light border-0 py-2" rows="3" placeholder="Nuestra misión es democratizar la tecnología..."></textarea>
+                                        <textarea id="mision" class="form-control bg-light border-0 py-2" rows="3"
+                                            placeholder="Nuestra misión es democratizar la tecnología..."></textarea>
                                     </div>
 
                                     <div class="col-12 mt-5 pt-4 border-top">
-                                        <button type="submit" class="btn btn-orange rounded-3 px-5 py-2 fw-bold shadow-sm">
+                                        <button type="submit"
+                                            class="btn btn-orange rounded-3 px-5 py-2 fw-bold shadow-sm">
                                             Guardar cambios
                                         </button>
-                                        <button type="button" class="btn btn-light rounded-3 px-4 py-2 text-dark font-medium border ms-2">
+                                        <button type="button"
+                                            class="btn btn-light rounded-3 px-4 py-2 text-dark font-medium border ms-2">
                                             Cancelar
                                         </button>
                                     </div>
@@ -232,7 +263,7 @@
                             </form>
                         </div>
                     </div>
-                    
+
                     <!-- TAB: CONTACTO -->
                     <div class="tab-pane fade" id="contacto">
                         <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5">
@@ -244,43 +275,54 @@
                             </div>
 
                             <form id="formContacto">
-                                <h6 class="fw-bold text-secondary mb-3 small text-uppercase">Responsable de RRHH / Selección</h6>
+                                <h6 class="fw-bold text-secondary mb-3 small text-uppercase">Responsable de RRHH /
+                                    Selección</h6>
                                 <div class="row g-3 mb-4">
                                     <div class="col-md-6">
                                         <label class="form-label small fw-bold">Nombre del contacto *</label>
-                                        <input type="text" id="contNombre" class="form-control bg-light border-0 py-2" placeholder="Juan Pérez" required>
+                                        <input type="text" id="contNombre" class="form-control bg-light border-0 py-2"
+                                            placeholder="Juan Pérez" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label small fw-bold">Cargo *</label>
-                                        <input type="text" id="contCargo" class="form-control bg-light border-0 py-2" placeholder="Director de Atracción de Talento" required>
+                                        <input type="text" id="contCargo" class="form-control bg-light border-0 py-2"
+                                            placeholder="Director de Atracción de Talento" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label small fw-bold">Correo corporativo *</label>
-                                        <input type="email" id="contEmail" class="form-control bg-light border-0 py-2" placeholder="j.perez@empresa.com" required>
+                                        <input type="email" id="contEmail" class="form-control bg-light border-0 py-2"
+                                            placeholder="j.perez@empresa.com" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label small fw-bold">Teléfono directo *</label>
-                                        <input type="tel" id="contTelefono" class="form-control bg-light border-0 py-2" placeholder="+51 987 654 321" required>
+                                        <input type="tel" id="contTelefono" class="form-control bg-light border-0 py-2"
+                                            placeholder="+51 987 654 321" required>
                                     </div>
                                 </div>
 
-                                <h6 class="fw-bold text-secondary mb-3 small text-uppercase">Ubicación de la Sede Principal</h6>
+                                <h6 class="fw-bold text-secondary mb-3 small text-uppercase">Ubicación de la Sede
+                                    Principal</h6>
                                 <div class="row g-3 mb-4">
                                     <div class="col-md-12">
                                         <label class="form-label small fw-bold">Dirección *</label>
-                                        <input type="text" id="contDireccion" class="form-control bg-light border-0 py-2" placeholder="Av. Javier Prado 123, Of. 402" required>
+                                        <input type="text" id="contDireccion"
+                                            class="form-control bg-light border-0 py-2"
+                                            placeholder="Av. Javier Prado 123, Of. 402" required>
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label small fw-bold">Ciudad *</label>
-                                        <input type="text" id="contCiudad" class="form-control bg-light border-0 py-2" placeholder="Lima" required>
+                                        <input type="text" id="contCiudad" class="form-control bg-light border-0 py-2"
+                                            placeholder="Lima" required>
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label small fw-bold">Provincia</label>
-                                        <input type="text" id="contProvincia" class="form-control bg-light border-0 py-2" placeholder="Lima">
+                                        <input type="text" id="contProvincia"
+                                            class="form-control bg-light border-0 py-2" placeholder="Lima">
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label small fw-bold">Código Postal</label>
-                                        <input type="text" id="contCP" class="form-control bg-light border-0 py-2" placeholder="15046">
+                                        <input type="text" id="contCP" class="form-control bg-light border-0 py-2"
+                                            placeholder="15046">
                                     </div>
                                 </div>
 
@@ -289,21 +331,29 @@
                                     <div class="col-md-6">
                                         <label class="form-label small fw-bold">LinkedIn</label>
                                         <div class="input-group">
-                                            <span class="input-group-text bg-light border-0 text-primary"><i class="fab fa-linkedin"></i></span>
-                                            <input type="text" id="contLinkedin" class="form-control bg-light border-0 py-2" placeholder="linkedin.com/company/empresa">
+                                            <span class="input-group-text bg-light border-0 text-primary"><i
+                                                    class="fab fa-linkedin"></i></span>
+                                            <input type="text" id="contLinkedin"
+                                                class="form-control bg-light border-0 py-2"
+                                                placeholder="linkedin.com/company/empresa">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label small fw-bold">Facebook</label>
                                         <div class="input-group">
-                                            <span class="input-group-text bg-light border-0 text-primary"><i class="fab fa-facebook"></i></span>
-                                            <input type="text" id="contFacebook" class="form-control bg-light border-0 py-2" placeholder="facebook.com/empresa">
+                                            <span class="input-group-text bg-light border-0 text-primary"><i
+                                                    class="fab fa-facebook"></i></span>
+                                            <input type="text" id="contFacebook"
+                                                class="form-control bg-light border-0 py-2"
+                                                placeholder="facebook.com/empresa">
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="col-12 mt-5 pt-4 border-top">
-                                    <button type="submit" class="btn btn-primary rounded-3 px-5 py-2 fw-bold shadow-sm">Guardar contacto</button>
+                                    <button type="submit"
+                                        class="btn btn-primary rounded-3 px-5 py-2 fw-bold shadow-sm">Guardar
+                                        contacto</button>
                                 </div>
                             </form>
                         </div>
@@ -321,12 +371,14 @@
                                 </div>
                             </div>
 
-                            <div class="alert alert-warning border-0 rounded-4 p-4 mb-4" style="background-color: #ff9800; color: white;">
+                            <div class="alert alert-warning border-0 rounded-4 p-4 mb-4"
+                                style="background-color: #ff9800; color: white;">
                                 <div class="d-flex align-items-center">
                                     <i class="fa fa-info-circle me-3 fa-2x"></i>
                                     <div>
                                         <h6 class="fw-bold mb-1">ISO 30415 - Gestión de Diversidad e Inclusión</h6>
-                                        <p class="mb-0 small">Esta información es visible para los candidatos y demuestra su compromiso real con la inclusión laboral.</p>
+                                        <p class="mb-0 small">Esta información es visible para los candidatos y
+                                            demuestra su compromiso real con la inclusión laboral.</p>
                                     </div>
                                 </div>
                             </div>
@@ -336,7 +388,8 @@
                                     <div class="col-md-12">
                                         <label class="form-label small fw-bold">Política formal de inclusión *</label>
                                         <select id="polInclusion" class="form-select bg-light border-0 py-2" required>
-                                            <option value="Sí, certificada (ISO 30415 u otra)">Sí, certificada (ISO 30415 u otra)</option>
+                                            <option value="Sí, certificada (ISO 30415 u otra)">Sí, certificada (ISO
+                                                30415 u otra)</option>
                                             <option value="Sí, implementada">Sí, implementada internamente</option>
                                             <option value="En proceso">En proceso de diseño</option>
                                             <option value="No posee">No posee actualmente</option>
@@ -344,74 +397,105 @@
                                     </div>
 
                                     <div class="col-md-12">
-                                        <label class="form-label small fw-bold">Empleados con discapacidad actualmente</label>
-                                        <input type="number" id="empDiscapacidad" class="form-control bg-light border-0 py-2" placeholder="45" required>
-                                        <small class="text-muted" style="font-size: 0.75rem;">En España, empresas con +50 empleados deben tener al menos 2% con discapacidad (LGD)</small>
+                                        <label class="form-label small fw-bold">Empleados con discapacidad
+                                            actualmente</label>
+                                        <input type="number" id="empDiscapacidad"
+                                            class="form-control bg-light border-0 py-2" placeholder="45" required>
+                                        <small class="text-muted" style="font-size: 0.75rem;">En Perú, empresas con más
+                                            de 50 trabajadores deben
+                                            contar con al menos 3% de personas con discapacidad (Ley 29973)</small>
                                     </div>
 
                                     <div class="col-md-12 mt-4">
-                                        <label class="form-label small fw-bold mb-3">Adaptaciones de accesibilidad disponibles (ISO 21542) *</label>
+                                        <label class="form-label small fw-bold mb-3">Adaptaciones de accesibilidad
+                                            disponibles (ISO 21542) *</label>
                                         <div class="row g-2">
                                             <div class="col-12">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" id="accFisica" checked>
-                                                    <label class="form-check-label text-secondary small" for="accFisica">Accesibilidad física (rampas, ascensores, baños adaptados)</label>
+                                                    <input class="form-check-input" type="checkbox" id="accFisica"
+                                                        checked>
+                                                    <label class="form-check-label text-secondary small"
+                                                        for="accFisica">Accesibilidad física (rampas, ascensores, baños
+                                                        adaptados)</label>
                                                 </div>
                                             </div>
                                             <div class="col-12">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" id="accTecno" checked>
-                                                    <label class="form-check-label text-secondary small" for="accTecno">Tecnologías de asistencia (lectores de pantalla, software adaptado)</label>
+                                                    <input class="form-check-input" type="checkbox" id="accTecno"
+                                                        checked>
+                                                    <label class="form-check-label text-secondary small"
+                                                        for="accTecno">Tecnologías de asistencia (lectores de pantalla,
+                                                        software adaptado)</label>
                                                 </div>
                                             </div>
                                             <div class="col-12">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" id="accLengua" checked>
-                                                    <label class="form-check-label text-secondary small" for="accLengua">Interpretación en lengua de señas disponible</label>
+                                                    <input class="form-check-input" type="checkbox" id="accLengua"
+                                                        checked>
+                                                    <label class="form-check-label text-secondary small"
+                                                        for="accLengua">Interpretación en lengua de señas
+                                                        disponible</label>
                                                 </div>
                                             </div>
                                             <div class="col-12">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" id="accRemoto" checked>
-                                                    <label class="form-check-label text-secondary small" for="accRemoto">Modalidad remota/híbrida y horarios flexibles</label>
+                                                    <input class="form-check-input" type="checkbox" id="accRemoto"
+                                                        checked>
+                                                    <label class="form-check-label text-secondary small"
+                                                        for="accRemoto">Modalidad remota/híbrida y horarios
+                                                        flexibles</label>
                                                 </div>
                                             </div>
                                             <div class="col-12">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" id="accParking" checked>
-                                                    <label class="form-check-label text-secondary small" for="accParking">Transporte o parking adaptado</label>
+                                                    <input class="form-check-input" type="checkbox" id="accParking"
+                                                        checked>
+                                                    <label class="form-check-label text-secondary small"
+                                                        for="accParking">Transporte o parking adaptado</label>
                                                 </div>
                                             </div>
                                             <div class="col-12">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" id="accFormacion" checked>
-                                                    <label class="form-check-label text-secondary small" for="accFormacion">Formación en diversidad e inclusión para el equipo</label>
+                                                    <input class="form-check-input" type="checkbox" id="accFormacion"
+                                                        checked>
+                                                    <label class="form-check-label text-secondary small"
+                                                        for="accFormacion">Formación en diversidad e inclusión para el
+                                                        equipo</label>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="col-md-12 mt-4">
-                                        <label class="form-label small fw-bold">Compromiso de la empresa con la inclusión *</label>
-                                        <textarea id="compromisoTexto" class="form-control bg-light border-0 py-2 small" rows="5" required>En Tech Solutions, la diversidad e inclusión no son solo palabras, sino parte fundamental de nuestra cultura corporativa. Contamos con un programa integral de inclusión que incluye: formación continua en diversidad para todos los empleados, políticas de contratación inclusiva, adaptación de espacios físicos según normativa ISO 21542, tecnología asistiva de última generación, y un comité de diversidad que supervisa el cumplimiento de nuestros objetivos de inclusión.</textarea>
+                                        <label class="form-label small fw-bold">Compromiso de la empresa con la
+                                            inclusión *</label>
+                                        <textarea id="compromisoTexto" class="form-control bg-light border-0 py-2 small"
+                                            rows="5"
+                                            required>En Tech Solutions, la diversidad e inclusión no son solo palabras, sino parte fundamental de nuestra cultura corporativa. Contamos con un programa integral de inclusión que incluye: formación continua en diversidad para todos los empleados, políticas de contratación inclusiva, adaptación de espacios físicos según normativa ISO 21542, tecnología asistiva de última generación, y un comité de diversidad que supervisa el cumplimiento de nuestros objetivos de inclusión.</textarea>
                                     </div>
 
                                     <div class="col-md-12">
-                                        <label class="form-label small fw-bold">Certificaciones de inclusión o responsabilidad social</label>
-                                        <input type="text" id="certificaciones" class="form-control bg-light border-0 py-2" placeholder="ISO 30415, Distintivo de Igualdad 2024, ISO 9001:2015">
+                                        <label class="form-label small fw-bold">Certificaciones de inclusión o
+                                            responsabilidad social</label>
+                                        <input type="text" id="certificaciones"
+                                            class="form-control bg-light border-0 py-2"
+                                            placeholder="ISO 30415, Distintivo de Igualdad 2024, ISO 9001:2015">
                                     </div>
 
                                     <div class="col-md-12">
-                                        <label class="form-label small fw-bold">Presupuesto para adaptaciones de accesibilidad</label>
+                                        <label class="form-label small fw-bold">Presupuesto para adaptaciones de
+                                            accesibilidad</label>
                                         <select id="presupuesto" class="form-select bg-light border-0 py-2">
-                                            <option value="Sí, presupuesto anual definido">Sí, presupuesto anual definido</option>
+                                            <option value="Sí, presupuesto anual definido">Sí, presupuesto anual
+                                                definido</option>
                                             <option value="Sí, bajo demanda">Sí, bajo demanda</option>
                                             <option value="No definido">No definido actualmente</option>
                                         </select>
                                     </div>
 
                                     <div class="col-md-12">
-                                        <label class="form-label small fw-bold">Responsable de diversidad e inclusión</label>
+                                        <label class="form-label small fw-bold">Responsable de diversidad e
+                                            inclusión</label>
                                         <select id="responsable" class="form-select bg-light border-0 py-2">
                                             <option value="Sí, puesto dedicado">Sí, puesto dedicado</option>
                                             <option value="Comité multi-área">Comité multi-área</option>
@@ -421,10 +505,12 @@
                                     </div>
 
                                     <div class="col-12 mt-4 pt-3 border-top">
-                                        <button type="submit" class="btn btn-orange rounded-3 px-4 py-2 fw-bold shadow-sm">
+                                        <button type="submit"
+                                            class="btn btn-orange rounded-3 px-4 py-2 fw-bold shadow-sm">
                                             Guardar cambios
                                         </button>
-                                        <button type="button" class="btn btn-light rounded-3 px-4 py-2 text-secondary border ms-2">
+                                        <button type="button"
+                                            class="btn btn-light rounded-3 px-4 py-2 text-secondary border ms-2">
                                             Cancelar
                                         </button>
                                     </div>
@@ -441,16 +527,19 @@
                                 </div>
                                 <div class="flex-grow-1">
                                     <h5 class="fw-bold mb-0">Documentos de Verificación</h5>
-                                    <p class="text-secondary small mb-0">Documentación legal y certificaciones (ISO 27001)</p>
+                                    <p class="text-secondary small mb-0">Documentación legal y certificaciones (ISO
+                                        27001)</p>
                                 </div>
                             </div>
 
-                            <div class="alert alert-success border-0 rounded-4 p-4 mb-4" style="background-color: #198754; color: white;">
+                            <div class="alert alert-success border-0 rounded-4 p-4 mb-4"
+                                style="background-color: #198754; color: white;">
                                 <div class="d-flex align-items-center">
                                     <i class="fa fa-check-circle me-3 fa-2x"></i>
                                     <div>
                                         <h6 class="fw-bold mb-1">Estado de verificación: Verificada</h6>
-                                        <p class="mb-0 small">Su empresa ha sido verificada por nuestro equipo. Todos los documentos están validados y actualizados.</p>
+                                        <p class="mb-0 small">Su empresa ha sido verificada por nuestro equipo. Todos
+                                            los documentos están validados y actualizados.</p>
                                     </div>
                                 </div>
                             </div>
@@ -460,68 +549,88 @@
                                 <div class="row g-3">
                                     <div class="col-md-12">
                                         <div class="p-3 border rounded-3 bg-white d-flex align-items-center">
-                                            <div class="icon-box bg-light text-green rounded me-3 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; font-size: 1.2rem;">
+                                            <div class="icon-box bg-light text-green rounded me-3 d-flex align-items-center justify-content-center"
+                                                style="width: 45px; height: 45px; font-size: 1.2rem;">
                                                 <i class="fa fa-file-invoice"></i>
                                             </div>
                                             <div class="flex-grow-1">
-                                                <h6 class="fw-bold mb-0 small">Certificado CIF/NIF</h6>
-                                                <p class="text-secondary mb-0" style="font-size: 0.7rem;">Subido el 15/01/2024 • Verificado ✓</p>
+                                                <h6 class="fw-bold mb-0 small">Ficha RUC / Constancia de RUC</h6>
+                                                <p class="text-secondary mb-0" style="font-size: 0.7rem;">Subido el
+                                                    15/01/2024 • Verificado ✓</p>
                                             </div>
-                                            <button class="btn btn-light btn-sm rounded-pill px-3 border border-secondary-subtle small fw-bold btn-view-doc" data-doc="Certificado RUC">Ver documento</button>
+                                            <button
+                                                class="btn btn-light btn-sm rounded-pill px-3 border border-secondary-subtle small fw-bold btn-view-doc"
+                                                data-doc="Certificado RUC">Ver documento</button>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="p-3 border rounded-3 bg-white d-flex align-items-center">
-                                            <div class="icon-box bg-light text-green rounded me-3 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; font-size: 1.2rem;">
+                                            <div class="icon-box bg-light text-green rounded me-3 d-flex align-items-center justify-content-center"
+                                                style="width: 45px; height: 45px; font-size: 1.2rem;">
                                                 <i class="fa fa-file-contract"></i>
                                             </div>
                                             <div class="flex-grow-1">
-                                                <h6 class="fw-bold mb-0 small">Registro Mercantil</h6>
-                                                <p class="text-secondary mb-0" style="font-size: 0.7rem;">Subido el 15/01/2024 • Verificado ✓</p>
+                                                <h6 class="fw-bold mb-0 small">Partida Registral (SUNARP)</h6>
+                                                <p class="text-secondary mb-0" style="font-size: 0.7rem;">Subido el
+                                                    15/01/2024 • Verificado ✓</p>
                                             </div>
-                                            <button class="btn btn-light btn-sm rounded-pill px-3 border border-secondary-subtle small fw-bold btn-view-doc" data-doc="Partida Registral">Ver documento</button>
+                                            <button
+                                                class="btn btn-light btn-sm rounded-pill px-3 border border-secondary-subtle small fw-bold btn-view-doc"
+                                                data-doc="Partida Registral">Ver documento</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="mb-5">
-                                <h6 class="fw-bold text-secondary mb-3 small text-uppercase">Certificaciones de inclusión</h6>
+                                <h6 class="fw-bold text-secondary mb-3 small text-uppercase">Certificaciones de
+                                    inclusión</h6>
                                 <div class="row g-3">
                                     <div class="col-md-12">
                                         <div class="p-3 border rounded-3 bg-white d-flex align-items-center">
-                                            <div class="icon-box bg-light text-green rounded me-3 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; font-size: 1.2rem;">
+                                            <div class="icon-box bg-light text-green rounded me-3 d-flex align-items-center justify-content-center"
+                                                style="width: 45px; height: 45px; font-size: 1.2rem;">
                                                 <i class="fa fa-shield-heart text-green"></i>
                                             </div>
                                             <div class="flex-grow-1">
                                                 <h6 class="fw-bold mb-0 small">ISO 30415 - Gestión de Diversidad</h6>
-                                                <p class="text-secondary mb-0" style="font-size: 0.7rem;">Subido el 20/02/2024 • Vence: 20/02/2027</p>
+                                                <p class="text-secondary mb-0" style="font-size: 0.7rem;">Subido el
+                                                    20/02/2024 • Vence: 20/02/2027</p>
                                             </div>
-                                            <button class="btn btn-light btn-sm rounded-pill px-3 border border-secondary-subtle small fw-bold btn-view-doc" data-doc="Certificado ISO 30415">Ver certificado</button>
+                                            <button
+                                                class="btn btn-light btn-sm rounded-pill px-3 border border-secondary-subtle small fw-bold btn-view-doc"
+                                                data-doc="Certificado ISO 30415">Ver certificado</button>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="p-3 border rounded-3 bg-white d-flex align-items-center">
-                                            <div class="icon-box bg-light text-green rounded me-3 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; font-size: 1.2rem;">
+                                            <div class="icon-box bg-light text-green rounded me-3 d-flex align-items-center justify-content-center"
+                                                style="width: 45px; height: 45px; font-size: 1.2rem;">
                                                 <i class="fa fa-award text-green"></i>
                                             </div>
                                             <div class="flex-grow-1">
                                                 <h6 class="fw-bold mb-0 small">Distintivo de Igualdad en la Empresa</h6>
-                                                <p class="text-secondary mb-0" style="font-size: 0.7rem;">Subido el 15/03/2024 • Vence: 15/03/2027</p>
+                                                <p class="text-secondary mb-0" style="font-size: 0.7rem;">Subido el
+                                                    15/03/2024 • Vence: 15/03/2027</p>
                                             </div>
-                                            <button class="btn btn-light btn-sm rounded-pill px-3 border border-secondary-subtle small fw-bold btn-view-doc" data-doc="Distintivo de Igualdad">Ver certificado</button>
+                                            <button
+                                                class="btn btn-light btn-sm rounded-pill px-3 border border-secondary-subtle small fw-bold btn-view-doc"
+                                                data-doc="Distintivo de Igualdad">Ver certificado</button>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="p-4 border border-dashed rounded-3 bg-light text-center">
                                             <p class="text-secondary small mb-2">Agregar nueva certificación</p>
-                                            <button class="btn btn-white btn-sm rounded-pill px-4 border shadow-sm small fw-bold">Subir certificado</button>
+                                            <button
+                                                class="btn btn-white btn-sm rounded-pill px-4 border shadow-sm small fw-bold">Subir
+                                                certificado</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="alert alert-primary border-0 rounded-4 p-4 mb-5" style="background-color: #0d6efd; color: white;">
+                            <div class="alert alert-primary border-0 rounded-4 p-4 mb-5"
+                                style="background-color: #0d6efd; color: white;">
                                 <h6 class="fw-bold mb-3">Seguridad de la información (ISO 27001)</h6>
                                 <ul class="mb-0 small ps-3">
                                     <li class="mb-1">Todos los documentos se almacenan de forma segura y encriptada</li>
@@ -532,34 +641,40 @@
                             </div>
 
                             <div class="p-4 border rounded-4 bg-light">
-                                <h6 class="fw-bold text-secondary mb-3 small text-uppercase">Compromisos y declaraciones</h6>
+                                <h6 class="fw-bold text-secondary mb-3 small text-uppercase">Compromisos y declaraciones
+                                </h6>
                                 <div class="row g-2">
                                     <div class="col-12">
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" checked disabled>
-                                            <label class="form-check-label text-secondary small">Compromiso de no discriminación (ISO 30415)</label>
+                                            <label class="form-check-label text-secondary small">Compromiso de no
+                                                discriminación (ISO 30415)</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" checked disabled>
-                                            <label class="form-check-label text-secondary small">Tratamiento de datos según RGPD</label>
+                                            <label class="form-check-label text-secondary small">Tratamiento de datos
+                                                según Ley N.º 29733</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" checked disabled>
-                                            <label class="form-check-label text-secondary small">Compromiso de accesibilidad (ISO 21542)</label>
+                                            <label class="form-check-label text-secondary small">Compromiso de
+                                                accesibilidad (ISO 21542)</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" checked disabled>
-                                            <label class="form-check-label text-secondary small">Veracidad de la información proporcionada</label>
+                                            <label class="form-check-label text-secondary small">Veracidad de la
+                                                información proporcionada</label>
                                         </div>
                                     </div>
                                 </div>
-                                <p class="text-muted mt-3 mb-0" style="font-size: 0.65rem;">Estos compromisos fueron aceptados durante el registro y no pueden modificarse.</p>
+                                <p class="text-muted mt-3 mb-0" style="font-size: 0.65rem;">Estos compromisos fueron
+                                    aceptados durante el registro y no pueden modificarse.</p>
                             </div>
                         </div>
                     </div>
@@ -577,13 +692,16 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4 text-center">
-                    <div class="bg-light rounded-4 p-5 d-flex flex-column align-items-center justify-content-center" style="min-height: 400px; border: 2px dashed #dee2e6;">
+                    <div class="bg-light rounded-4 p-5 d-flex flex-column align-items-center justify-content-center"
+                        style="min-height: 400px; border: 2px dashed #dee2e6;">
                         <i class="fa fa-file-shield text-green mb-4" style="font-size: 5rem; opacity: 0.5;"></i>
                         <h4 class="fw-bold mb-2">Previsualización Segura</h4>
-                        <p class="text-secondary small mb-4">Este documento ha sido validado satisfactoriamente por el equipo de Talento Inclusivo.</p>
-                        
+                        <p class="text-secondary small mb-4">Este documento ha sido validado satisfactoriamente por el
+                            equipo de Talento Inclusivo.</p>
+
                         <!-- SIMULACIÓN DE DOCUMENTO -->
-                        <div class="doc-sim p-4 bg-white shadow-sm border rounded-3 w-100 text-start" style="max-width: 500px;">
+                        <div class="doc-sim p-4 bg-white shadow-sm border rounded-3 w-100 text-start"
+                            style="max-width: 500px;">
                             <div class="d-flex justify-content-between mb-3 border-bottom pb-2">
                                 <span class="fw-bold small">TALENTO INCLUSIVO VALIDATOR</span>
                                 <span class="text-green small fw-bold">VERIFICADO ✓</span>
@@ -598,7 +716,8 @@
                                     </div>
                                     <div>
                                         <p class="mb-0 small fw-bold">Sello Digital de Integridad</p>
-                                        <p class="mb-0 text-muted" style="font-size: 0.6rem;">ID: TI-CERT-2024-87654321</p>
+                                        <p class="mb-0 text-muted" style="font-size: 0.6rem;">ID: TI-CERT-2024-87654321
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -606,8 +725,10 @@
                     </div>
                 </div>
                 <div class="modal-footer border-0 px-4 pb-4">
-                    <button type="button" class="btn btn-light rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-orange text-white rounded-pill px-4 fw-bold shadow-sm">Descargar copia</button>
+                    <button type="button" class="btn btn-light rounded-pill px-4 fw-bold"
+                        data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button"
+                        class="btn btn-orange text-white rounded-pill px-4 fw-bold shadow-sm">Descargar copia</button>
                 </div>
             </div>
         </div>
@@ -619,4 +740,5 @@
     <script src="../BD/data.js"></script>
     <script src="perfil.js"></script>
 </body>
+
 </html>

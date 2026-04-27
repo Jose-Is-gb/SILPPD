@@ -133,6 +133,55 @@
 
     </div>
 
+    <!-- MODAL: DETALLES DE POSTULACIÓN -->
+    <div class="modal fade" id="detailModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow-lg">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold" id="detailTitle">Detalles de la Postulación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="text-center mb-4">
+                        <div class="bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 60px; height: 60px;">
+                            <i class="fa fa-file-lines fa-2x"></i>
+                        </div>
+                        <h4 class="fw-bold mb-1" id="infoPuesto">Puesto</h4>
+                        <p class="text-muted" id="infoEmpresa">Empresa</p>
+                    </div>
+                    
+                    <div class="card bg-light border-0 rounded-4 p-3 mb-3">
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 0.65rem;">Fecha de Envío</small>
+                                <span class="fw-medium" id="infoFecha">01/01/2024</span>
+                            </div>
+                            <div class="col-6 text-end">
+                                <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 0.65rem;">Estado</small>
+                                <span class="badge" id="infoEstado">Pendiente</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="fw-bold small text-uppercase ls-1 mb-2">Mensaje del reclutador</h6>
+                        <div class="p-3 bg-white border rounded-3 text-secondary small" id="infoMensaje">
+                            Tu postulación está siendo revisada por el equipo de selección. Te notificaremos cualquier cambio en este portal.
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info border-0 rounded-3 small mb-0">
+                        <i class="fa fa-info-circle me-2"></i> Cumplimiento ISO/IEC 12207: El proceso sigue el ciclo de vida de adquisición de talento estándar.
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary rounded-pill px-4" onclick="location.href='mensajeria.html'">Contactar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer class="bg-white border-top py-5 mt-auto">
         <div class="container lead text-muted small text-center">© 2025 Talento Inclusivo • ISO/IEC 25010 e ISO/IEC 12207</div>
     </footer>

@@ -68,16 +68,16 @@ document.addEventListener("DOMContentLoaded", () => {
                                 </div>
                             </div>
                             <div class="d-flex gap-2 mt-2 mt-md-0">
-                                <button class="btn btn-light rounded-pill px-3 btn-sm" onclick="viewDetails(${o.id})">
+                                <button class="btn btn-light rounded-pill px-3 btn-sm" onclick="viewDetails('${o.id}')">
                                     <i class="fa fa-eye me-1"></i> Ver detalles
                                 </button>
-                                <button class="btn btn-light rounded-pill px-3 btn-sm" onclick="editOffer(${o.id})">
+                                <button class="btn btn-light rounded-pill px-3 btn-sm" onclick="editOffer('${o.id}')">
                                     <i class="fa fa-edit me-1"></i> Editar
                                 </button>
-                                <button class="btn ${toggleBtnClass} rounded-pill px-3 btn-sm" onclick="toggleStatus(${o.id}, '${o.estado}')">
+                                <button class="btn ${toggleBtnClass} rounded-pill px-3 btn-sm" onclick="toggleStatus('${o.id}', '${o.estado}')">
                                     <i class="fa ${toggleIcon} me-1"></i> ${toggleText}
                                 </button>
-                                <button class="btn btn-outline-danger rounded-pill px-3 btn-sm border-0" onclick="deleteOffer(${o.id})">
+                                <button class="btn btn-outline-danger rounded-pill px-3 btn-sm border-0" onclick="deleteOffer('${o.id}')">
                                     <i class="fa fa-trash"></i>
                                 </button>
                             </div>
@@ -107,8 +107,38 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     window.viewDetails = (id) => {
-        // Implementación futura o modal
-        alert("Visualizando detalles de la oferta ID: " + id);
+        const o = Data.getOfertas().find(of => of.id == id);
+        if(!o) return;
+
+        const body = document.getElementById("modalDetalleBody");
+        body.innerHTML = `
+            <div class="mb-3">
+                <h4 class="fw-bold text-orange mb-1">${o.titulo}</h4>
+                <span class="badge ${o.estado === 'Activa' ? 'bg-success' : 'bg-warning'} rounded-pill">${o.estado}</span>
+            </div>
+            <p class="mb-4">${o.descripcion}</p>
+            <div class="row g-3 small">
+                <div class="col-6">
+                    <p class="text-secondary mb-1">Categoría</p>
+                    <p class="fw-bold mb-0">${o.categoria}</p>
+                </div>
+                <div class="col-6">
+                    <p class="text-secondary mb-1">Modalidad</p>
+                    <p class="fw-bold mb-0">${o.modalidad}</p>
+                </div>
+                <div class="col-6">
+                    <p class="text-secondary mb-1">Fecha Publicación</p>
+                    <p class="fw-bold mb-0">${o.fecha}</p>
+                </div>
+                <div class="col-6">
+                    <p class="text-secondary mb-1">Discapacidad Preferente</p>
+                    <p class="fw-bold mb-0">${o.discapacidad}</p>
+                </div>
+            </div>
+        `;
+        
+        const modal = new bootstrap.Modal(document.getElementById('modalDetalle'));
+        modal.show();
     };
 
     // Eventos

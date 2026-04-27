@@ -169,12 +169,34 @@ document.addEventListener("DOMContentLoaded", () => {
     const modalDoc = modalDocElement ? new bootstrap.Modal(modalDocElement) : null;
     const modalDocTitle = document.getElementById('modalDocTitle');
 
-    document.addEventListener('click', (e) => {
-        if (e.target.classList.contains('btn-view-doc')) {
-            const btn = e.target;
-            const docName = btn.getAttribute('data-doc');
-            if (modalDocTitle) modalDocTitle.textContent = docName;
-            if (modalDoc) modalDoc.show();
+    // Cambiar Logo
+    const logoBtn = document.getElementById("logoBtn");
+    const logoInput = document.getElementById("logoInput");
+    if (logoBtn && logoInput) {
+        logoBtn.onclick = () => logoInput.click();
+        logoInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const imgData = event.target.result;
+                    const container = document.querySelector(".logo-container");
+                    if(container) container.innerHTML = `<img src="${imgData}" style="width:100%; height:100%; object-fit:cover;" class="rounded-circle">`;
+                    saveAndReload({ fotoEmpresa: imgData }, "Logo actualizado correctamente.");
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+    }
+
+    // Botones de cancelar
+    document.querySelectorAll(".btn-light").forEach(btn => {
+        if(btn.textContent.trim() === "Cancelar") {
+            btn.onclick = () => {
+                if (confirm("¿Estás seguro de que deseas cancelar? Se perderán los cambios no guardados.")) {
+                    loadProfile();
+                }
+            };
         }
     });
 

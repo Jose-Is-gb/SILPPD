@@ -1,8 +1,4 @@
-// ===============================================
-// perfil.js — Gestión avanzada del perfil de usuario
-// ===============================================
-
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     // 1. Verificar sesión activa
     const user = Auth.getActiveUser();
     if (!user) {
@@ -31,9 +27,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const toast = new bootstrap.Toast(saveAlert);
 
     // ===============================================
-    // Cargar datos
+    // Cargar datos asincrónicamente
     // ===============================================
-    function loadProfile() {
+    async function loadProfile() {
+        // Refrescar el objeto user desde la base de datos (por si cambió en otro lado)
+        const freshUser = await Data.getUserByEmail(user.correo);
+        Object.assign(user, freshUser);
+
         // Sidebar
         sidebarName.textContent = `${user.nombre || ""} ${user.apellido || ""}`.trim() || "Usuario";
         sidebarEmail.textContent = user.correo;
@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (user.foto) profilePhoto.src = user.foto;
 
         // Actualizar estadísticas reales
-        updateActivityStats();
+        await updateActivityStats();
 
         // Datos Personales
         setInput("reg-nombre", user.nombre);
@@ -106,28 +106,20 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function updateActivityStats() {
-        const db = Data.getDB();
+    async function updateActivityStats() {
+        const db = await Data.getDB();
         const userPostulaciones = (db.postulaciones || []).filter(p => p.email === user.correo);
         
-        // Postulaciones totales
         const total = userPostulaciones.length;
-        
-        // En proceso (Pendiente + En revisión)
         const enProceso = userPostulaciones.filter(p => p.estado === "Pendiente" || p.estado === "En revisión").length;
         
-        // Miembro desde (Año de registro)
-        let anio = "2024"; // Default
+        let anio = "2024";
         if (user.fechaRegistro) {
-            // Intentar extraer el año de formatos tipo "14/04/2026" o ISO
             const parts = user.fechaRegistro.split("/");
-            if (parts.length === 3) {
-                anio = parts[2];
-            } else {
+            if (parts.length === 3) anio = parts[2];
+            else {
                 const date = new Date(user.fechaRegistro);
-                if (!isNaN(date.getTime())) {
-                    anio = date.getFullYear();
-                }
+                if (!isNaN(date.getTime())) anio = date.getFullYear();
             }
         }
 
@@ -146,39 +138,42 @@ document.addEventListener("DOMContentLoaded", () => {
         if (el) el.checked = checked;
     }
 
-    loadProfile();
+    await loadProfile();
 
     // ===============================================
-    // Guardar datos (Lógica compartida)
+    // Guardar datos asincrónicamente
     // ===============================================
-    function saveAndNotify() {
-        Auth.setActiveUser(user);
-        Data.updateUser(user.correo, user);
-        
-        // Actualizar UI inmediata
-        sidebarName.textContent = `${user.nombre} ${user.apellido}`.trim();
-        sidebarPhone.textContent = user.telefono || "No especificado";
-        
-        const sidebarLocation = document.getElementById("sidebarLocation");
-        if (sidebarLocation) {
-            sidebarLocation.textContent = `${user.ciudad || ""}, ${user.pais || ""}`.replace(/^, |, $/, "") || "Ubicación no especificada";
+    async function saveAndNotify() {
+        try {
+            await Data.updateUser(user.correo, user);
+            Auth.setActiveUser(user);
+            
+            // Actualizar UI inmediata
+            sidebarName.textContent = `${user.nombre} ${user.apellido}`.trim();
+            sidebarPhone.textContent = user.telefono || "No especificado";
+            
+            const sidebarLocation = document.getElementById("sidebarLocation");
+            if (sidebarLocation) {
+                sidebarLocation.textContent = `${user.ciudad || ""}, ${user.pais || ""}`.replace(/^, |, $/, "") || "Ubicación no especificada";
+            }
+            const sidebarExperience = document.getElementById("sidebarExperience");
+            if (sidebarExperience) {
+                const years = user.experienciaYears || "0-1";
+                sidebarExperience.textContent = `${years === "0-1" ? "Menos de 1 año" : years + " años"} de experiencia`;
+            }
+            
+            await updateActivityStats();
+            toast.show();
+        } catch (e) {
+            console.error("Error al guardar perfil:", e);
+            alert("No se pudieron guardar los cambios en la nube.");
         }
-        const sidebarExperience = document.getElementById("sidebarExperience");
-        if (sidebarExperience) {
-            const years = user.experienciaYears || "0-1";
-            sidebarExperience.textContent = `${years === "0-1" ? "Menos de 1 año" : years + " años"} de experiencia`;
-        }
-        
-        // Refrescar estadísticas por si acaso
-        updateActivityStats();
-
-        toast.show();
     }
 
     // Eventos de los formularios
     [formPersonal, formDisability, formLaboral, formPreferences].forEach(form => {
         if (!form) return;
-        form.addEventListener("submit", e => {
+        form.addEventListener("submit", async e => {
             e.preventDefault();
             
             if (form.id === "formPersonal") {
@@ -201,7 +196,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 user.vencimientoCertificado = document.getElementById("reg-vencimiento-certificado").value;
                 user.adaptaciones = document.getElementById("reg-adaptaciones").value.trim();
                 
-                // Recoger asistencia
                 user.asistencia = [];
                 if (document.getElementById("assist-accesibilidad").checked) user.asistencia.push("accesibilidad");
                 if (document.getElementById("assist-tecnologia").checked) user.asistencia.push("tecnologia");
@@ -230,7 +224,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 };
             }
 
-            saveAndNotify();
+            await saveAndNotify();
         });
     });
 
@@ -240,11 +234,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!file) return;
 
         const reader = new FileReader();
-        reader.onload = function(event) {
+        reader.onload = async function(event) {
             const imgData = event.target.result;
             profilePhoto.src = imgData;
             user.foto = imgData;
-            saveAndNotify();
+            await saveAndNotify();
         };
         reader.readAsDataURL(file);
     });
@@ -261,7 +255,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             const reader = new FileReader();
-            reader.onload = function(event) {
+            reader.onload = async function(event) {
                 const base64 = event.target.result;
                 const date = new Date().toLocaleDateString();
                 const size = (file.size / 1024).toFixed(0) + " KB";
@@ -276,7 +270,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (cvFileName) cvFileName.textContent = file.name;
                 if (cvFileMeta) cvFileMeta.textContent = `Subido el ${date} • ${size}`;
                 
-                saveAndNotify();
+                await saveAndNotify();
             };
             reader.readAsDataURL(file);
         });
@@ -284,16 +278,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Botones de cancelar
     document.querySelectorAll(".btn-cancel").forEach(btn => {
-        btn.addEventListener("click", () => {
+        btn.addEventListener("click", async () => {
             if (confirm("¿Estás seguro de que deseas cancelar? Se perderán los cambios no guardados.")) {
-                loadProfile();
+                await loadProfile();
             }
         });
     });
 
     // Cerrar sesión
-    document.getElementById("logoutBtn").addEventListener("click", (e) => {
+    document.getElementById("logoutBtn").addEventListener("click", async (e) => {
         e.preventDefault();
-        Auth.logout();
+        await Auth.logout();
     });
 });

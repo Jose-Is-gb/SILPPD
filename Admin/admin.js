@@ -1,8 +1,4 @@
-// ===============================
-// admin.js — Panel principal del administrador
-// ===============================
-
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     if (typeof Auth !== "undefined") {
         const user = Auth.getActiveUser();
         if (!user || user.rol !== "admin") {
@@ -11,26 +7,28 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // --- Cargar base de datos local ---
-    const db = Data.getDB();
+    // --- Cargar datos de la nube ---
+    async function cargarEstadisticas() {
+        try {
+            const db = await Data.getDB();
 
-    // --- Actualizar contadores ---
-    const setText = (id, value) => {
-        const el = document.getElementById(id);
-        if (el) el.textContent = value;
-    };
+            const setText = (id, value) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = value;
+            };
 
-    setText("countUsuarios", db.usuarios.length);
-    setText("countOfertas", db.ofertas.length);
-    setText("countEmpresas", db.empresas.length);
-    setText("countPostulaciones", db.postulaciones ? db.postulaciones.length : 0);
+            setText("countUsuarios", db.usuarios.length);
+            setText("countOfertas", db.ofertas.length);
+            setText("countEmpresas", db.empresas.length);
+            setText("countPostulaciones", db.postulaciones ? db.postulaciones.length : 0);
 
-    // ===============================
-    // Mostrar actividad reciente — versión mejorada
-    // ===============================
-    function cargarActividadReciente() {
-        const db = Data.getDB();
+            await cargarActividadReciente(db);
+        } catch (e) {
+            console.error("Error al cargar estadísticas admin:", e);
+        }
+    }
 
+    async function cargarActividadReciente(db) {
         const listaActividad = document.getElementById("actividadReciente");
         const actividades = [];
 
@@ -45,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         // --- Últimos usuarios registrados ---
-        db.usuarios.slice(-3).forEach(u => {
+        db.usuarios.slice(-5).forEach(u => {
             actividades.push({
                 tipo: "Usuario",
                 mensaje: `Nuevo usuario: <strong>${u.nombre}</strong>`,
@@ -55,31 +53,17 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         // --- Últimas ofertas ---
-        db.ofertas.slice(-3).forEach(o => {
-            // Busquemos el correo de la empresa por el nombre (en este mock el nombre es el ID usualmente o link)
-            const empresa = db.empresas.find(e => e.nombre === o.empresa);
+        db.ofertas.slice(-5).forEach(o => {
             actividades.push({
                 tipo: "Oferta",
                 mensaje: `Oferta: <strong>${o.titulo}</strong>`,
                 fecha: parseFecha(o.fecha || o.fechaPublicacion),
-                email: empresa ? empresa.correo : "soporte@talentoinclusivo.com"
+                email: o.empresaEmail || "soporte@talentoinclusivo.com"
             });
         });
 
-        // --- Últimas empresas ---
-        db.empresas.slice(-3).forEach(e => {
-            actividades.push({
-                tipo: "Empresa",
-                mensaje: `Empresa: <strong>${e.nombre}</strong>`,
-                fecha: parseFecha(e.fechaRegistro),
-                email: e.correo
-            });
-        });
-
-        // --- Ordenar por fecha (más reciente primero) ---
+        // --- Ordenar por fecha ---
         actividades.sort((a, b) => b.fecha - a.fecha);
-
-        // --- Mostrar solo los últimos 5 eventos ---
         const recientes = actividades.slice(0, 5);
 
         listaActividad.innerHTML = "";
@@ -89,9 +73,9 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        recientes.forEach(a => {
+        for (const a of recientes) {
             try {
-                const info = Data.getContactInfo(a.email);
+                const info = await Data.getContactInfo(a.email);
                 const li = document.createElement("li");
                 li.className = "list-group-item d-flex align-items-center justify-content-between py-3";
                 li.innerHTML = `
@@ -105,16 +89,17 @@ document.addEventListener("DOMContentLoaded", () => {
             } catch (err) {
                 console.error("Error al renderizar actividad:", err);
             }
-        });
+        }
     }
 
-    // Ejecutar al cargar
-    cargarActividadReciente();
-
+    // Inicializar
+    await cargarEstadisticas();
 
     // --- Logout ---
     const logoutBtn = document.getElementById("logoutBtn");
     if (logoutBtn) {
-        logoutBtn.addEventListener("click", () => Auth.logout());
+        logoutBtn.addEventListener("click", async () => {
+            await Auth.logout();
+        });
     }
 });

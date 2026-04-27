@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setMode("user");
 
     // Login
-    loginBtn.onclick = () => {
+    loginBtn.onclick = async () => {
         const email = emailInput.value.trim();
         const password = passwordInput.value.trim();
         const mode = loginBox.getAttribute("data-login-mode");
@@ -124,32 +124,44 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        if (mode === "admin") {
-            if (Auth.loginAdmin(email, password)) {
-                window.location.href = ADMIN_URL;
+        // Mostrar un pequeño indicador de carga si fuera necesario
+        loginBtn.disabled = true;
+        loginBtn.innerHTML = '<i class="fa fa-spinner fa-spin me-2"></i> Cargando...';
+
+        try {
+            if (mode === "admin") {
+                if (await Auth.loginAdmin(email, password)) {
+                    window.location.href = ADMIN_URL;
+                } else {
+                    alert("Credenciales de administrador incorrectas o no tienes permisos.");
+                }
+            } else if (mode === "company") {
+                const user = await Auth.login(email, password);
+                if (user && user.rol === "empresa") {
+                    window.location.href = COMPANY_URL;
+                } else if (user) {
+                    alert("Esta cuenta no es de tipo empresa.");
+                    await Auth.logout();
+                } else {
+                    alert("Correo o contraseña incorrectos.");
+                }
             } else {
-                alert("Credenciales de administrador incorrectas.");
+                const user = await Auth.login(email, password);
+                if (user && user.rol === "usuario") {
+                    window.location.href = APP_URL;
+                } else if (user) {
+                    alert("Esta cuenta no es de tipo usuario.");
+                    await Auth.logout();
+                } else {
+                    alert("Correo o contraseña incorrectos.");
+                }
             }
-        } else if (mode === "company") {
-            const user = Auth.login(email, password);
-            if (user && user.rol === "empresa") {
-                window.location.href = COMPANY_URL;
-            } else if (user) {
-                alert("Esta cuenta no es de tipo empresa.");
-                Auth.logout();
-            } else {
-                alert("Correo o contraseña incorrectos.");
-            }
-        } else {
-            const user = Auth.login(email, password);
-            if (user && user.rol === "usuario") {
-                window.location.href = APP_URL;
-            } else if (user) {
-                alert("Esta cuenta no es de tipo usuario.");
-                Auth.logout();
-            } else {
-                alert("Correo o contraseña incorrectos.");
-            }
+        } catch (e) {
+            console.error(e);
+            alert("Error en la conexión con el servidor.");
+        } finally {
+            loginBtn.disabled = false;
+            loginBtn.textContent = mode === "admin" ? "Acceder como Administrador" : "Iniciar Sesión";
         }
     };
 
@@ -157,9 +169,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnRecover = document.getElementById("btnRecoverPassword");
 
     if (btnRecover) {
-        btnRecover.addEventListener("click", () => {
-
-            const email = document.getElementById("recoverEmail").value;
+        btnRecover.addEventListener("click", async () => {
+            const email = document.getElementById("recoverEmail").value.trim();
             const pass1 = document.getElementById("recoverPassword").value;
             const pass2 = document.getElementById("recoverPassword2").value;
 
@@ -173,18 +184,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            const db = JSON.parse(localStorage.getItem("TI_DATABASE")) || { usuarios: [] };
-            const user = db.usuarios.find(u => u.correo === email);
+            try {
+                const db = await Data.getDB();
+                const user = (db.usuarios || []).find(u => u.correo === email) || 
+                             (db.empresas || []).find(e => e.correo === email);
 
-            if (!user) {
-                alert("No existe una cuenta con ese correo");
-                return;
+                if (!user) {
+                    alert("No existe una cuenta con ese correo");
+                    return;
+                }
+
+                await Data.updateUser(user.correo, { password: pass1 });
+                alert("✓ Contraseña actualizada correctamente en la nube.");
+                location.reload();
+            } catch (e) {
+                alert("Error al actualizar la contraseña: " + e.message);
             }
-
-            user.password = pass1;
-            localStorage.setItem("TI_DATABASE", JSON.stringify(db));
-            alert("Contraseña actualizada correctamente");
-            location.reload();
         });
     }
 

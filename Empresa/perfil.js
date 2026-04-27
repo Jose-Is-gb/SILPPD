@@ -1,6 +1,6 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     // 1. Verificar sesión
-    const user = Auth.getActiveUser();
+    let user = Auth.getActiveUser();
     if (!user || user.rol !== "empresa") {
         window.location.href = "../login.html";
         return;
@@ -16,18 +16,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const sidePhone = document.getElementById("sidePhone");
     const sideFounded = document.getElementById("sideFounded");
     
-    // Stats
     const statOfertas = document.getElementById("statOfertas");
     const statContratos = document.getElementById("statContratos");
     const statMiembro = document.getElementById("statMiembro");
 
-    // Formularios
     const formPerfil = document.getElementById("formPerfil");
     const formContacto = document.getElementById("formContacto");
     const formInclusion = document.getElementById("formInclusion");
 
-    // 3. Cargar Datos
-    function loadProfile() {
+    const logoContainer = document.querySelector(".logo-container");
+
+    // 3. Cargar Datos Asíncronamente
+    async function loadProfile() {
+        // Obtener datos frescos de la nube
+        user = await Data.getUserByEmail(user.correo);
+        Auth.setActiveUser(user);
+
         // Sidebar
         sideName.textContent = user.nombre;
         sideSector.textContent = user.sector || "Sector no especificado";
@@ -39,18 +43,24 @@ document.addEventListener("DOMContentLoaded", () => {
         sidePhone.textContent = user.telefono || "Sin teléfono";
         sideFounded.textContent = user.fundacion ? `Fundada en ${user.fundacion}` : "Año no especificado";
 
-        // Stats dinámicas
-        const db = Data.getDB();
-        const ofertas = db.ofertas.filter(o => o.empresa === user.nombre);
-        const postulaciones = db.postulaciones.filter(p => ofertas.some(o => o.id == p.idOferta));
+        if (user.fotoEmpresa || user.foto) {
+            logoContainer.innerHTML = `<img src="${user.fotoEmpresa || user.foto}" style="width:100%; height:100%; object-fit:cover;" class="rounded-circle shadow-sm">`;
+        } else {
+            logoContainer.innerHTML = `<i class="fa fa-building"></i>`;
+        }
+
+        // Stats dinámicas de la nube
+        const db = await Data.getDB();
+        const ofertas = (db.ofertas || []).filter(o => o.empresa === user.nombre || o.empresaEmail === user.correo);
+        const postulaciones = (db.postulaciones || []).filter(p => ofertas.some(o => String(o.id) === String(p.idOferta)));
         
         statOfertas.textContent = ofertas.length;
         statContratos.textContent = postulaciones.filter(p => p.estado === "Aceptado").length;
         statMiembro.textContent = user.fechaRegistro ? user.fechaRegistro.split('/').pop() : '2024';
 
         // TAB 1: Datos Empresa
-        document.getElementById("razonSocial").value = user.razonSocial || user.nombre;
-        document.getElementById("nombreComercial").value = user.nombreComercial || user.nombre;
+        document.getElementById("razonSocial").value = user.razonSocial || user.nombre || "";
+        document.getElementById("nombreComercial").value = user.nombreComercial || user.nombre || "";
         document.getElementById("ruc").value = user.ruc || "";
         document.getElementById("partidaRegistral").value = user.partidaRegistral || "";
         document.getElementById("sector").value = user.sector || "Tecnología e Informática";
@@ -65,8 +75,8 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("contNombre").value = user.contacto.nombre || "";
             document.getElementById("contCargo").value = user.contacto.cargo || "";
             document.getElementById("contEmail").value = user.contacto.email || user.correo;
-            document.getElementById("contTelefono").value = user.contacto.telefono || user.telefono;
-            document.getElementById("contDireccion").value = user.contacto.direccion || user.direccion;
+            document.getElementById("contTelefono").value = user.contacto.telefono || user.telefono || "";
+            document.getElementById("contDireccion").value = user.contacto.direccion || user.direccion || "";
             document.getElementById("contCiudad").value = user.contacto.ciudad || "";
             document.getElementById("contProvincia").value = user.contacto.provincia || "";
             document.getElementById("contCP").value = user.contacto.cp || "";
@@ -80,27 +90,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // TAB 3: Inclusión
         if (user.inclusion) {
-            document.getElementById("accFisica").checked = user.inclusion.accFisica || false;
-            document.getElementById("accTecno").checked = user.inclusion.accTecno || false;
-            document.getElementById("accLengua").checked = user.inclusion.accLengua || false;
-            document.getElementById("accRemoto").checked = user.inclusion.accRemoto || false;
-            document.getElementById("accParking").checked = user.inclusion.accParking || false;
-            document.getElementById("accFormacion").checked = user.inclusion.accFormacion || false;
+            document.getElementById("accFisica").checked = !!user.inclusion.accFisica;
+            document.getElementById("accTecno").checked = !!user.inclusion.accTecno;
+            document.getElementById("accLengua").checked = !!user.inclusion.accLengua;
+            document.getElementById("accRemoto").checked = !!user.inclusion.accRemoto;
+            document.getElementById("accParking").checked = !!user.inclusion.accParking;
+            document.getElementById("accFormacion").checked = !!user.inclusion.accFormacion;
             
-            document.getElementById("polInclusion").value = user.inclusion.politica || "Sí, certificada (ISO 30415 u otra)";
-            document.getElementById("empDiscapacidad").value = user.inclusion.empDiscapacidad || "45";
+            document.getElementById("polInclusion").value = user.inclusion.politica || "En proceso";
+            document.getElementById("empDiscapacidad").value = user.inclusion.empDiscapacidad || "0";
             document.getElementById("compromisoTexto").value = user.inclusion.compromiso || "";
             document.getElementById("certificaciones").value = user.inclusion.certificaciones || "";
-            document.getElementById("presupuesto").value = user.inclusion.presupuesto || "Sí, presupuesto anual definido";
-            document.getElementById("responsable").value = user.inclusion.responsable || "Sí, puesto dedicado";
+            document.getElementById("presupuesto").value = user.inclusion.presupuesto || "No definido";
+            document.getElementById("responsable").value = user.inclusion.responsable || "No definido";
         }
-
-        // TAB 4: Verificación
-        // No fields to fill here as per the screenshot (mostly static/display information)
     }
 
     // 4. Guardar Datos
-    formPerfil.addEventListener("submit", (e) => {
+    formPerfil.addEventListener("submit", async (e) => {
         e.preventDefault();
         const updatedData = {
             razonSocial: document.getElementById("razonSocial").value,
@@ -114,10 +121,11 @@ document.addEventListener("DOMContentLoaded", () => {
             descripcion: document.getElementById("descripcion").value,
             mision: document.getElementById("mision").value,
         };
-        saveAndReload(updatedData, "Datos legales actualizados.");
+        if (updatedData.nombreComercial) updatedData.nombre = updatedData.nombreComercial;
+        await saveAndReload(updatedData, "Datos legales actualizados en la nube.");
     });
 
-    formContacto.addEventListener("submit", (e) => {
+    formContacto.addEventListener("submit", async (e) => {
         e.preventDefault();
         const contacto = {
             nombre: document.getElementById("contNombre").value,
@@ -131,10 +139,10 @@ document.addEventListener("DOMContentLoaded", () => {
             linkedin: document.getElementById("contLinkedin").value,
             facebook: document.getElementById("contFacebook").value
         };
-        saveAndReload({ contacto, direccion: contacto.direccion, telefono: contacto.telefono }, "Información de contacto actualizada.");
+        await saveAndReload({ contacto, direccion: contacto.direccion, telefono: contacto.telefono }, "Información de contacto actualizada.");
     });
 
-    formInclusion.addEventListener("submit", (e) => {
+    formInclusion.addEventListener("submit", async (e) => {
         e.preventDefault();
         const inclusion = {
             accFisica: document.getElementById("accFisica").checked,
@@ -150,39 +158,33 @@ document.addEventListener("DOMContentLoaded", () => {
             presupuesto: document.getElementById("presupuesto").value,
             responsable: document.getElementById("responsable").value
         };
-        saveAndReload({ inclusion }, "Políticas de inclusión actualizadas.");
+        await saveAndReload({ inclusion }, "Políticas de inclusión actualizadas.");
     });
 
-    function saveAndReload(newData, message) {
-        if (newData.nombreComercial) {
-            user.nombre = newData.nombreComercial;
+    async function saveAndReload(newData, message) {
+        try {
+            await Data.updateUser(user.correo, newData);
+            alert("✓ " + message);
+            await loadProfile();
+        } catch (err) {
+            console.error(err);
+            alert("Error al guardar en la nube.");
         }
-        Object.assign(user, newData);
-        Auth.setActiveUser(user);
-        Data.updateUser(user.correo, user);
-        alert(message);
-        loadProfile();
     }
-
-    // 5. Visor de documentos
-    const modalDocElement = document.getElementById('modalDoc');
-    const modalDoc = modalDocElement ? new bootstrap.Modal(modalDocElement) : null;
-    const modalDocTitle = document.getElementById('modalDocTitle');
 
     // Cambiar Logo
     const logoBtn = document.getElementById("logoBtn");
     const logoInput = document.getElementById("logoInput");
     if (logoBtn && logoInput) {
         logoBtn.onclick = () => logoInput.click();
-        logoInput.onchange = (e) => {
+        logoInput.onchange = async (e) => {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = (event) => {
+                reader.onload = async (event) => {
                     const imgData = event.target.result;
-                    const container = document.querySelector(".logo-container");
-                    if(container) container.innerHTML = `<img src="${imgData}" style="width:100%; height:100%; object-fit:cover;" class="rounded-circle">`;
-                    saveAndReload({ fotoEmpresa: imgData }, "Logo actualizado correctamente.");
+                    logoContainer.innerHTML = `<img src="${imgData}" style="width:100%; height:100%; object-fit:cover;" class="rounded-circle shadow-sm">`;
+                    await saveAndReload({ fotoEmpresa: imgData, foto: imgData }, "Logo actualizado correctamente.");
                 };
                 reader.readAsDataURL(file);
             }
@@ -192,19 +194,20 @@ document.addEventListener("DOMContentLoaded", () => {
     // Botones de cancelar
     document.querySelectorAll(".btn-light").forEach(btn => {
         if(btn.textContent.trim() === "Cancelar") {
-            btn.onclick = () => {
-                if (confirm("¿Estás seguro de que deseas cancelar? Se perderán los cambios no guardados.")) {
-                    loadProfile();
+            btn.onclick = async () => {
+                if (confirm("¿Estás seguro de que deseas cancelar?")) {
+                    await loadProfile();
                 }
             };
         }
     });
 
-    loadProfile();
+    // Inicializar
+    await loadProfile();
 
     // Logout
-    document.getElementById("logoutBtn").addEventListener("click", (e) => {
+    document.getElementById("logoutBtn").addEventListener("click", async (e) => {
         e.preventDefault();
-        Auth.logout();
+        await Auth.logout();
     });
 });

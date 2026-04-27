@@ -1,8 +1,8 @@
 // ===============================
-// mensajeria.js — Chat del usuario (con Soporte y otros usuarios)
+// mensajeria.js — Chat del usuario (con Soporte y otros usuarios) - FIREBASE
 // ===============================
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     // ===============================
     // Verificar sesión activa
     // ===============================
@@ -23,6 +23,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const attachBtn = document.getElementById("attachBtn");
     const attachInput = document.getElementById("attachInput");
 
+    let activeChat = null;
+    let unsubscribeMessages = null;
+
     // Lógica de archivos
     attachBtn.onclick = () => attachInput.click();
     attachInput.onchange = () => {
@@ -33,171 +36,118 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    let activeChat = null;
-
-    // ===============================
-    // Inicializar base de datos si no existe
-    // ===============================
-    const db = JSON.parse(localStorage.getItem("TI_DATABASE")) || { usuarios: [], mensajes: [] };
-    db.mensajes = db.mensajes || [];
-
-    // ===============================
-    // Crear conversación predeterminada con Soporte
-    // ===============================
     const soporteEmail = "soporte@talentoinclusivo.com";
-    const soporteNombre = "Soporte Talento Inclusivo";
-
-    const tieneSoporte = db.mensajes.some(
-        m =>
-            (m.remitente === user.correo && m.destinatario === soporteEmail) ||
-            (m.remitente === soporteEmail && m.destinatario === user.correo)
-    );
-
-    if (!tieneSoporte) {
-        db.mensajes.push({
-            remitente: soporteEmail,
-            destinatario: user.correo,
-            texto: `👋 ¡Hola ${user.nombre || "usuario"}! Bienvenido a Talento Inclusivo. ¿Necesitas ayuda?`,
-            fecha: new Date().toLocaleString()
-        });
-        localStorage.setItem("TI_DATABASE", JSON.stringify(db));
-    }
 
     // ===============================
-    // Obtener nombre del usuario por correo
+    // Cargar lista de conversaciones únicas
     // ===============================
-    function getNombrePorCorreo(correo) {
-        if (correo === soporteEmail) return soporteNombre;
-        const usuario = db.usuarios.find(u => u.correo === correo);
-        return usuario ? usuario.nombre : correo;
-    }
+    async function loadChats() {
+        try {
+            const allMsgs = await Data.getMensajesByUser(user.correo);
+            
+            // Si no hay mensajes, forzamos el de bienvenida de Soporte en la nube
+            if (allMsgs.length === 0) {
+                await Data.addMensaje({
+                    de: soporteEmail,
+                    para: user.correo,
+                    texto: `👋 ¡Hola ${user.nombre || "usuario"}! Bienvenido a Talento Inclusivo Cloud. ¿Necesitas ayuda?`
+                });
+                return loadChats(); // Re-cargar
+            }
 
-    // ===============================
-    // Cargar lista de conversaciones
-    // ===============================
-    function loadChats() {
-        const db = JSON.parse(localStorage.getItem("TI_DATABASE")) || { mensajes: [] };
-        const userMsgs = db.mensajes.filter(
-            m => m.remitente === user.correo || m.destinatario === user.correo
-        );
+            const contactosSet = new Set(
+                allMsgs.map(m => (m.de === user.correo ? m.para : m.de))
+            );
 
-        const contactos = [...new Set(
-            userMsgs.map(m => (m.remitente === user.correo ? m.destinatario : m.remitente))
-        )];
+            // Asegurar que soporte esté en la lista
+            contactosSet.add(soporteEmail);
 
-        chatList.innerHTML = `
-            <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
-                <strong>Conversaciones</strong>
-                <button class="btn btn-sm btn-success" id="newChatBtn">
-                    <i class="fa fa-plus"></i>
-                </button>
-            </li>
-        `;
-
-        if (contactos.length === 0) {
-            chatList.innerHTML += `<li class="list-group-item text-center text-muted">No hay conversaciones</li>`;
-            return;
-        }
-
-        contactos.forEach(contactoCorreo => {
-            const info = Data.getContactInfo(contactoCorreo);
-            const li = document.createElement("li");
-            li.className = `list-group-item list-group-item-action d-flex align-items-center ${activeChat === contactoCorreo ? 'active bg-primary text-white' : ''}`;
-            li.innerHTML = `
-                <img src="${info.foto}" class="rounded-circle me-3" style="width: 35px; height: 35px; object-fit: cover;">
-                <span>${info.nombre}</span>
+            chatList.innerHTML = `
+                <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
+                    <strong>Conversaciones</strong>
+                    <button class="btn btn-sm btn-success" id="newChatBtn">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                </li>
             `;
-            li.onclick = () => openChat(contactoCorreo, info.nombre, info.foto);
-            chatList.appendChild(li);
-        });
 
-        document.getElementById("newChatBtn").onclick = createNewChat;
+            for (const contactoCorreo of contactosSet) {
+                const info = await Data.getContactInfo(contactoCorreo);
+                const li = document.createElement("li");
+                li.className = `list-group-item list-group-item-action d-flex align-items-center ${activeChat === contactoCorreo ? 'active bg-primary text-white border-primary' : ''}`;
+                li.innerHTML = `
+                    <div class="position-relative me-3">
+                        <img src="${info.foto}" class="rounded-circle" style="width: 35px; height: 35px; object-fit: cover;">
+                        <span class="position-absolute bottom-0 end-0 p-1 bg-success border border-light rounded-circle" style="padding: 4px !important;"></span>
+                    </div>
+                    <span>${info.nombre}</span>
+                `;
+                li.onclick = () => openChat(contactoCorreo, info.nombre, info.foto);
+                chatList.appendChild(li);
+            }
+
+            document.getElementById("newChatBtn").onclick = createNewChat;
+        } catch (e) {
+            console.error("Error cargando chats:", e);
+        }
     }
 
-    // ===============================
-    // Crear nueva conversación manualmente
-    // ===============================
     function createNewChat() {
         const email = prompt("Introduce el correo del usuario con el que deseas chatear:");
-        if (!email) return;
-
-        if (email === user.correo) {
-            alert("No puedes chatear contigo mismo.");
-            return;
-        }
-
-        // Abrir el chat directamente
-        activeChat = email;
-        chatHeader.textContent = `Conversación con ${getNombrePorCorreo(email)}`;
-        renderMessages();
-
-        // Añadir a la lista si no existe
-        const existe = [...chatList.querySelectorAll("li")].some(li =>
-            li.textContent.includes(email)
-        );
-        if (!existe) {
-            const li = document.createElement("li");
-            li.className = "list-group-item list-group-item-action";
-            li.innerHTML = `<i class="fa fa-user-circle me-2 text-primary"></i>${getNombrePorCorreo(email)}`;
-            li.onclick = () => openChat(email);
-            chatList.appendChild(li);
-        }
+        if (!email || email === user.correo) return;
+        openChat(email);
     }
 
     // ===============================
-    // Abrir conversación existente
+    // Abrir conversación existente con ESCUCHA EN TIEMPO REAL
     // ===============================
-    function openChat(contactEmail, nombre, foto) {
+    async function openChat(contactEmail, nombre, foto) {
+        // Cancelar suscripción anterior si existe
+        if (unsubscribeMessages) unsubscribeMessages();
+        
         activeChat = contactEmail;
-        const info = foto ? { nombre, foto } : Data.getContactInfo(contactEmail);
+        const info = foto ? { nombre, foto } : await Data.getContactInfo(contactEmail);
+        
         chatHeader.innerHTML = `
             <div class="d-flex align-items-center">
                 <img src="${info.foto}" class="rounded-circle me-3" style="width: 40px; height: 40px; object-fit: cover;">
                 <div>
-                    <h6 class="mb-0">${info.nombre}</h6>
+                    <h6 class="mb-0 text-dark fw-bold">${info.nombre}</h6>
                     <small class="text-success" style="font-size: 0.75rem;">Online</small>
                 </div>
             </div>
         `;
-        renderMessages();
+
+        // ESCUCHAR EN TIEMPO REAL CON FIRESTORE
+        unsubscribeMessages = Data.listenConversacion(user.correo, activeChat, (msgs) => {
+            renderMessages(msgs);
+        });
+
+        // Refrescar lista para marcar el activo
         loadChats();
     }
 
-    // ===============================
-    // Mostrar mensajes del chat activo
-    // ===============================
-    function renderMessages() {
-        if (!activeChat) {
-            chatBody.innerHTML = `<p class="text-muted text-center">Selecciona una conversación</p>`;
-            return;
-        }
-
-        const db = JSON.parse(localStorage.getItem("TI_DATABASE")) || { mensajes: [] };
-        const msgs = db.mensajes.filter(
-            m =>
-                (m.remitente === user.correo && m.destinatario === activeChat) ||
-                (m.remitente === activeChat && m.destinatario === user.correo)
-        );
-
+    function renderMessages(msgs) {
         chatBody.innerHTML = "";
-
+        
         if (msgs.length === 0) {
-            chatBody.innerHTML = `<p class="text-muted text-center">No hay mensajes todavía</p>`;
+            chatBody.innerHTML = `<div class="text-center py-5 opacity-50"><p>No hay mensajes todavía. ¡Saluda primero! 👋</p></div>`;
             return;
         }
 
         msgs.forEach(msg => {
+            const isMe = msg.de === user.correo;
             const div = document.createElement("div");
-            div.className = msg.remitente === user.correo ? "text-end mb-2" : "text-start mb-2";
+            div.className = isMe ? "text-end mb-3" : "text-start mb-3";
 
             div.innerHTML = `
-                <div class="d-inline-block p-2 rounded ${msg.remitente === user.correo
-                    ? "bg-primary text-white"
-                    : "bg-light"
+                <div class="d-inline-block p-3 rounded-4 shadow-sm" style="max-width: 80%; ${isMe
+                    ? "background-color: #0d6efd; color: white; border-bottom-right-radius: 2px;"
+                    : "background-color: #f8f9fa; color: #333; border-bottom-left-radius: 2px;"
                 }">
-                    <small>${msg.texto}</small>
-                </div><br>
-                <small class="text-muted">${msg.fecha}</small>
+                    <p class="mb-1" style="font-size: 0.95rem;">${msg.texto}</p>
+                    <small class="opacity-75" style="font-size: 0.7rem;">${msg.fecha || "Ahora mismo"}</small>
+                </div>
             `;
             chatBody.appendChild(div);
         });
@@ -208,55 +158,33 @@ document.addEventListener("DOMContentLoaded", () => {
     // ===============================
     // Enviar mensaje
     // ===============================
-    sendBtn.addEventListener("click", () => {
+    sendBtn.addEventListener("click", async () => {
         const texto = messageInput.value.trim();
         if (!texto || !activeChat) return;
 
-        const db = JSON.parse(localStorage.getItem("TI_DATABASE")) || { mensajes: [] };
-        db.mensajes = db.mensajes || [];
-
-        db.mensajes.push({
-            remitente: user.correo,
-            destinatario: activeChat,
-            texto,
-            fecha: new Date().toLocaleString()
-        });
-
-        localStorage.setItem("TI_DATABASE", JSON.stringify(db));
         messageInput.value = "";
-        renderMessages();
-
-        // ✅ Respuesta automática si el chat es con soporte
-        // Solo enviar si el admin NO ha respondido en las últimas 12 horas
-        if (activeChat === soporteEmail) {
-            const autoReplyText = "Gracias por tu mensaje. En breve un agente de Talento Inclusivo te responderá. 💬";
-            const ahora = new Date();
-            const hace12h = new Date(ahora.getTime() - 12 * 60 * 60 * 1000);
-
-            // Buscar si el admin (soporte) ya envió un mensaje REAL (que no sea el auto-reply)
-            // a este usuario en las últimas 12 horas
-            const replyReciente = db.mensajes.some(m => {
-                if (m.remitente !== soporteEmail || m.destinatario !== user.correo) return false;
-                if (m.texto === autoReplyText) return false; // Ignorar auto-replies
-                try {
-                    const fechaMsg = new Date(m.fecha);
-                    return fechaMsg >= hace12h;
-                } catch(e) { return false; }
+        
+        try {
+            await Data.addMensaje({
+                de: user.correo,
+                para: activeChat,
+                texto: texto
             });
-
-            if (!replyReciente) {
-                setTimeout(() => {
-                    const dbFresh = JSON.parse(localStorage.getItem("TI_DATABASE")) || { mensajes: [] };
-                    dbFresh.mensajes.push({
-                        remitente: soporteEmail,
-                        destinatario: user.correo,
-                        texto: autoReplyText,
-                        fecha: new Date().toLocaleString()
+            
+            // ✅ Respuesta automática si el chat es con soporte
+            if (activeChat === soporteEmail) {
+                setTimeout(async () => {
+                    const autoReplyText = "Gracias por escribir. Todo nuestro equipo ha migrado a la nube de Firebase para darte una mejor experiencia. ☁️✨";
+                    await Data.addMensaje({
+                        de: soporteEmail,
+                        para: user.correo,
+                        texto: autoReplyText
                     });
-                    localStorage.setItem("TI_DATABASE", JSON.stringify(dbFresh));
-                    renderMessages();
-                }, 1000);
+                }, 1500);
             }
+        } catch (e) {
+            console.error("Error enviando mensaje:", e);
+            alert("No se pudo enviar el mensaje.");
         }
     });
 
@@ -268,13 +196,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // ===============================
-    // Cerrar sesión
-    // ===============================
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-        Auth.logout();
+    // Logout
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+        await Auth.logout();
     });
 
-    // Inicializar lista
-    loadChats();
+    // Inicializar
+    await loadChats();
 });

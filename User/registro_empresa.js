@@ -104,8 +104,9 @@ function togglePasswordEmp(inputId, iconSpan) {
     }
 }
 
-function submitEmpresa() {
+async function submitEmpresa() {
     const errorBox = document.getElementById('error-step-4');
+    const btnSubmit = document.querySelector('button[onclick="submitEmpresa()"]');
     
     // Validar documento RUC obligatorio
     const docRuc = document.getElementById('emp-doc-ruc');
@@ -135,29 +136,86 @@ function submitEmpresa() {
     }
 
     errorBox.classList.add('d-none');
+    btnSubmit.disabled = true;
+    btnSubmit.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Procesando solicitud...';
 
-    // Guardar datos de empresa (simulado)
+    // RECOLECCIÓN COMPLETA DE DATOS DE EMPRESA
+    const extraData = {
+        razonSocial: document.getElementById('emp-razon-social').value.trim(),
+        nombreComercial: document.getElementById('emp-nombre-comercial').value.trim(),
+        ruc: document.getElementById('emp-ruc').value.trim(),
+        sector: document.getElementById('emp-sector').value,
+        tamanio: document.getElementById('emp-tamano').value,
+        fundacion: document.getElementById('emp-fundacion').value,
+        sitioWeb: document.getElementById('emp-web').value.trim(),
+        descripcion: document.getElementById('emp-descripcion').value.trim(),
+        
+        // Ubicación y Contacto
+        direccion: document.getElementById('emp-direccion').value.trim(),
+        ciudad: document.getElementById('emp-ciudad').value.trim(),
+        provincia: document.getElementById('emp-provincia').value.trim(),
+        codigoPostal: document.getElementById('emp-cp').value.trim(),
+        pais: document.getElementById('emp-pais').value.trim(),
+        telefono: document.getElementById('emp-telefono').value.trim(),
+        
+        contacto: {
+            nombre: document.getElementById('emp-contacto-nombre').value.trim(),
+            cargo: document.getElementById('emp-contacto-cargo').value.trim(),
+            email: document.getElementById('emp-email').value.trim(),
+            telefono: document.getElementById('emp-telefono').value.trim()
+        },
+
+        // Inclusión
+        inclusion: {
+            politica: document.getElementById('emp-politica-inclusion').value,
+            empDiscapacidad: document.getElementById('emp-empleados-discapacidad').value,
+            compromiso: document.getElementById('emp-compromiso').value.trim(),
+            certificaciones: document.getElementById('emp-certificaciones').value.trim(),
+            presupuesto: document.getElementById('emp-presupuesto').value,
+            responsable: document.getElementById('emp-responsable').value,
+            accFisica: document.getElementById('adapt-fisica').checked,
+            accTecno: document.getElementById('adapt-tecnologia').checked,
+            accLengua: document.getElementById('adapt-lengua').checked,
+            accRemoto: document.getElementById('adapt-remoto').checked,
+            accParking: document.getElementById('adapt-transporte').checked,
+            accFormacion: document.getElementById('adapt-formacion').checked
+        },
+        
+        validada: false, // Requiere aprobación del admin
+        estado: "Pendiente"
+    };
+
     const email = document.getElementById('emp-email').value.trim();
     const pwd = document.getElementById('emp-password').value;
-    const razonSocial = document.getElementById('emp-razon-social').value.trim();
+    const nombre = extraData.nombreComercial || extraData.razonSocial;
 
-    let isRegistered = true;
-    if (typeof Auth !== 'undefined' && Auth.registerUser) {
-        isRegistered = Auth.registerUser(razonSocial, email, pwd, "", "empresa");
-    }
+    try {
+        let isRegistered = false;
+        if (typeof Auth !== 'undefined' && Auth.registerUser) {
+            isRegistered = await Auth.registerUser(nombre, email, pwd, "", "empresa", extraData);
+        }
 
-    if (!isRegistered) {
-        errorBox.textContent = "Este correo electrónico ya está registrado.";
+        if (!isRegistered) {
+            errorBox.textContent = "El registro de empresa falló en la nube. Revisa los datos.";
+            errorBox.classList.remove('d-none');
+            btnSubmit.disabled = false;
+            btnSubmit.innerHTML = 'Enviar solicitud de registro';
+            return;
+        }
+
+        const successBox = document.getElementById('success-reg');
+        successBox.textContent = "¡Solicitud enviada a la nube! El administrador la revisará pronto.";
+        successBox.classList.remove('d-none');
+
+        setTimeout(() => {
+            window.location.href = 'login.html';
+        }, 3000);
+
+    } catch (e) {
+        console.error("Error en registro empresa cloud:", e);
+        errorBox.textContent = "Error inesperado: " + e.message;
         errorBox.classList.remove('d-none');
-        return;
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = 'Enviar solicitud de registro';
     }
-
-    // Éxito
-    const successBox = document.getElementById('success-reg');
-    successBox.textContent = "¡Solicitud enviada con éxito! Su cuenta será revisada en 48-72 horas hábiles.";
-    successBox.classList.remove('d-none');
-
-    setTimeout(() => {
-        window.location.href = 'login.html';
-    }, 3000);
 }

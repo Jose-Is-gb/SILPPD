@@ -1,11 +1,5 @@
-// ===============================
-// usuario.js — Gestión de Usuarios (Administrador)
-// ===============================
-
-document.addEventListener("DOMContentLoaded", () => {
-    // ===============================
-    // Verificar sesión activa
-    // ===============================
+document.addEventListener("DOMContentLoaded", async () => {
+    // 1. Verificar sesión
     if (typeof Auth !== "undefined") {
         const user = Auth.getActiveUser();
         if (!user || user.rol !== "admin") {
@@ -14,470 +8,193 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // ===============================
-    // Referencias DOM
-    // ===============================
+    // 2. Elementos del DOM
     const tablaUsuarios = document.getElementById("tablaUsuarios");
     const searchInput = document.getElementById("searchInput");
+    const filtroRol = document.getElementById("filtroRol");
     const filtroDiscapacidad = document.getElementById("filtroDiscapacidad");
+    const containerFiltroDiscapacidad = document.getElementById("containerFiltroDiscapacidad");
     const filterBtn = document.getElementById("filterBtn");
     const clearBtn = document.getElementById("clearBtn");
 
-    const editNombre = document.getElementById("editNombre");
-    const editApellido = document.getElementById("editApellido");
-    const editCorreo = document.getElementById("editCorreo");
-    const editTelefono = document.getElementById("editTelefono");
-    const editPassword = document.getElementById("editPassword");
-    const editDescripcion = document.getElementById("editDescripcion");
-    const editDiscapacidad = document.getElementById("editDiscapacidad");
-    const guardarCambios = document.getElementById("guardarCambios");
+    const editForm = {
+        nombre: document.getElementById("editNombre"),
+        apellido: document.getElementById("editApellido"),
+        correo: document.getElementById("editCorreo"),
+        telefono: document.getElementById("editTelefono"),
+        password: document.getElementById("editPassword"),
+        descripcion: document.getElementById("editDescripcion"),
+        discapacidad: document.getElementById("editDiscapacidad"),
+        rol: document.getElementById("editRol")
+    };
 
-    // Toggle para ver/ocultar contraseña
-    const toggleEditPass = document.getElementById("toggleEditPass");
-    if (toggleEditPass) {
-        toggleEditPass.addEventListener("click", () => {
-            const inp = editPassword;
-            if (inp.type === "password") {
-                inp.type = "text";
-                toggleEditPass.innerHTML = '<i class="fa fa-eye-slash"></i>';
-            } else {
-                inp.type = "password";
-                toggleEditPass.innerHTML = '<i class="fa fa-eye"></i>';
-            }
-        });
-    }
+    let allUsers = [];
+    let usuarioActual = null;
 
-    // Campos y botón del modal "Agregar Usuario"
-    const nuevoNombre = document.getElementById("nuevoNombre");
-    const nuevoCorreo = document.getElementById("nuevoCorreo");
-    const nuevoPassword = document.getElementById("nuevoPassword");
-    const nuevoDiscapacidad = document.getElementById("nuevoDiscapacidad");
-    const guardarNuevoUsuario = document.getElementById("guardarNuevoUsuario");
-
-    const containerEditDiscapacidad = document.getElementById("containerEditDiscapacidad");
-    const containerNuevoDiscapacidad = document.getElementById("containerNuevoDiscapacidad");
-
-    // ===============================
-    // Lógica dinámica para mostrar/ocultar Discapacidad
-    // ===============================
-    if (document.getElementById("editRol")) {
-        document.getElementById("editRol").addEventListener("change", (e) => {
-            if (e.target.value === "usuario") {
-                containerEditDiscapacidad.style.display = "block";
-            } else {
-                containerEditDiscapacidad.style.display = "none";
-            }
-        });
-    }
-
-    if (document.getElementById("nuevoRol")) {
-        document.getElementById("nuevoRol").addEventListener("change", (e) => {
-            if (e.target.value === "usuario") {
-                containerNuevoDiscapacidad.style.display = "block";
-            } else {
-                containerNuevoDiscapacidad.style.display = "none";
-                nuevoDiscapacidad.value = "";
-            }
-        });
-    }
-
-
-    let usuarios = Data.getDB().usuarios || [];
-    let usuarioActual = null; // Para edición
-
-    // ===============================
-    // Referencias de filtros
-    // ===============================
-    const filtroRol = document.getElementById("filtroRol");
-    const containerFiltroDiscapacidad = document.getElementById("containerFiltroDiscapacidad");
-    const containerFiltroSector = document.getElementById("containerFiltroSector");
-    const containerFiltroRegion = document.getElementById("containerFiltroRegion");
-    const filtroSector = document.getElementById("filtroSector");
-    const filtroRegion = document.getElementById("filtroRegion");
-
-    // ===============================
-    // Función para renderizar tabla
-    // ===============================
-    function renderUsuarios(lista) {
+    // 3. Renderizar Tabla (Asíncrona)
+    async function renderUsuarios(lista) {
         tablaUsuarios.innerHTML = "";
+        const rolActual = filtroRol.value;
 
-        // Actualizar encabezados de tabla según el filtro activo
-        const thCol3 = document.getElementById("thCol3");
-        const thCol5 = document.getElementById("thCol5");
-        const rolActual = filtroRol ? filtroRol.value : "all";
-
-        if (rolActual === "empresa") {
-            thCol3.textContent = "Sector";
-            thCol5.textContent = "Región";
-        } else {
-            thCol3.textContent = "Discapacidad";
-            thCol5.textContent = "Fecha Registro";
-        }
+        // Ajustar headers
+        document.getElementById("thCol3").textContent = rolActual === "empresa" ? "Sector" : "Discapacidad";
+        document.getElementById("thCol5").textContent = rolActual === "empresa" ? "Ubicación" : "Registro";
 
         if (lista.length === 0) {
-            tablaUsuarios.innerHTML = `
-                <tr>
-                    <td colspan="6" class="text-center text-muted py-4">
-                        <i class="fa fa-info-circle me-2"></i>No hay registros que coincidan.
-                    </td>
-                </tr>
-            `;
+            tablaUsuarios.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">No hay resultados.</td></tr>`;
             return;
         }
 
-        lista.forEach(u => {
-            try {
-                const tr = document.createElement("tr");
-                const col3 = rolActual === "empresa" ? (u.discapacidad || "—") : (u.discapacidad || "No especificada");
-                const col5 = rolActual === "empresa" ? (u._region || "—") : (u.fechaRegistro || "—");
-                
-                const info = Data.getContactInfo(u.correo);
+        for (const u of lista) {
+            const info = await Data.getContactInfo(u.correo);
+            const col3 = u.rol === "empresa" ? (u.sector || "General") : (u.discapacidad || "—");
+            const col5 = u.rol === "empresa" ? (u.direccion || "—") : (u.fechaRegistro ? u.fechaRegistro.split('T')[0] : "—");
 
-                tr.innerHTML = `
-                    <td>
-                        <div class="d-flex align-items-center gap-2">
-                            <img src="${info.foto}" class="rounded-circle" style="width:32px; height:32px; object-fit: cover;">
-                            <span>${u.nombre || "Sin nombre"}</span>
-                        </div>
-                    </td>
-                    <td>${u.correo || "—"}</td>
-                    <td>${col3}</td>
-                    <td><span class="badge ${u.rol === 'admin' ? 'bg-danger' : u.rol === 'empresa' ? 'bg-success' : 'bg-primary'}">${(u.rol || "USUARIO").toUpperCase()}</span></td>
-                    <td>${col5}</td>
-                    <td>
-                        <button class="btn btn-sm btn-action btn-outline-primary me-1" onclick="editarUsuario('${u.correo}')" title="Editar">
-                            <i class="fa fa-pen"></i>
-                        </button>
-                        <button class="btn btn-sm btn-action btn-outline-danger" onclick="eliminarUsuario('${u.correo}')" title="Eliminar">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    </td>
-                `;
-                tablaUsuarios.appendChild(tr);
-            } catch (err) {
-                console.error("Error al renderizar usuario:", err);
-            }
-        });
-    }
-
-    // ===============================
-    // Render inicial
-    // ===============================
-    renderUsuarios(usuarios);
-
-    // ===============================
-    // Filtro por texto (en tiempo real)
-    // ===============================
-    searchInput.addEventListener("input", () => aplicarFiltros());
-
-    // Extraer región de la dirección si no existe el campo region
-    function getRegion(emp) {
-        if (emp.region) return emp.region;
-        // Intentar extraer la ciudad de la dirección (formato: "Calle X, Ciudad")
-        if (emp.direccion) {
-            const partes = emp.direccion.split(",");
-            if (partes.length > 1) return partes[partes.length - 1].trim();
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>
+                    <div class="d-flex align-items-center gap-2">
+                        <img src="${info.foto}" class="rounded-circle shadow-sm" style="width:32px; height:32px; object-fit: cover; border:1px solid #eee;">
+                        <span class="fw-medium">${info.nombre || u.nombre}</span>
+                    </div>
+                </td>
+                <td class="small text-muted">${u.correo}</td>
+                <td><span class="badge ${u.rol === 'empresa' ? 'bg-info-light text-info' : 'bg-light text-dark'} fw-normal">${col3}</span></td>
+                <td><span class="badge ${u.rol === 'admin' ? 'bg-danger' : u.rol === 'empresa' ? 'bg-success' : 'bg-primary'}">${u.rol.toUpperCase()}</span></td>
+                <td class="text-secondary small">${col5}</td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary border-0" onclick="editarUsuario('${u.correo}')"><i class="fa fa-pen"></i></button>
+                    <button class="btn btn-sm btn-outline-danger border-0" onclick="eliminarUsuario('${u.correo}')"><i class="fa fa-trash"></i></button>
+                </td>
+            `;
+            tablaUsuarios.appendChild(tr);
         }
-        return "Sin región";
     }
 
-    // Asignar sector si no existe
-    function getSector(emp) {
-        if (emp.sector) return emp.sector;
-        // Intentar asignar por nombre de empresa
-        const nombre = (emp.nombre || "").toLowerCase();
-        if (nombre.includes("tech") || nombre.includes("cloud") || nombre.includes("lab")) return "Tecnología";
-        if (nombre.includes("pixel") || nombre.includes("art") || nombre.includes("studio")) return "Diseño y Marketing";
-        if (nombre.includes("eco") || nombre.includes("market")) return "Comercio";
-        if (nombre.includes("edu") || nombre.includes("learn")) return "Educación";
-        return "General";
+    async function reloadData() {
+        const db = await Data.getDB();
+        // Combinar usuarios y empresas para gestión unificada
+        const users = (db.usuarios || []).map(u => ({...u, rol: u.rol || 'usuario'}));
+        const companies = (db.empresas || []).map(e => ({...e, rol: 'empresa', nombre: e.nombre || e.razonSocial}));
+        allUsers = [...users, ...companies];
+        applyFilters();
     }
 
-    // Poblar dinámicamente sectores y regiones desde la BD
-    function poblarFiltrosEmpresa() {
-        const db = Data.getDB();
-        const empresas = db.empresas || [];
-
-        // Sectores únicos
-        const sectores = [...new Set(empresas.map(e => getSector(e)))].sort();
-        filtroSector.innerHTML = '<option value="all">Todos</option>';
-        sectores.forEach(s => {
-            filtroSector.innerHTML += `<option value="${s}">${s}</option>`;
-        });
-
-        // Regiones únicas
-        const regiones = [...new Set(empresas.map(e => getRegion(e)))].sort();
-        filtroRegion.innerHTML = '<option value="all">Todas</option>';
-        regiones.forEach(r => {
-            filtroRegion.innerHTML += `<option value="${r}">${r}</option>`;
-        });
-    }
-
-    filtroRol.addEventListener("change", () => {
-        // Ocultar todos los filtros condicionales
-        containerFiltroDiscapacidad.style.display = "none";
-        containerFiltroSector.style.display = "none";
-        containerFiltroRegion.style.display = "none";
-        filtroDiscapacidad.value = "all";
-        filtroSector.value = "all";
-        filtroRegion.value = "all";
-
-        if (filtroRol.value === "usuario") {
-            containerFiltroDiscapacidad.style.display = "block";
-        } else if (filtroRol.value === "empresa") {
-            poblarFiltrosEmpresa();
-            containerFiltroSector.style.display = "block";
-            containerFiltroRegion.style.display = "block";
-        }
-        aplicarFiltros();
-    });
-
-    // ===============================
-    // Función combinada de filtros
-    // ===============================
-    function aplicarFiltros() {
+    function applyFilters() {
         const query = searchInput.value.toLowerCase();
-        const rolFiltro = filtroRol.value;
-        const discFiltro = filtroDiscapacidad.value;
-        const sectorFiltro = filtroSector.value;
-        const regionFiltro = filtroRegion.value;
+        const rol = filtroRol.value;
+        const disc = filtroDiscapacidad.value;
 
-        // Base de datos: combinar usuarios + empresas normalizadas
-        let listaBase;
+        let filtered = allUsers;
 
-        if (rolFiltro === "empresa") {
-            const db = Data.getDB();
-            let empresasList = db.empresas || [];
-
-            // Filtrar por sector (usando helper)
-            if (sectorFiltro !== "all") {
-                empresasList = empresasList.filter(e => getSector(e) === sectorFiltro);
-            }
-            // Filtrar por región (usando helper)
-            if (regionFiltro !== "all") {
-                empresasList = empresasList.filter(e => getRegion(e) === regionFiltro);
-            }
-
-            listaBase = empresasList.map(e => ({
-                nombre: e.nombre || e.razonSocial || "Sin nombre",
-                apellido: "",
-                correo: e.correo || "",
-                discapacidad: getSector(e),
-                rol: "empresa",
-                fechaRegistro: e.fechaRegistro || "—",
-                _region: getRegion(e),
-                _esEmpresa: true
-            }));
-        } else if (rolFiltro === "all") {
-            const db = Data.getDB();
-            const empresasNorm = (db.empresas || []).map(e => ({
-                nombre: e.nombre || e.razonSocial || "Sin nombre",
-                apellido: "",
-                correo: e.correo || "",
-                discapacidad: "—",
-                rol: "empresa",
-                fechaRegistro: e.fechaRegistro || "—",
-                _esEmpresa: true
-            }));
-            listaBase = [...usuarios, ...empresasNorm];
-        } else {
-            listaBase = usuarios;
-        }
-
-        let filtrados = listaBase;
-
-        // Filtro por texto
+        if (rol !== "all") filtered = filtered.filter(u => u.rol === rol);
+        if (disc !== "all" && rol === "usuario") filtered = filtered.filter(u => (u.discapacidad || "").toLowerCase() === disc);
         if (query) {
-            filtrados = filtrados.filter(u =>
-                (u.nombre || "").toLowerCase().includes(query) ||
-                (u.apellido || "").toLowerCase().includes(query) ||
+            filtered = filtered.filter(u => 
+                (u.nombre || "").toLowerCase().includes(query) || 
                 (u.correo || "").toLowerCase().includes(query)
             );
         }
 
-        // Filtro por rol (para "all" ya tenemos ambos, para usuario/admin filtrar)
-        if (rolFiltro !== "all" && rolFiltro !== "empresa") {
-            filtrados = filtrados.filter(u => (u.rol || "usuario") === rolFiltro);
-        }
-
-        // Filtro por discapacidad (solo si rol es "usuario")
-        if (rolFiltro === "usuario" && discFiltro !== "all") {
-            filtrados = filtrados.filter(u => (u.discapacidad || "").toLowerCase() === discFiltro);
-        }
-
-        renderUsuarios(filtrados);
+        renderUsuarios(filtered);
     }
 
-    filterBtn.addEventListener("click", () => aplicarFiltros());
-
-    clearBtn.addEventListener("click", () => {
-        searchInput.value = "";
-        filtroRol.value = "all";
-        filtroDiscapacidad.value = "all";
-        filtroSector.value = "all";
-        filtroRegion.value = "all";
-        containerFiltroDiscapacidad.style.display = "none";
-        containerFiltroSector.style.display = "none";
-        containerFiltroRegion.style.display = "none";
-        renderUsuarios(usuarios);
-    });
-
-    // ===============================
-    // Guardar cambios del modal
-    // ===============================
-    guardarCambios.addEventListener("click", () => {
+    // 4. Acciones Globales
+    window.editarUsuario = async (correo) => {
+        usuarioActual = allUsers.find(u => u.correo === correo);
         if (!usuarioActual) return;
 
-        const nuevoNombreVal = editNombre.value.trim();
-        const nuevoApellidoVal = editApellido.value.trim();
-        const nuevoCorreoVal = editCorreo.value.trim();
-        const nuevoTelefonoVal = editTelefono.value.trim();
-        const nuevoPasswordVal = editPassword.value.trim();
-        const nuevaDescripcionVal = editDescripcion.value.trim();
-        const nuevaDiscapacidad = editDiscapacidad.value.trim();
-        const nuevoRol = document.getElementById("editRol").value;
-
-        if (!nuevoNombreVal || !nuevoCorreoVal) {
-            alert("Por favor, completa los campos requeridos (Nombre y Correo).");
-            return;
-        }
-
-        // Construir objeto de actualización
-        const datosActualizados = {
-            nombre: nuevoNombreVal,
-            apellido: nuevoApellidoVal,
-            correo: nuevoCorreoVal,
-            telefono: nuevoTelefonoVal,
-            descripcion: nuevaDescripcionVal,
-            discapacidad: nuevaDiscapacidad,
-            rol: nuevoRol
-        };
-
-        // Solo actualizar password si se ingresó una nueva
-        if (nuevoPasswordVal) {
-            datosActualizados.password = nuevoPasswordVal;
-        }
-
-        // Actualizar datos
-        Data.updateUser(usuarioActual.correo, datosActualizados);
-
-        // Actualizar en memoria y recargar
-        usuarios = Data.getDB().usuarios;
-        const modal = bootstrap.Modal.getInstance(document.getElementById("modalEditar"));
-        modal.hide();
-        editPassword.value = ""; // Limpiar campo de contraseña
-        alert("Usuario actualizado correctamente.");
-        renderUsuarios(usuarios);
-    });
-
-    // ===============================
-    // Cerrar sesión
-    // ===============================
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-        Auth.logout();
-    });
-
-    // Exponer funciones globales
-    window.editarUsuario = (correo) => {
-        const db = Data.getDB();
-        const usuario = db.usuarios.find(u => u.correo === correo);
-        if (!usuario) return alert("Usuario no encontrado.");
-
-        usuarioActual = usuario;
-
-        editNombre.value = usuario.nombre || "";
-        editApellido.value = usuario.apellido || "";
-        editCorreo.value = usuario.correo || "";
-        editTelefono.value = usuario.telefono || "";
-        editPassword.value = ""; // Siempre vacío al abrir
-        editDescripcion.value = usuario.descripcion || "";
-        editDiscapacidad.value = usuario.discapacidad || "";
-        if (document.getElementById("editRol")) {
-            const r = usuario.rol || "usuario";
-            document.getElementById("editRol").value = r;
-            if (r === "usuario") {
-                containerEditDiscapacidad.style.display = "block";
-            } else {
-                containerEditDiscapacidad.style.display = "none";
-            }
-        }
+        editForm.nombre.value = usuarioActual.nombre || "";
+        editForm.apellido.value = usuarioActual.apellido || "";
+        editForm.correo.value = usuarioActual.correo || "";
+        editForm.telefono.value = usuarioActual.telefono || "";
+        editForm.descripcion.value = usuarioActual.descripcion || "";
+        editForm.discapacidad.value = usuarioActual.discapacidad || "";
+        editForm.rol.value = usuarioActual.rol || "usuario";
 
         const modal = new bootstrap.Modal(document.getElementById("modalEditar"));
         modal.show();
     };
 
-    window.eliminarUsuario = (correo) => {
-        if (!confirm("¿Seguro que deseas eliminar este usuario?")) return;
-        Data.deleteUser(correo);
-        usuarios = Data.getDB().usuarios;
-        renderUsuarios(usuarios);
-        alert("Usuario eliminado correctamente.");
+    window.eliminarUsuario = async (correo) => {
+        if (!confirm("¿Eliminar este usuario de forma permanente?")) return;
+        await Data.deleteUser(correo);
+        await reloadData();
+        alert("🗑️ Registro eliminado de la nube.");
     };
 
-    // ===============================
-    // Agregar nuevo usuario
-    // ===============================
-    guardarNuevoUsuario.addEventListener("click", () => {
-        const nombre = nuevoNombre.value.trim();
-        const correo = nuevoCorreo.value.trim();
-        const password = nuevoPassword.value.trim();
-        const discapacidad = nuevoDiscapacidad.value.trim();
-        const rol = document.getElementById("nuevoRol") ? document.getElementById("nuevoRol").value : "usuario";
-
-        if (!nombre || !correo || !password) {
-            alert("Por favor completa los campos obligatorios.");
-            return;
-        }
-
-        // Obtener base actual
-        const db = Data.getDB();
-
-        // Verificar duplicado
-        if (db.usuarios.some(u => u.correo === correo)) {
-            alert("Ya existe un usuario con ese correo.");
-            return;
-        }
-
-        // Crear objeto compatible con Auth y sistema
-        const nuevoUsuario = {
-            id: db.usuarios.length ? db.usuarios[db.usuarios.length - 1].id + 1 : 1,
-            nombre,
-            correo,
-            password, // Guardamos directamente por ahora
-            discapacidad,
-            rol: rol,
-            fechaRegistro: new Date().toISOString(),
-            postulaciones: []
+    // 5. Guardar Cambios
+    document.getElementById("guardarCambios").addEventListener("click", async () => {
+        const newData = {
+            nombre: editForm.nombre.value,
+            apellido: editForm.apellido.value,
+            telefono: editForm.telefono.value,
+            descripcion: editForm.descripcion.value,
+            discapacidad: editForm.discapacidad.value,
+            rol: editForm.rol.value
         };
 
-        // Guardar en la base
-        db.usuarios.push(nuevoUsuario);
-        Data.saveDB(db); // Usa el método del sistema para mantener coherencia
+        if (editForm.password.value) newData.password = editForm.password.value;
 
-        //  Sincronizar con Auth (opcional, pero útil si Auth usa su propia tabla)
-        if (typeof Auth !== "undefined" && Auth.registerUser) {
-        Auth.registerUser(nombre, correo, password);
+        try {
+            await Data.updateUser(usuarioActual.correo, newData);
+            await reloadData();
+            bootstrap.Modal.getInstance(document.getElementById("modalEditar")).hide();
+            alert("✓ Usuario actualizado.");
+        } catch (e) {
+            alert("Error al actualizar.");
         }
-
-
-        // Limpiar campos
-        nuevoNombre.value = "";
-        nuevoCorreo.value = "";
-        nuevoPassword.value = "";
-        nuevoDiscapacidad.value = "";
-        if (document.getElementById("nuevoRol")) {
-            document.getElementById("nuevoRol").value = "usuario";
-            if (containerNuevoDiscapacidad) containerNuevoDiscapacidad.style.display = "block";
-        }
-
-        // Cerrar modal
-        const modal = bootstrap.Modal.getInstance(document.getElementById("modalAgregar"));
-        modal.hide();
-
-        alert(" Usuario agregado correctamente. Ya puede iniciar sesión con su correo y contraseña.");
-        usuarios = db.usuarios;
-        renderUsuarios(usuarios);
     });
 
+    // 6. Nuevo Usuario
+    document.getElementById("guardarNuevoUsuario").addEventListener("click", async () => {
+        const nNombre = document.getElementById("nuevoNombre").value;
+        const nCorreo = document.getElementById("nuevoCorreo").value;
+        const nPass = document.getElementById("nuevoPassword").value;
+        const nRol = document.getElementById("nuevoRol").value;
+        const nDisc = document.getElementById("nuevoDiscapacidad").value;
 
+        if (!nNombre || !nCorreo || !nPass) return alert("Completa los campos.");
+
+        try {
+            const db = await Data.getDB();
+            if (db.usuarios.some(u => u.correo === nCorreo)) return alert("El correo ya existe.");
+
+            const newUser = {
+                nombre: nNombre,
+                correo: nCorreo,
+                password: nPass,
+                rol: nRol,
+                discapacidad: nRol === "usuario" ? nDisc : "",
+                fechaRegistro: new Date().toISOString()
+            };
+
+            await Data.addUser(newUser);
+            await reloadData();
+            bootstrap.Modal.getInstance(document.getElementById("modalAgregar")).hide();
+            alert("✓ Usuario creado en la nube.");
+        } catch (e) {
+            alert("Error al crear.");
+        }
+    });
+
+    // UI Events
+    filtroRol.addEventListener("change", () => {
+        containerFiltroDiscapacidad.style.display = filtroRol.value === "usuario" ? "block" : "none";
+        applyFilters();
+    });
+    filterBtn.addEventListener("click", applyFilters);
+    clearBtn.addEventListener("click", () => {
+        searchInput.value = "";
+        filtroRol.value = "all";
+        reloadData();
+    });
+
+    // Logout
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+        await Auth.logout();
+    });
+
+    // Init
+    await reloadData();
 });

@@ -1,8 +1,4 @@
-// ===============================
-// gestion.js — Gestión de Ofertas (Administrador)
-// ===============================
-
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
 
     // ===============================
     // Verificar sesión activa
@@ -13,17 +9,6 @@ document.addEventListener("DOMContentLoaded", () => {
             window.location.href = "../login.html";
             return;
         }
-    }
-
-    // ===============================
-    // Inicializar base de datos
-    // ===============================
-    let db = Data.getDB();
-
-    // Si no existen ofertas, cargar DEMO
-    if (!db.ofertas || db.ofertas.length === 0) {
-        // Las ofertas demo ya están en tu version anterior. No repetir aquí.
-        console.log("No hay ofertas, usar gestión para crearlas.");
     }
 
     // ===============================
@@ -45,13 +30,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const nuevaDiscapacidad = document.getElementById("nuevaDiscapacidad");
     const nuevoEstado = document.getElementById("nuevoEstado");
 
-    let ofertas = Data.getOfertas();
-    let editandoID = null; //  Detecta si estamos editando
+    let ofertas = [];
+    let editandoID = null;
 
     // ===============================
-    // Renderizar tabla
+    // Renderizar tabla (Asíncrona)
     // ===============================
-    function renderOfertas(lista) {
+    async function renderOfertas(lista) {
         tablaOfertas.innerHTML = "";
 
         if (lista.length === 0) {
@@ -66,40 +51,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
         lista.forEach(o => {
             const tr = document.createElement("tr");
-
             tr.innerHTML = `
             <td>${o.titulo}</td>
             <td>${o.empresa}</td>
             <td>${o.ciudad}</td>
             <td>${o.modalidad}</td>
-            <td>${o.discapacidad}</td>
+            <td>${o.discapacidad || o.categoria || "—"}</td>
             <td class="text-center">
-                <!-- Botón de estado -->
-                
                 <button class="btn btn-sm ${o.estado === "Activa" ? "btn-success" : "btn-warning"} me-1"
-                    onclick="toggleEstado(${o.id})">
+                    onclick="toggleEstado('${o.id}')">
                     ${o.estado}
                 </button>
-                </td>
-                <!-- Editar -->
-                <button class="btn btn-sm btn-primary me-1" onclick="editarOferta(${o.id})">
+            </td>
+            <td>
+                <button class="btn btn-sm btn-primary me-1" onclick="editarOferta('${o.id}')">
                     <i class="fa fa-pen"></i>
                 </button>
-
-                <!-- Eliminar -->
-                <button class="btn btn-sm btn-danger" onclick="eliminarOferta(${o.id})">
+                <button class="btn btn-sm btn-danger" onclick="eliminarOferta('${o.id}')">
                     <i class="fa fa-trash"></i>
                 </button>
-
             </td>
-
             `;
-
             tablaOfertas.appendChild(tr);
         });
     }
 
-    renderOfertas(ofertas);
+    async function reloadOfertas() {
+        ofertas = await Data.getOfertas();
+        renderOfertas(ofertas);
+    }
 
     // ===============================
     // BUSCAR
@@ -107,8 +87,8 @@ document.addEventListener("DOMContentLoaded", () => {
     buscarOferta.addEventListener("input", () => {
         const q = buscarOferta.value.toLowerCase();
         const filtradas = ofertas.filter(o =>
-            o.titulo.toLowerCase().includes(q) ||
-            o.empresa.toLowerCase().includes(q)
+            (o.titulo || "").toLowerCase().includes(q) ||
+            (o.empresa || "").toLowerCase().includes(q)
         );
         renderOfertas(filtradas);
     });
@@ -118,11 +98,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // ===============================
     btnFiltrar.addEventListener("click", () => {
         const filtro = filtrarDiscapacidad.value;
-
         if (filtro === "all") renderOfertas(ofertas);
         else {
             const filtradas = ofertas.filter(o =>
-                o.discapacidad.toLowerCase() === filtro.toLowerCase()
+                (o.discapacidad || "").toLowerCase() === filtro.toLowerCase()
             );
             renderOfertas(filtradas);
         }
@@ -137,66 +116,39 @@ document.addEventListener("DOMContentLoaded", () => {
     // ===============================
     // GUARDAR (Crear / Editar)
     // ===============================
-    guardarNuevaOferta.addEventListener("click", () => {
+    guardarNuevaOferta.addEventListener("click", async () => {
+        const payload = {
+            titulo: nuevoTitulo.value.trim(),
+            empresa: nuevaEmpresa.value.trim(),
+            categoria: nuevaCategoria.value.trim(),
+            descripcion: nuevaDescripcion.value.trim(),
+            ciudad: nuevaCiudad.value.trim(),
+            modalidad: nuevaModalidad.value.trim(),
+            discapacidad: nuevaDiscapacidad.value.trim(),
+            estado: nuevoEstado.value.trim(),
+            fecha: new Date().toISOString().split("T")[0]
+        };
 
-        const titulo = nuevoTitulo.value.trim();
-        const empresa = nuevaEmpresa.value.trim();
-        const categoria = nuevaCategoria.value.trim();
-        const descripcion = nuevaDescripcion.value.trim();
-        const ciudad = nuevaCiudad.value.trim();
-        const modalidad = nuevaModalidad.value.trim();
-        const discapacidad = nuevaDiscapacidad.value.trim();
-        const estado = nuevoEstado.value.trim();
-
-        if (!titulo || !empresa) {
+        if (!payload.titulo || !payload.empresa) {
             alert("Completa los campos obligatorios.");
             return;
         }
 
-        if (editandoID === null) {
-            // ===============================
-            // CREAR OFERTA
-            // ===============================
-            const nuevaOferta = {
-                id: ofertas.length ? Math.max(...ofertas.map(o => o.id)) + 1 : 1,
-                titulo,
-                empresa,
-                categoria,
-                descripcion,
-                ciudad,
-                modalidad,
-                discapacidad,
-                estado,
-                fecha: new Date().toISOString().split("T")[0]
-            };
-
-            Data.addOferta(nuevaOferta);
-        } else {
-            // ===============================
-            // EDITAR OFERTA
-            // ===============================
-            Data.updateOferta(editandoID, {
-                titulo,
-                empresa,
-                categoria,
-                descripcion,
-                ciudad,
-                modalidad,
-                discapacidad,
-                estado
-            });
-
-            editandoID = null; // salir del modo edición
+        try {
+            if (editandoID === null) {
+                await Data.addOferta(payload);
+            } else {
+                await Data.updateOferta(editandoID, payload);
+                editandoID = null;
+            }
+            await reloadOfertas();
+            bootstrap.Modal.getInstance(document.getElementById("modalNuevaOferta")).hide();
+            limpiarCampos();
+            alert("✓ Cambios guardados en la nube.");
+        } catch (e) {
+            console.error(e);
+            alert("Error al guardar.");
         }
-
-        ofertas = Data.getOfertas();
-        renderOfertas(ofertas);
-
-        const modal = bootstrap.Modal.getInstance(document.getElementById("modalNuevaOferta"));
-        modal.hide();
-        limpiarCampos();
-
-        alert(" Cambios guardados.");
     });
 
     function limpiarCampos() {
@@ -211,62 +163,47 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ===============================
-    // EDITAR OFERTA (CARGA MODAL)
+    // ACCIONES GLOBALES
     // ===============================
-    window.editarOferta = id => {
-        const oferta = ofertas.find(o => o.id === id);
+    window.editarOferta = async (id) => {
+        const oferta = ofertas.find(o => String(o.id) === String(id));
         if (!oferta) return;
 
         editandoID = id;
+        nuevoTitulo.value = oferta.titulo || "";
+        nuevaEmpresa.value = oferta.empresa || "";
+        nuevaCategoria.value = oferta.categoria || "";
+        nuevaDescripcion.value = oferta.descripcion || "";
+        nuevaCiudad.value = oferta.ciudad || "";
+        nuevaModalidad.value = oferta.modalidad || "Presencial";
+        nuevaDiscapacidad.value = oferta.discapacidad || "Fisica";
+        nuevoEstado.value = oferta.estado || "Activa";
 
-        nuevoTitulo.value = oferta.titulo;
-        nuevaEmpresa.value = oferta.empresa;
-        nuevaCategoria.value = oferta.categoria;
-        nuevaDescripcion.value = oferta.descripcion;
-        nuevaCiudad.value = oferta.ciudad;
-        nuevaModalidad.value = oferta.modalidad;
-        nuevaDiscapacidad.value = oferta.discapacidad;
-        nuevoEstado.value = oferta.estado;
-
-        const modal = new bootstrap.Modal(document.getElementById("modalNuevaOferta"));
-        modal.show();
+        new bootstrap.Modal(document.getElementById("modalNuevaOferta")).show();
     };
 
-    // ===============================
-    // ACTIVAR / PAUSAR
-    // ===============================
-    window.toggleEstado = id => {
-        const oferta = ofertas.find(o => o.id === id);
+    window.toggleEstado = async (id) => {
+        const oferta = ofertas.find(o => String(o.id) === String(id));
         if (!oferta) return;
 
         const nuevo = oferta.estado === "Activa" ? "Pausada" : "Activa";
-        Data.updateOferta(id, { estado: nuevo });
-
-        ofertas = Data.getOfertas();
-        renderOfertas(ofertas);
-
-        alert(" Estado actualizado.");
+        await Data.updateOferta(id, { estado: nuevo });
+        await reloadOfertas();
+        alert("✓ Estado actualizado.");
     };
 
-    // ===============================
-    // ELIMINAR
-    // ===============================
-    window.eliminarOferta = id => {
-        if (!confirm("¿Eliminar esta oferta?")) return;
-
-        Data.deleteOferta(id);
-
-        ofertas = Data.getOfertas();
-        renderOfertas(ofertas);
-
-        alert("🗑️ Oferta eliminada.");
+    window.eliminarOferta = async (id) => {
+        if (!confirm("¿Eliminar esta oferta definitivamente?")) return;
+        await Data.deleteOferta(id);
+        await reloadOfertas();
+        alert("🗑️ Oferta eliminada de la nube.");
     };
 
-    // ===============================
-    // LOGOUT
-    // ===============================
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-        Auth.logout();
+    // Logout
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+        await Auth.logout();
     });
 
+    // Inicializar
+    await reloadOfertas();
 });

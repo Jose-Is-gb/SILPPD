@@ -95,8 +95,10 @@ function togglePassword(inputId, iconSpan) {
     }
 }
 
-function submitRegistration() {
+async function submitRegistration() {
     const errorBox = document.getElementById('error-step-4');
+    const successBox = document.getElementById('success-reg');
+    const btnSubmit = document.querySelector('button[onclick="submitRegistration()"]');
     
     // Validar checkbox obligatorios
     const chkTerminos = document.getElementById('chk-terminos').checked;
@@ -111,30 +113,80 @@ function submitRegistration() {
     }
 
     errorBox.classList.add('d-none');
+    btnSubmit.disabled = true;
+    btnSubmit.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Procesando...';
 
-    // MOCK REGISTRATION: Usaremos auth.js si está presente, el usuario pasará con el nombre del email
+    // RECOLECCIÓN COMPLETA DE DATOS (ISO 30415)
+    const extraData = {
+        apellido: document.getElementById('reg-apellidos').value.trim(),
+        tipoDoc: document.getElementById('reg-tipo-doc').value,
+        numDoc: document.getElementById('reg-num-doc').value.trim(),
+        fechaNacimiento: document.getElementById('reg-fecha-nac').value,
+        telefono: document.getElementById('reg-telefono').value.trim(),
+        direccion: document.getElementById('reg-direccion').value.trim(),
+        codigoPostal: document.getElementById('reg-cp').value.trim(),
+        ciudad: document.getElementById('reg-ciudad').value.trim(),
+        pais: document.getElementById('reg-pais').value.trim(),
+        
+        // Discapacidad
+        gradoDiscapacidad: document.getElementById('reg-grado-discapacidad').value,
+        numCertificado: document.getElementById('reg-num-cert').value.trim(),
+        vencimientoCertificado: document.getElementById('reg-vencimiento-cert').value,
+        adaptaciones: document.getElementById('reg-adaptaciones').value.trim(),
+        asistencia: [],
+        
+        // Laboral
+        nivelEducativo: document.getElementById('reg-educacion').value,
+        especializacion: document.getElementById('reg-especializacion').value.trim(),
+        experienciaYears: document.getElementById('reg-experiencia').value,
+        habilidades: document.getElementById('reg-habilidades').value.trim(),
+        idiomas: document.getElementById('reg-idiomas').value.trim(),
+        modalidadLaboral: document.getElementById('reg-modalidad').value,
+        disponibilidad: document.getElementById('reg-disponibilidad').value,
+        
+        privacidad: {
+            visible: chkCompartir,
+            newsletter: document.getElementById('chk-comunicaciones').checked
+        }
+    };
+
+    // Agregar tipos de asistencia checklist
+    if (document.getElementById('asist-fisica').checked) extraData.asistencia.push("accesibilidad");
+    if (document.getElementById('asist-tecnologia').checked) extraData.asistencia.push("tecnologia");
+    if (document.getElementById('asist-interprete').checked) extraData.asistencia.push("interprete");
+    if (document.getElementById('asist-horario').checked) extraData.asistencia.push("remoto");
+
     const email = document.getElementById('reg-email').value.trim();
     const pwd = document.getElementById('reg-password').value;
     const nombre = document.getElementById('reg-nombre').value.trim();
+    const discapacidad = document.getElementById('reg-tipo-discapacidad').value;
 
-    // Intentar registro base en Auth.js (si existe la libreria)
-    let isRegistered = true;
-    if (typeof Auth !== 'undefined' && Auth.registerUser) {
-        isRegistered = Auth.registerUser(nombre, email, pwd);
-    }
+    try {
+        let isRegistered = false;
+        if (typeof Auth !== 'undefined' && Auth.registerUser) {
+            isRegistered = await Auth.registerUser(nombre, email, pwd, discapacidad, "usuario", extraData);
+        }
 
-    if (!isRegistered) {
-        errorBox.textContent = "Este correo electrónico ya está registrado.";
+        if (!isRegistered) {
+            errorBox.textContent = "El registro falló en la nube. Verifica tu conexión.";
+            errorBox.classList.remove('d-none');
+            btnSubmit.disabled = false;
+            btnSubmit.innerHTML = 'Completar registro';
+            return;
+        }
+
+        successBox.textContent = "¡Registro completado en la nube! Redirigiendo...";
+        successBox.classList.remove('d-none');
+
+        setTimeout(() => {
+            window.location.href = 'login.html';
+        }, 2000);
+
+    } catch (e) {
+        console.error(e);
+        errorBox.textContent = "Error inesperado en el registro cloud: " + e.message;
         errorBox.classList.remove('d-none');
-        return;
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = 'Completar registro';
     }
-
-    // Mostrar éxito y redirigir
-    const successBox = document.getElementById('success-reg');
-    successBox.textContent = "¡Registro completado con éxito! Redirigiendo al login...";
-    successBox.classList.remove('d-none');
-
-    setTimeout(() => {
-        window.location.href = 'login.html';
-    }, 2000);
 }

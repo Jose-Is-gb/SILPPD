@@ -1,8 +1,8 @@
 // ===============================
-// user_home.js — Control de sesión y Dashboard dinámico
+// user_home.js — Control de sesión y Dashboard dinámico con Firebase
 // ===============================
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const session = Auth.getActiveUser();
 
     // Si no hay sesión, redirige al login
@@ -19,38 +19,35 @@ document.addEventListener("DOMContentLoaded", () => {
         heroWelcome.textContent = `¡Hola, ${session.nombre}! 👋`;
     }
 
-    const welcome = document.getElementById("welcomeMessage");
-    if (welcome && session.nombre) {
-        welcome.innerHTML = `<i class="fa fa-info-circle me-2 text-primary"></i> Tip del día: Asegúrate de tener tu CV actualizado en la sección de Perfil.`;
-        welcome.style.display = "block";
+    // ===============================
+    // Cálculo de Estadísticas desde la Nube
+    // ===============================
+    try {
+        // En lugar de bajar toda la DB, hacemos consultas específicas si es posible, 
+        // o usamos los métodos asíncronos de Data.js
+        const allOfertas = await Data.getOfertas();
+        const activeOffers = allOfertas.filter(o => o.estado === "Activa");
+        document.getElementById("statOfertas").textContent = activeOffers.length;
+
+        const allPostulaciones = await Data.getPostulaciones();
+        const myApps = allPostulaciones.filter(p => p.email === session.correo);
+        document.getElementById("statApps").textContent = myApps.length;
+
+        const myMsgs = await Data.getMensajesByUser(session.correo);
+        document.getElementById("statMsg").textContent = myMsgs.length;
+
+    } catch (e) {
+        console.error("Error cargando estadísticas:", e);
     }
-
-    // ===============================
-    // Cálculo de Estadísticas Reales
-    // ===============================
-    const db = Data.getDB();
-
-    // 1. Postulaciones del usuario
-    const myApps = (db.postulaciones || []).filter(p => p.email === session.correo);
-    document.getElementById("statApps").textContent = myApps.length;
-
-    // 2. Ofertas de empleo activas (compatibles o generales)
-    const offers = Data.getOfertas().filter(o => o.estado === "Activa");
-    document.getElementById("statOfertas").textContent = offers.length;
-
-    // 3. Mensajes (simulado por ahora o desde la BD de mensajes si existe)
-    const myMsgs = (db.mensajes || []).filter(m => m.destinatario === session.correo);
-    document.getElementById("statMsg").textContent = myMsgs.length;
 
     // ===============================
     // Logout
     // ===============================
     const logoutBtn = document.getElementById("logoutBtn");
     if (logoutBtn) {
-        logoutBtn.addEventListener("click", (e) => {
+        logoutBtn.addEventListener("click", async (e) => {
             e.preventDefault();
-            Auth.logout();
-            window.location.href = "../login.html";
+            await Auth.logout();
         });
     }
 });

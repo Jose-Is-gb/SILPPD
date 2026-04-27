@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     // 1. Verificar sesión
     const user = Auth.getActiveUser();
     if (!user || user.rol !== "empresa") {
@@ -17,27 +17,32 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelector("h2").textContent = "Editar Oferta";
         document.querySelector("button[type='submit']").textContent = "Actualizar oferta";
         
-        const oferta = Data.getOfertas().find(o => o.id == editId);
+        const rawOfertas = await Data.getOfertas();
+        const oferta = rawOfertas.find(o => String(o.id) === String(editId));
+
         if (oferta) {
-            document.getElementById("titulo").value = oferta.titulo;
-            document.getElementById("categoria").value = oferta.categoria;
-            document.getElementById("descripcion").value = oferta.descripcion;
-            document.getElementById("modalidad").value = oferta.modalidad;
-            document.getElementById("ubicacion").value = oferta.ciudad;
-            // Otros campos simulados o añadidos en la expansión
-            if (oferta.vacantes) document.getElementById("vacantes").value = oferta.vacantes;
-            if (oferta.requisitos) document.getElementById("requisitos").value = oferta.requisitos;
-            if (oferta.jornada) document.getElementById("jornada").value = oferta.jornada;
-            if (oferta.salarioMin) document.getElementById("salarioMin").value = oferta.salarioMin;
-            if (oferta.salarioMax) document.getElementById("salarioMax").value = oferta.salarioMax;
-            if (oferta.adaptaciones) document.getElementById("adaptaciones").value = oferta.adaptaciones;
-            if (oferta.vencimiento) document.getElementById("vencimiento").value = oferta.vencimiento;
+            document.getElementById("titulo").value = oferta.titulo || "";
+            document.getElementById("categoria").value = oferta.categoria || "";
+            document.getElementById("descripcion").value = oferta.descripcion || "";
+            document.getElementById("modalidad").value = oferta.modalidad || "";
+            document.getElementById("ubicacion").value = oferta.ciudad || "";
+            document.getElementById("vacantes").value = oferta.vacantes || "1";
+            document.getElementById("requisitos").value = oferta.requisitos || "";
+            document.getElementById("jornada").value = oferta.jornada || "";
+            document.getElementById("salarioMin").value = oferta.salarioMin || "";
+            document.getElementById("salarioMax").value = oferta.salarioMax || "";
+            document.getElementById("adaptaciones").value = oferta.adaptaciones || "";
+            document.getElementById("vencimiento").value = oferta.vencimiento || "";
         }
     }
 
-    // 4. Guardar Oferta
-    offerForm.addEventListener("submit", (e) => {
+    // 4. Guardar Oferta (Nube)
+    offerForm.addEventListener("submit", async (e) => {
         e.preventDefault();
+
+        const btn = offerForm.querySelector("button[type='submit']");
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa fa-spinner fa-spin me-2"></i> Procesando...';
 
         const nuevaOferta = {
             titulo: document.getElementById("titulo").value,
@@ -53,25 +58,31 @@ document.addEventListener("DOMContentLoaded", () => {
             adaptaciones: document.getElementById("adaptaciones").value,
             vencimiento: document.getElementById("vencimiento").value,
             empresa: user.nombre,
+            empresaEmail: user.correo,
             fecha: new Date().toISOString().split('T')[0],
             estado: "Activa"
         };
 
-        if (editId) {
-            Data.updateOferta(parseInt(editId), nuevaOferta);
-            alert("Oferta actualizada con éxito.");
-        } else {
-            nuevaOferta.id = Date.now(); // ID único temporal
-            Data.addOferta(nuevaOferta);
-            alert("Oferta publicada con éxito.");
+        try {
+            if (editId) {
+                await Data.updateOferta(editId, nuevaOferta);
+                alert("✓ Oferta actualizada en la nube.");
+            } else {
+                await Data.addOferta(nuevaOferta);
+                alert("✓ Oferta publicada en la nube.");
+            }
+            window.location.href = "gestion_ofertas.html";
+        } catch (err) {
+            console.error(err);
+            alert("Error al guardar la oferta. Intenta de nuevo.");
+            btn.disabled = false;
+            btn.textContent = editId ? "Actualizar oferta" : "Publicar oferta";
         }
-
-        window.location.href = "gestion_ofertas.html";
     });
 
     // Logout
-    document.getElementById("logoutBtn").addEventListener("click", (e) => {
+    document.getElementById("logoutBtn").addEventListener("click", async (e) => {
         e.preventDefault();
-        Auth.logout();
+        await Auth.logout();
     });
 });

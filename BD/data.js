@@ -1,206 +1,188 @@
 // ===============================
-// data.js — Manejo general de la base de datos local
+// data.js — Manejo de datos con Firebase Firestore
 // ===============================
 
 const Data = {
 
-    // Obtener base de datos completa desde localStorage
-    getDB() {
-        let db = JSON.parse(localStorage.getItem("TI_DATABASE"));
+    // Helper para obtener datos (mantenemos compatibilidad con estructura de objetos)
+    async getDB() {
+        // En Firebase no solemos bajar toda la DB de golpe,
+        // pero para compatibilidad con código antiguo que espera un objeto 'db':
+        const snaps = await Promise.all([
+            dbFirestore.collection("usuarios").get(),
+            dbFirestore.collection("ofertas").get(),
+            dbFirestore.collection("empresas").get(),
+            dbFirestore.collection("postulaciones").get()
+        ]);
 
-        if (!db) {
-            // Crear estructura base
-            db = {
-                usuarios: [],
-                ofertas: [],
-                mensajes: [],
-                empresas: [],
-                postulaciones: []
-            };
-        }
-
-        // Asegurar claves básicas
-        if (!db.usuarios) db.usuarios = [];
-        if (!db.empresas) db.empresas = [];
-        if (!db.postulaciones) db.postulaciones = [];
-        if (!db.mensajes) db.mensajes = [];
-        if (!db.ofertas) db.ofertas = [];
-
-        // ===============================
-        // INSERTAR USUARIOS INICIALES (solo si no existen)
-        // ===============================
-        if (db.usuarios.length === 0) {
-            db.usuarios.push(
-                {
-                    nombre: "Juan Pérez",
-                    apellido: "García",
-                    correo: "juan@example.com",
-                    password: "123456",
-                    telefono: "987654321",
-                    descripcion: "Buscando oportunidades inclusivas en el sector tecnológico.",
-                    discapacidad: "Motora",
-                    fechaRegistro: new Date().toLocaleDateString(),
-                    foto: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
-                    rol: "usuario"
-                },
-                {
-                    nombre: "Empresa de Prueba",
-                    apellido: "S.A.C.",
-                    correo: "empresa@talentoinclusivo.com",
-                    password: "empresa123",
-                    telefono: "900000000",
-                    descripcion: "Empresa de prueba configurada para testing del sistema SILPPD.",
-                    fechaRegistro: new Date().toLocaleDateString(),
-                    rol: "empresa",
-                    ruc: "20123456789"
-                },
-                {
-                    nombre: "Usuario de Prueba",
-                    apellido: "Inclusivo",
-                    correo: "usuario@talentoinclusivo.com",
-                    password: "usuario123",
-                    telefono: "911111111",
-                    descripcion: "Perfil de candidato para pruebas rápidas.",
-                    discapacidad: "Ninguna (Tester)",
-                    fechaRegistro: new Date().toLocaleDateString(),
-                    foto: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
-                    rol: "usuario"
-                }
-            );
-        }
-
-        localStorage.setItem("TI_DATABASE", JSON.stringify(db));
-        return db;
-    },
-
-    // Guardar base de datos en localStorage
-    saveDB(db) {
-        localStorage.setItem("TI_DATABASE", JSON.stringify(db));
+        return {
+            usuarios: snaps[0].docs.map(d => d.data()),
+            ofertas: snaps[1].docs.map(d => d.data()),
+            empresas: snaps[2].docs.map(d => d.data()),
+            postulaciones: snaps[3].docs.map(d => d.data())
+        };
     },
 
     // ===============================
     // USUARIOS
     // ===============================
 
-    getUserByEmail(email) {
-        const db = this.getDB();
-        return db.usuarios.find(u => u.correo === email) || null;
+    async getUserByEmail(email) {
+        const doc = await dbFirestore.collection("usuarios").doc(email).get();
+        return doc.exists ? doc.data() : null;
     },
 
-    updateUser(email, newData) {
-        const db = this.getDB();
-        const index = db.usuarios.findIndex(u => u.correo === email);
-        if (index !== -1) {
-            db.usuarios[index] = { ...db.usuarios[index], ...newData };
-            this.saveDB(db);
+    async updateUser(email, newData) {
+        try {
+            await dbFirestore.collection("usuarios").doc(email).update(newData);
             return true;
+        } catch (e) {
+            console.error("Error updating user:", e);
+            return false;
         }
-        return false;
     },
 
-    addUser(user) {
-        const db = this.getDB();
-        db.usuarios.push(user);
-        this.saveDB(db);
+    async deleteUser(email) {
+        await dbFirestore.collection("usuarios").doc(email).delete();
     },
 
-    deleteUser(email) {
-        const db = this.getDB();
-        db.usuarios = db.usuarios.filter(u => u.correo !== email);
-        this.saveDB(db);
+    // ===============================
+    // PERSISTENCIA GLOBAL (COMPATIBILIDAD)
+    // ===============================
+    async saveDB(newData) {
+        // Esta función es para cuando el admin importa un JSON o resetea
+        // Debemos ser cuidadosos. Usaremos lotes (batches) si es posible.
+        const batch = dbFirestore.batch();
+
+        if (newData.usuarios) {
+            newData.usuarios.forEach(u => {
+                const ref = dbFirestore.collection("usuarios").doc(u.correo);
+                batch.set(ref, u);
+            });
+        }
+        if (newData.ofertas) {
+            newData.ofertas.forEach(o => {
+                const ref = dbFirestore.collection("ofertas").doc(String(o.id));
+                batch.set(ref, o);
+            });
+        }
+        if (newData.empresas) {
+            newData.empresas.forEach(e => {
+                const ref = dbFirestore.collection("empresas").doc(e.correo);
+                batch.set(ref, e);
+            });
+        }
+        if (newData.postulaciones) {
+            newData.postulaciones.forEach(p => {
+                const id = `${p.email}_${p.idOferta}`;
+                const ref = dbFirestore.collection("postulaciones").doc(id);
+                batch.set(ref, p);
+            });
+        }
+        if (newData.config) {
+            const ref = dbFirestore.collection("config").doc("sistema");
+            batch.set(ref, newData.config);
+        }
+
+        await batch.commit();
+        return true;
     },
 
     // ===============================
     // OFERTAS DE EMPLEO
     // ===============================
 
-    addOferta(oferta) {
-        const db = this.getDB();
+    async addOferta(oferta) {
+        if (!oferta.id) oferta.id = "off_" + Date.now();
         if (!oferta.estado) oferta.estado = "Activa";
-        oferta.discapacidad = oferta.discapacidad?.trim();
-        oferta.categoria = oferta.categoria?.trim();
-        oferta.modalidad = oferta.modalidad?.trim();
-        db.ofertas.push(oferta);
-        this.saveDB(db);
+        await dbFirestore.collection("ofertas").doc(String(oferta.id)).set(oferta);
     },
 
-    getOfertas() {
-        const db = this.getDB();
-
-        db.ofertas = db.ofertas.map(o => ({
-            id: o.id,
-            titulo: o.titulo || o.puesto || "Sin título",
-            empresa: o.empresa,
-            categoria: o.categoria || "General",
-            descripcion: o.descripcion || `Oferta de ${o.titulo || o.puesto}`,
-            ciudad: o.ciudad || "No especificado",
-            modalidad: o.modalidad || "Presencial",
-            discapacidad: o.discapacidad || "No especificado",
-            estado: o.estado || "Activa",
-            fecha: o.fecha || o.fechaCreacion?.split("T")[0] || new Date().toISOString().split("T")[0]
-        }));
-
-        this.saveDB(db);
-        return db.ofertas;
+    async getOfertas() {
+        const snap = await dbFirestore.collection("ofertas").get();
+        return snap.docs.map(d => {
+            const o = d.data();
+            return {
+                id: o.id,
+                titulo: o.titulo || o.puesto || "Sin título",
+                empresa: o.empresa,
+                categoria: o.categoria || "General",
+                descripcion: o.descripcion || `Oferta de ${o.titulo || o.puesto}`,
+                ciudad: o.ciudad || "No especificado",
+                modalidad: o.modalidad || "Presencial",
+                discapacidad: o.discapacidad || "No especificado",
+                estado: o.estado || "Activa",
+                fecha: o.fecha || o.fechaCreacion?.split("T")[0] || new Date().toISOString().split("T")[0]
+            };
+        });
     },
 
-    updateOferta(id, newData) {
-        const db = this.getDB();
-        const index = db.ofertas.findIndex(o => o.id === id);
-        if (index !== -1) {
-            db.ofertas[index] = { ...db.ofertas[index], ...newData };
-            this.saveDB(db);
-        }
+    async updateOferta(id, newData) {
+        await dbFirestore.collection("ofertas").doc(String(id)).update(newData);
     },
 
-    deleteOferta(id) {
-        const db = this.getDB();
-        db.ofertas = db.ofertas.filter(o => o.id !== id);
-        this.saveDB(db);
+    async deleteOferta(id) {
+        await dbFirestore.collection("ofertas").doc(String(id)).delete();
     },
 
     // ===============================
     // MENSAJERÍA
     // ===============================
 
-    addMensaje(mensaje) {
-        const db = this.getDB();
-        db.mensajes.push(mensaje);
-        this.saveDB(db);
+    async addMensaje(mensaje) {
+        mensaje.timestamp = firebase.firestore.FieldValue.serverTimestamp();
+        await dbFirestore.collection("mensajes").add(mensaje);
     },
 
-    getMensajesByUser(email) {
-        const db = this.getDB();
-        return db.mensajes.filter(m => m.para === email || m.de === email);
+    // Escuchar mensajes en tiempo real (Bidireccional)
+    listenConversacion(email1, email2, callback) {
+        return dbFirestore.collection("mensajes")
+            .where("de", "in", [email1, email2])
+            .where("para", "in", [email1, email2])
+            .orderBy("timestamp", "asc")
+            .onSnapshot(snap => {
+                const msgs = snap.docs.map(d => {
+                    const data = d.data();
+                    // Convertir timestamp de Firebase a fecha legible si es necesario
+                    const date = data.timestamp ? data.timestamp.toDate().toLocaleString() : new Date().toLocaleString();
+                    return { ...data, fecha: date };
+                });
+                
+                // Firestore 'in' query con múltiples wheres puede ser triqui 
+                // Mejor filtramos aquí mismo para asegurar que solo sean estos dos participantes
+                const filtrados = msgs.filter(m => 
+                    (m.de === email1 && m.para === email2) || 
+                    (m.de === email2 && m.para === email1)
+                );
+                callback(filtrados);
+            });
+    },
+
+    async getMensajesByUser(email) {
+        const snap1 = await dbFirestore.collection("mensajes").where("de", "==", email).get();
+        const snap2 = await dbFirestore.collection("mensajes").where("para", "==", email).get();
+        const all = [...snap1.docs.map(d => d.data()), ...snap2.docs.map(d => d.data())];
+        return all.sort((a, b) => (a.timestamp?.seconds || 0) - (b.timestamp?.seconds || 0));
     },
 
     // ===============================
     // POSTULACIONES
     // ===============================
 
-    addPostulacion(postulacion) {
-        const db = this.getDB();
-        if (!db.postulaciones) db.postulaciones = [];
-
-        const existe = db.postulaciones.some(
-            p => p.email === postulacion.email && p.idOferta === postulacion.idOferta
-        );
-
-        if (!existe) {
-            db.postulaciones.push(postulacion);
-            this.saveDB(db);
-        }
+    async addPostulacion(postulacion) {
+        const id = `${postulacion.email}_${postulacion.idOferta}`;
+        await dbFirestore.collection("postulaciones").doc(id).set(postulacion);
     },
 
-    getPostulaciones() {
-        const db = this.getDB();
-        return db.postulaciones || [];
+    async getPostulaciones() {
+        const snap = await dbFirestore.collection("postulaciones").get();
+        return snap.docs.map(d => d.data());
     },
 
     // ===============================
     // HELPERS DE CONSISTENCIA
     // ===============================
-    getContactInfo(email) {
+    async getContactInfo(email) {
         const supportInfo = {
             nombre: "Soporte Talento Inclusivo",
             foto: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
@@ -210,26 +192,13 @@ const Data = {
 
         if (email === "soporte@talentoinclusivo.com") return supportInfo;
 
-        const db = Data.getDB();
-        if (!db) return supportInfo;
-
-        const user = (db.usuarios || []).find(u => u.correo === email);
+        const user = await this.getUserByEmail(email);
         if (user) {
             return {
                 nombre: ((user.nombre || "") + " " + (user.apellido || "")).trim() || email,
                 foto: user.foto || "https://cdn-icons-png.flaticon.com/512/149/149071.png",
-                rol: "usuario",
-                color: "bg-blue"
-            };
-        }
-
-        const empresa = (db.empresas || []).find(e => e.correo === email);
-        if (empresa) {
-            return {
-                nombre: empresa.nombre || empresa.razonSocial || email,
-                foto: empresa.fotoEmpresa || "https://cdn-icons-png.flaticon.com/512/186/186100.png",
-                rol: "empresa",
-                color: "bg-orange"
+                rol: user.rol || "usuario",
+                color: user.rol === "empresa" ? "bg-orange" : "bg-blue"
             };
         }
 

@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     // 1. Verificar sesión
     const user = Auth.getActiveUser();
     if (!user || user.rol !== "empresa") {
@@ -12,13 +12,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const filterEstado = document.getElementById("filterEstado");
     const filterModalidad = document.getElementById("filterModalidad");
 
-    // 3. Cargar y Filtrar Ofertas
-    function renderOffers() {
+    // 3. Cargar y Filtrar Ofertas de la nube
+    async function renderOffers() {
         const query = searchInput.value.toLowerCase();
         const estado = filterEstado.value;
         const modalidad = filterModalidad.value;
 
-        let ofertas = Data.getOfertas().filter(o => o.empresa === user.nombre);
+        const allOffers = await Data.getOfertas();
+        let ofertas = allOffers.filter(o => o.empresa === user.nombre || o.empresaEmail === user.correo);
         
         // Aplicar filtros
         if (query) {
@@ -40,10 +41,11 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const allPostulaciones = Data.getPostulaciones();
+        const db = await Data.getDB();
+        const allPostulaciones = db.postulaciones || [];
 
         offersList.innerHTML = ofertas.map(o => {
-            const numPostulaciones = allPostulaciones.filter(p => p.idOferta == o.id).length;
+            const numPostulaciones = allPostulaciones.filter(p => String(p.idOferta) === String(o.id)).length;
             const statusClass = o.estado === "Activa" ? "bg-green-light text-green" : "bg-orange-light text-orange";
             const statusDot = o.estado === "Activa" ? "status-active" : "status-paused";
             const toggleText = o.estado === "Activa" ? "Pausar" : "Reactivar";
@@ -59,10 +61,10 @@ document.addEventListener("DOMContentLoaded", () => {
                                 <div>
                                     <h5 class="fw-bold mb-1">${o.titulo}</h5>
                                     <p class="text-secondary small mb-2">
-                                        Publicado: ${o.fecha} • Vence: 15/04/2025
+                                        Publicado: ${o.fecha || "No especificada"}
                                     </p>
                                     <p class="text-muted small mb-0">
-                                        Modalidad: <span class="fw-semibold">${o.modalidad}</span> • Jornada: Tiempo completo • 
+                                        Modalidad: <span class="fw-semibold">${o.modalidad}</span> • 
                                         <a href="postulaciones_recibidas.html?id=${o.id}" class="text-blue text-decoration-none fw-bold">${numPostulaciones} postulaciones</a>
                                     </p>
                                 </div>
@@ -89,16 +91,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // 4. Acciones
-    window.toggleStatus = (id, currentStatus) => {
+    window.toggleStatus = async (id, currentStatus) => {
         const newStatus = currentStatus === "Activa" ? "Pausada" : "Activa";
-        Data.updateOferta(id, { estado: newStatus });
-        renderOffers();
+        await Data.updateOferta(id, { estado: newStatus });
+        await renderOffers();
     };
 
-    window.deleteOffer = (id) => {
+    window.deleteOffer = async (id) => {
         if (confirm("¿Estás seguro de que deseas eliminar esta oferta? Esta acción no se puede deshacer.")) {
-            Data.deleteOferta(id);
-            renderOffers();
+            await Data.deleteOferta(id);
+            await renderOffers();
         }
     };
 
@@ -106,8 +108,9 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = `publicar_oferta.html?edit=${id}`;
     };
 
-    window.viewDetails = (id) => {
-        const o = Data.getOfertas().find(of => of.id == id);
+    window.viewDetails = async (id) => {
+        const ofertas = await Data.getOfertas();
+        const o = ofertas.find(of => String(of.id) === String(id));
         if(!o) return;
 
         const body = document.getElementById("modalDetalleBody");
@@ -128,7 +131,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
                 <div class="col-6">
                     <p class="text-secondary mb-1">Fecha Publicación</p>
-                    <p class="fw-bold mb-0">${o.fecha}</p>
+                    <p class="fw-bold mb-0">${o.fecha || "No especificada"}</p>
                 </div>
                 <div class="col-6">
                     <p class="text-secondary mb-1">Discapacidad Preferente</p>
@@ -146,11 +149,11 @@ document.addEventListener("DOMContentLoaded", () => {
     filterEstado.addEventListener("change", renderOffers);
     filterModalidad.addEventListener("change", renderOffers);
 
-    renderOffers();
+    await renderOffers();
 
     // Logout
-    document.getElementById("logoutBtn").addEventListener("click", (e) => {
+    document.getElementById("logoutBtn").addEventListener("click", async (e) => {
         e.preventDefault();
-        Auth.logout();
+        await Auth.logout();
     });
 });

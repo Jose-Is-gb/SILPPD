@@ -1,104 +1,93 @@
 // ===============================
-// auth.js — Manejo de autenticación y sesiones
+// auth.js — Manejo de autenticación y sesiones con Firebase
 // ===============================
 
-// Objeto global Auth
 const Auth = {
-    // Verifica si hay una sesión activa
+    // Verifica si hay una sesión activa de forma sincrónica (desde cache local)
     getActiveUser() {
-        return JSON.parse(localStorage.getItem("activeUser")) || null;
+        const user = localStorage.getItem("activeUser");
+        return user ? JSON.parse(user) : null;
     },
 
-    // Guardar sesión
+    // Guardar sesión localmente para acceso rápido
     setActiveUser(user) {
         localStorage.setItem("activeUser", JSON.stringify(user));
     },
 
     // Cerrar sesión
-    logout() {
+    async logout() {
+        try {
+            await authFirebase.signOut();
+        } catch (e) {
+            console.error("Error al cerrar sesión en Firebase:", e);
+        }
         localStorage.removeItem("activeUser");
         window.location.href = "../login.html";
     },
 
-    // Iniciar sesión (usuario o empresa)
-    login(email, password) {
-        // Cuentas fijas para testing (Sprint 1 - Agile)
-        if (email === "empresa@talentoinclusivo.com" && password === "empresa123") {
-            const fixedEmpresa = { nombre: "Empresa de Prueba", correo: email, rol: "empresa", ruc: "20123456789" };
-            this.setActiveUser(fixedEmpresa);
-            return fixedEmpresa;
-        }
+    // Iniciar sesión con Firebase
+    async login(email, password) {
+        try {
+            const userCredential = await authFirebase.signInWithEmailAndPassword(email, password);
+            const fbUser = userCredential.user;
 
-        if (email === "usuario@talentoinclusivo.com" && password === "usuario123") {
-            const fixedUser = { nombre: "Usuario de Prueba", correo: email, rol: "usuario" };
-            this.setActiveUser(fixedUser);
-            return fixedUser;
-        }
-
-        const db = JSON.parse(localStorage.getItem("TI_DATABASE")) || { usuarios: [], empresas: [] };
-        
-        // 1. Buscar en usuarios (donde deberían estar todos con el nuevo sistema de roles)
-        let user = db.usuarios.find(u => u.correo === email && u.password === password);
-
-        // 2. Si no está en usuarios, buscar en empresas (legado) y migrar si coincide
-        if (!user && db.empresas) {
-            const company = db.empresas.find(e => e.correo === email);
-            // Las empresas legadas no tienen password en init_data.js, permitimos '123456' por defecto o el que se use academicamente
-            if (company && (password === "123456")) {
-                user = { ...company, rol: "empresa", password: "123456" };
-                db.usuarios.push(user);
-                db.empresas = db.empresas.filter(e => e.correo !== email);
-                localStorage.setItem("TI_DATABASE", JSON.stringify(db));
+            // Al iniciar sesión, buscamos el perfil extendido en Firestore
+            const userDoc = await dbFirestore.collection("usuarios").doc(fbUser.email).get();
+            
+            if (userDoc.exists) {
+                const userData = userDoc.data();
+                this.setActiveUser(userData);
+                return userData;
+            } else {
+                // Si no existe el doc en Firestore (pero sí en Auth), creamos uno básico
+                const basicUser = { nombre: fbUser.displayName || "Usuario", correo: fbUser.email, rol: "usuario" };
+                this.setActiveUser(basicUser);
+                return basicUser;
             }
+        } catch (error) {
+            console.error("Error Login:", error.code, error.message);
+            return null;
         }
-
-        if (user) {
-            this.setActiveUser(user);
-            return user;
-        }
-
-        return null;
     },
 
-    // Registrar usuario (devuelve true si se registró correctamente)
-    // Registrar usuario (devuelve true si se registró correctamente)
-    registerUser(nombre, email, password, discapacidad = "", rol = "usuario") {
-    const db = JSON.parse(localStorage.getItem("TI_DATABASE")) || { usuarios: [] };
+    // Registrar usuario en Firebase Auth + Firestore
+    async registerUser(nombre, email, password, discapacidad = "", rol = "usuario", extraData = {}) {
+        try {
+            // 1. Crear usuario en Firebase Auth
+            const userCredential = await authFirebase.createUserWithEmailAndPassword(email, password);
+            const fbUser = userCredential.user;
 
-    // Evitar duplicados
-    if (db.usuarios.some(u => u.correo === email)) {
-        return false;
-    }
+            // 2. Crear perfil en Firestore
+            const profile = {
+                nombre,
+                correo: email,
+                discapacidad,
+                rol,
+                fechaRegistro: new Date().toLocaleDateString("es-PE"),
+                foto: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+                ...extraData // Inyectamos todos los datos adicionales que vengan del form
+            };
 
-    db.usuarios.push({
-        id: db.usuarios.length ? db.usuarios[db.usuarios.length - 1].id + 1 : 1,
-        nombre,
-        correo: email,
-        password,
-        discapacidad,
-        rol,
-        fechaRegistro: new Date().toLocaleDateString("es-PE"),
-        postulaciones: (rol === "usuario" ? [] : undefined),
-        ofertas: (rol === "empresa" ? [] : undefined)
-    });
-
-    localStorage.setItem("TI_DATABASE", JSON.stringify(db));
-    return true;
-},
-
-
-    // Iniciar sesión como administrador
-    loginAdmin(email, password) {
-        const ADMIN_EMAIL = "admin@talentoinclusivo.com";
-        const ADMIN_PASS = "admin123";
-
-        if (email === ADMIN_EMAIL && password === ADMIN_PASS) {
-            const adminUser = { nombre: "Administrador", correo: ADMIN_EMAIL, rol: "admin" };
-            this.setActiveUser(adminUser); // ✅ guarda sesión de admin
+            await dbFirestore.collection("usuarios").doc(email).set(profile);
+            
+            this.setActiveUser(profile);
             return true;
+        } catch (error) {
+            console.error("Error Registro:", error.code, error.message);
+            alert("Error al registrar: " + error.message);
+            return false;
+        }
+    },
+
+    // Login Admin (usando Firebase)
+    async loginAdmin(email, password) {
+        const user = await this.login(email, password);
+        if (user && user.rol === "admin") {
+            return true;
+        }
+        if (user) {
+            await this.logout(); // No es admin
         }
         return false;
     }
-
-    
 };

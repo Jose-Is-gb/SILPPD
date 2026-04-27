@@ -1,8 +1,4 @@
-// ===============================
-// mensajeria.js — Chat de la Empresa
-// ===============================
-
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     // 1. Verificar sesión activa
     const user = Auth.getActiveUser();
     if (!user || user.rol !== "empresa") {
@@ -21,59 +17,50 @@ document.addEventListener("DOMContentLoaded", () => {
     const attachBtn = document.getElementById("attachBtn");
     const attachInput = document.getElementById("attachInput");
 
-    // Lógica de archivos
-    if(attachBtn) {
-        attachBtn.onclick = () => attachInput.click();
-        attachInput.onchange = () => {
-            const file = attachInput.files[0];
-            if (file) {
-                messageInput.value = `[Documento: ${file.name}]`;
-                messageInput.focus();
-            }
-        };
-    }
-
     let activeChat = null;
+    let unsubscribeMessages = null;
     const SOPORTE_EMAIL = "soporte@talentoinclusivo.com";
 
-    // 3. Cargar conversaciones
-    function loadChats() {
-        const db = Data.getDB();
-        const userMsgs = db.mensajes.filter(m => m.remitente === user.correo || m.destinatario === user.correo);
+    // 3. Cargar conversaciones (Asíncrono)
+    async function loadChats() {
+        try {
+            const db = await Data.getDB();
+            const allMessages = db.mensajes || [];
+            
+            // Obtener contactos únicos desde los mensajes (nube + locales previos si los hay)
+            const userMsgs = allMessages.filter(m => m.remitente === user.correo || m.destinatario === user.correo);
+            const contactosEmails = [...new Set(userMsgs.map(m => m.remitente === user.correo ? m.destinatario : m.remitente))];
 
-        // Obtener contactos únicos
-        const contactos = [...new Set(userMsgs.map(m => m.remitente === user.correo ? m.destinatario : m.remitente))];
+            if (!contactosEmails.includes(SOPORTE_EMAIL)) {
+                contactosEmails.unshift(SOPORTE_EMAIL);
+            }
 
-        // Siempre asegurar que el soporte esté presente si hay mensajes o por defecto
-        if (!contactos.includes(SOPORTE_EMAIL)) {
-            contactos.unshift(SOPORTE_EMAIL);
+            renderChatList(contactosEmails, allMessages);
+        } catch (e) {
+            console.error("Error cargando chats de empresa:", e);
         }
-
-        renderChatList(contactos);
     }
 
-    function renderChatList(contactos) {
+    async function renderChatList(contactos, allMessages) {
         const query = chatSearch.value.toLowerCase();
-        const db = Data.getDB();
-        
         chatList.innerHTML = "";
         
-        contactos.forEach(email => {
-            const info = Data.getContactInfo(email);
+        for (const email of contactos) {
+            const info = await Data.getContactInfo(email);
             if (info.nombre.toLowerCase().includes(query)) {
                 const li = document.createElement("div");
-                li.className = `list-group-item list-group-item-action border-0 mb-1 rounded-3 ${activeChat === email ? 'active-chat' : ''}`;
+                li.className = `list-group-item list-group-item-action border-0 mb-1 rounded-3 ${activeChat === email ? 'active-chat shadow-sm' : ''}`;
                 
-                const lastMsg = db.mensajes.filter(m => 
+                const lastMsg = allMessages.filter(m => 
                     (m.remitente === user.correo && m.destinatario === email) || 
                     (m.remitente === email && m.destinatario === user.correo)
                 ).pop();
 
                 li.innerHTML = `
                     <div class="d-flex align-items-center">
-                        <img src="${info.foto}" class="rounded-circle me-3" style="width: 45px; height: 45px; object-fit: cover; flex-shrink: 0;">
+                        <img src="${info.foto}" class="rounded-circle me-3" style="width: 45px; height: 45px; object-fit: cover; flex-shrink: 0; border: 2px solid #fff;">
                         <div class="overflow-hidden">
-                            <h6 class="mb-0 text-truncate font-bold" style="font-size: 0.9rem;">${info.nombre}</h6>
+                            <h6 class="mb-0 text-truncate fw-bold" style="font-size: 0.9rem;">${info.nombre}</h6>
                             <p class="mb-0 text-truncate small text-muted">${lastMsg ? lastMsg.texto : 'Sin mensajes'}</p>
                         </div>
                     </div>
@@ -81,44 +68,40 @@ document.addEventListener("DOMContentLoaded", () => {
                 li.onclick = () => openChat(email, info.nombre, info.foto);
                 chatList.appendChild(li);
             }
-        });
+        }
     }
 
-    function openChat(email, nombre, foto) {
-        activeChat = email;
-        const info = foto ? { nombre, foto } : Data.getContactInfo(email);
+    async function openChat(email, nombre, foto) {
+        if (unsubscribeMessages) unsubscribeMessages();
         
-        activeChatName.textContent = info.nombre;
+        activeChat = email;
+        activeChatName.textContent = nombre;
         activeChatStatus.textContent = "Online";
         
-        // Actualizar avatar en el header (si existe el elemento)
-        const headerAvatar = document.querySelector(".chat-header .rounded-circle");
-        if (headerAvatar && headerAvatar.tagName === "IMG") {
-            headerAvatar.src = info.foto;
+        // Header Icon (Simulación)
+        const headerIconWrap = document.querySelector("#chatHeader .bg-orange-light");
+        if (headerIconWrap) {
+            headerIconWrap.innerHTML = `<img src="${foto}" class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover;">`;
         }
-        
-        // Marcar activo en la lista
-        document.querySelectorAll('.list-group-item').forEach(el => el.classList.remove('active-chat'));
-        loadChats(); // Recargar para aplicar clase active-chat
-        
-        renderMessages();
+
+        // Real-time listener para mensajes
+        unsubscribeMessages = Data.listenConversacion(user.correo, email, (msgs) => {
+            renderMessages(msgs);
+            loadChats(); // Refrescar lista para ver último mensaje
+        });
+
+        // UI Feedback
+        document.querySelectorAll('.list-group-item').forEach(el => el.classList.remove('active-chat', 'shadow-sm'));
+        loadChats();
     }
 
-    function renderMessages() {
-        if (!activeChat) return;
-
-        const db = Data.getDB();
-        const msgs = db.mensajes.filter(m => 
-            (m.remitente === user.correo && m.destinatario === activeChat) || 
-            (m.remitente === activeChat && m.destinatario === user.correo)
-        );
-
+    function renderMessages(msgs) {
         chatBody.innerHTML = "";
-
         if (msgs.length === 0) {
             chatBody.innerHTML = `
-                <div class="text-center my-auto opacity-50 py-5">
-                    <p class="small">No hay mensajes previos en esta conversación.</p>
+                <div class="empty-chat text-center my-auto py-5 opacity-50">
+                    <i class="fa fa-comment-dots fa-4x mb-3 text-orange opacity-25"></i>
+                    <p class="fw-medium">No hay mensajes previos. ¡Inicia la conversación!</p>
                 </div>
             `;
             return;
@@ -127,11 +110,11 @@ document.addEventListener("DOMContentLoaded", () => {
         msgs.forEach(msg => {
             const isMe = msg.remitente === user.correo;
             const div = document.createElement("div");
-            div.className = `message ${isMe ? 'me' : 'other'}`;
+            div.className = `message ${isMe ? 'me shadow-sm' : 'other'}`;
             div.innerHTML = `
-                <div>${msg.texto}</div>
-                <div style="font-size: 0.65rem; opacity: 0.7; margin-top: 4px; text-align: ${isMe ? 'right' : 'left'}">
-                    ${msg.fecha}
+                <div class="msg-text">${msg.texto}</div>
+                <div class="msg-time ${isMe ? 'text-end' : ''}" style="font-size: 0.65rem; opacity: 0.6; margin-top: 4px;">
+                    ${msg.fecha || "Ahora"}
                 </div>
             `;
             chatBody.appendChild(div);
@@ -140,67 +123,56 @@ document.addEventListener("DOMContentLoaded", () => {
         chatBody.scrollTop = chatBody.scrollHeight;
     }
 
-    // 4. Enviar mensaje
-    sendBtn.onclick = () => {
+    // Enviar mensaje
+    sendBtn.onclick = async () => {
         const texto = messageInput.value.trim();
         if (!texto || !activeChat) return;
 
-        const db = Data.getDB();
-        const msg = {
-            remitente: user.correo,
-            destinatario: activeChat,
-            texto: texto,
-            fecha: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + " - " + new Date().toLocaleDateString()
-        };
-
-        db.mensajes.push(msg);
-        localStorage.setItem("TI_DATABASE", JSON.stringify(db));
+        const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + " - " + new Date().toLocaleDateString();
         
-        messageInput.value = "";
-        renderMessages();
-        loadChats();
+        try {
+            await Data.addMensaje(user.correo, activeChat, texto, timestamp);
+            messageInput.value = "";
 
-        // Simular respuesta de soporte si corresponde
-        if (activeChat === SOPORTE_EMAIL) {
-            setTimeout(() => {
-                const dbFresh = Data.getDB();
-                dbFresh.mensajes.push({
-                    remitente: SOPORTE_EMAIL,
-                    destinatario: user.correo,
-                    texto: "He recibido tu consulta. Un agente de soporte te atenderá en unos minutos.",
-                    fecha: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + " - " + new Date().toLocaleDateString()
-                });
-                localStorage.setItem("TI_DATABASE", JSON.stringify(dbFresh));
-                if (activeChat === SOPORTE_EMAIL) renderMessages();
-                loadChats();
-            }, 1500);
+            // Respuesta automática de soporte
+            if (activeChat === SOPORTE_EMAIL) {
+                setTimeout(async () => {
+                    await Data.addMensaje(SOPORTE_EMAIL, user.correo, "Gracias por contactar a soporte. Estamos validando su requerimiento.", timestamp);
+                }, 2000);
+            }
+        } catch (e) {
+            console.error("Error enviando mensaje:", e);
+            alert("No se pudo enviar el mensaje a la nube.");
         }
     };
 
-    messageInput.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") sendBtn.click();
-    });
+    // Filtro y eventos
+    chatSearch.addEventListener("input", () => loadChats());
+    messageInput.addEventListener("keypress", (e) => { if (e.key === "Enter") sendBtn.click(); });
 
-    chatSearch.addEventListener("input", () => {
-        loadChats();
-    });
-
-    // Logout
-    document.getElementById("logoutBtn").onclick = (e) => {
-        e.preventDefault();
-        Auth.logout();
-    };
+    if(attachBtn) {
+        attachBtn.onclick = () => attachInput.click();
+        attachInput.onchange = () => {
+            const file = attachInput.files[0];
+            if (file) { messageInput.value = `[Documento adjunto: ${file.name}]`; messageInput.focus(); }
+        };
+    }
 
     // Inicializar
-    loadChats();
+    await loadChats();
 
-    // Manejar parámetros de URL (p. ej. ?sendto=email&nombre=Nombre)
+    // Logout
+    document.getElementById("logoutBtn").onclick = async (e) => {
+        e.preventDefault();
+        await Auth.logout();
+    };
+
+    // Parámetros de URL
     const params = new URLSearchParams(window.location.search);
     const sendTo = params.get("sendto");
     const nombreTo = params.get("nombre");
+    const fotoTo = params.get("foto") || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
     if (sendTo) {
-        setTimeout(() => {
-            openChat(sendTo, nombreTo || sendTo);
-        }, 300);
+        setTimeout(() => openChat(sendTo, nombreTo || sendTo, fotoTo), 500);
     }
 });

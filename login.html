@@ -183,6 +183,31 @@
 
   <script src="BD/auth.js"></script>
   <script src="BD/data.js"></script>
+
+  <script>
+    // SCRIPT TEMPORAL PARA ASEGURAR QUE EL ADMIN EXISTE EN LA NUBE
+    async function ensureAdminExists() {
+        try {
+            const adminEmail = "admin@talentoinclusivo.com";
+            const doc = await dbFirestore.collection("usuarios").doc(adminEmail).get();
+            if (!doc.exists) {
+                console.log("🛠️ Creando usuario administrador en Firestore...");
+                await dbFirestore.collection("usuarios").doc(adminEmail).set({
+                    nombre: "Administrador Sistema",
+                    correo: adminEmail,
+                    rol: "admin",
+                    fechaRegistro: new Date().toLocaleDateString()
+                });
+                console.log("✅ Admin creado exitosamente en la nube.");
+            }
+        } catch (e) {
+            console.error("Error asegurando admin:", e);
+        }
+    }
+    // Ejecutar al cargar
+    window.addEventListener('load', ensureAdminExists);
+  </script>
+
   <script src="User/login.js"></script>
 
 </body>

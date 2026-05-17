@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Postulaciones Recibidas - Talento Inclusivo</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body class="bg-light">
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-white py-3 border-bottom sticky-top">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold d-flex align-items-center" href="dashboard.html">
+                <span style="color: #ff9800;"><i class="fa fa-wheelchair me-2"></i> Talento Inclusivo</span>
+            </a>
+            <div id="menu" class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item mx-2"><a class="nav-link text-secondary" href="dashboard.html">Inicio</a></li>
+                    <li class="nav-item mx-2"><a class="nav-link text-secondary" href="gestion_ofertas.html">Mis Ofertas</a></li>
+                    <li class="nav-item mx-2"><a class="nav-link active text-dark fw-semibold" href="postulaciones_recibidas.html">Postulaciones</a></li>
+                    <li class="nav-item mx-2"><a class="nav-link text-secondary" href="mensajeria.html">Mensajes</a></li>
+                    <li class="nav-item mx-2"><a class="nav-link text-secondary" href="perfil.html">Perfil</a></li>
+                    <li class="nav-item ms-lg-3">
+                        <a class="nav-link text-danger fw-bold" href="#" id="logoutBtn" onclick="Auth.logout()">Cerrar sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="mb-4">
+            <h2 class="fw-bold mb-1">Postulaciones Recibidas</h2>
+            <p class="text-secondary">Gestiona las postulaciones de candidatos a tus ofertas.</p>
+        </div>
+
+        <!-- SEARCH & FILTERS -->
+        <div class="card border-0 shadow-sm rounded-4 p-3 mb-4">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-0 ps-3">
+                            <i class="fa fa-search text-muted"></i>
+                        </span>
+                        <input type="text" id="searchCandidate" class="form-control border-0 py-2" placeholder="Buscar por nombre de candidato...">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select id="filterOffer" class="form-select border-0 bg-light py-2 px-3 rounded-3">
+                        <option value="">Oferta laboral</option>
+                        <!-- Cargado dinámicamente -->
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select id="filterEstado" class="form-select border-0 bg-light py-2 px-3 rounded-3">
+                        <option value="">Estado</option>
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="En revisión">En revisión</option>
+                        <option value="Aceptado">Aceptado</option>
+                        <option value="Rechazado">Rechazado</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABS -->
+        <ul class="nav nav-pills bg-white p-1 rounded-4 shadow-sm mb-4" id="postulacionesTabs" role="tablist">
+            <li class="nav-item flex-fill" role="presentation">
+                <button class="nav-link active w-100 rounded-pill" data-status="Nuevas" data-bs-toggle="pill" type="button">Nuevas (<span id="countNew">0</span>)</button>
+            </li>
+            <li class="nav-item flex-fill" role="presentation">
+                <button class="nav-link w-100 rounded-pill" data-status="En revisión" data-bs-toggle="pill" type="button">Revisadas (<span id="countReviewed">0</span>)</button>
+            </li>
+            <li class="nav-item flex-fill" role="presentation">
+                <button class="nav-link w-100 rounded-pill" data-status="Aceptado" data-bs-toggle="pill" type="button">Aceptadas (<span id="countAccepted">0</span>)</button>
+            </li>
+            <li class="nav-item flex-fill" role="presentation">
+                <button class="nav-link w-100 rounded-pill" data-status="Rechazado" data-bs-toggle="pill" type="button">Rechazadas (<span id="countRejected">0</span>)</button>
+            </li>
+        </ul>
+
+        <!-- CANDIDATES LIST -->
+        <div id="candidatesList" class="row g-3">
+            <!-- Cargado dinámicamente -->
+        </div>
+    </div>
+
+    <!-- MODAL CV -->
+    <div class="modal fade" id="modalCV" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow">
+                <div class="modal-header border-0 pb-0 px-4 pt-4">
+                    <h5 class="modal-title fw-bold" id="cvModalTitle">Curriculum Vitae</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div id="cvContainer" class="bg-light rounded-4 p-4 text-center" style="min-height: 400px; border: 2px dashed #ccc;">
+                        <!-- Contenido dinámico -->
+                        <i class="fa fa-file-pdf text-danger mb-3" style="font-size: 4rem;"></i>
+                        <h4 class="fw-bold">Visualización de CV</h4>
+                        <p class="text-secondary">Simulación de documento PDF para testing.</p>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 px-4 pb-4">
+                    <button type="button" class="btn btn-light rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-orange text-white rounded-pill px-4 fw-bold shadow-sm" onclick="alert('Funcionalidad de descarga en curso...')">Descargar PDF</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- SCRIPTS DE FIREBASE (Modo Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="../BD/firebase-config.js"></script>
+
+    <script src="../BD/auth.js"></script>
+    <script src="../BD/data.js"></script>
+    <script src="postulaciones_recibidas.js"></script>
+</body>
+</html>

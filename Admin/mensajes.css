@@ -1,0 +1,164 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8f9fa; /* matches bg-light */
+}
+
+/* Navbar */
+.doc-navbar {
+    border-bottom: 1px solid #eef0f2;
+}
+.brand-text {
+    font-weight: 300;
+}
+.msg-nav-links .nav-link {
+    font-size: 0.95rem;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+}
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/* Content Layout */
+.custom-layout {
+    max-width: 1600px;
+}
+.content-title {
+    font-size: 1.5rem;
+}
+.content-subtitle {
+    font-size: 0.9rem;
+}
+
+.chat-workspace {
+    height: calc(100vh - 170px);
+    min-height: 600px;
+}
+
+/* Contacts Sidebar */
+.search-bar input:focus {
+    box-shadow: none;
+}
+.search-bar .input-group-text {
+    padding-right: 0;
+}
+.tabs-container button {
+    font-size: 0.85rem;
+}
+
+.contacts-list {
+    overflow-y: auto;
+}
+.contacts-list::-webkit-scrollbar {
+    width: 6px;
+}
+.contacts-list::-webkit-scrollbar-thumb {
+    background-color: #e0e0e0;
+    border-radius: 10px;
+}
+
+.contact-item {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.contact-item:hover {
+    background-color: #f8f9fa;
+}
+.contact-item.active {
+    background-color: #f0fdf4; /* Very light green */
+    border-left: 4px solid #4CAF50 !important;
+}
+
+.avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: white;
+}
+.avatar-lg {
+    width: 52px;
+    height: 52px;
+}
+
+/* UI Colors */
+.bg-orange { background-color: #FF9800 !important; }
+.bg-blue { background-color: #2196F3 !important; }
+.bg-teal { background-color: #009688 !important; }
+.bg-purple { background-color: #9C27B0 !important; }
+
+/* Chat Main Workspace */
+.chat-main-container {
+    border: 1px solid #eef0f2;
+}
+
+.header-info-bar span {
+    font-size: 0.85rem;
+}
+
+.bg-chat-bg {
+    background-color: #f8f9fa; /* or white */
+}
+
+.chat-messages-body {
+    overflow-y: auto;
+    scroll-behavior: smooth;
+}
+.chat-messages-body::-webkit-scrollbar {
+    width: 6px;
+}
+.chat-messages-body::-webkit-scrollbar-thumb {
+    background-color: #e0e0e0;
+    border-radius: 10px;
+}
+
+/* Chat Bubbles */
+.msg-bubble {
+    max-width: 100%;
+    border-radius: 6px;
+    padding: 12px 18px;
+    position: relative;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+/* Received Message */
+.msg-received {
+    background-color: #f1f3f4;
+    color: #202124;
+    border-bottom-left-radius: 0;
+}
+
+/* Sent Message */
+.msg-sent {
+    background-color: #4CAF50;
+    color: #ffffff;
+    border-bottom-right-radius: 0;
+}
+
+.msg-time {
+    font-size: 0.75rem;
+    margin-top: 4px;
+}
+.msg-received + .msg-time {
+    color: #6c757d;
+}
+.msg-sent-time {
+    color: #6c757d;
+}
+
+/* Inputs / Footer */
+#adminMsgInput:focus {
+    box-shadow: none;
+    background-color: #f1f3f4 !important;
+}
+.action-pills button {
+    font-size: 0.8rem;
+    font-weight: 500;
+}

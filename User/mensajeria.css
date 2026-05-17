@@ -1,0 +1,104 @@
+:root {
+    --primary-color: #1976d2;
+    --primary-gradient: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%);
+    --bg-light: #f1f5f9;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-light);
+}
+
+/* Chat container fixes */
+.chat-container-wrapper {
+    height: calc(100vh - 250px);
+    min-height: 500px;
+}
+
+.chat-list-card, .chat-window-card {
+    height: 100%;
+}
+
+/* Chat List */
+.chat-list-items {
+    overflow-y: auto;
+    height: calc(100% - 110px);
+}
+
+.chat-list-items .list-group-item {
+    border: none;
+    padding: 1.25rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid rgba(0,0,0,0.03);
+}
+
+.chat-list-items .list-group-item:hover {
+    background-color: #f8fafc;
+}
+
+.chat-list-items .list-group-item.active-chat {
+    background-color: #e0f2fe !important;
+    border-left: 4px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+/* Chat Window */
+.chat-body {
+    background-color: #f8fafc;
+    overflow-y: auto;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Message Bubbles */
+.message {
+    max-width: 80%;
+    margin-bottom: 1.5rem;
+    padding: 0.8rem 1.2rem;
+    border-radius: 1.2rem;
+    font-size: 0.9rem;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.message.me {
+    background: var(--primary-color);
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 0.2rem;
+}
+
+.message.other {
+    background: white;
+    color: #334155;
+    align-self: flex-start;
+    border-bottom-left-radius: 0.2rem;
+    border: 1px solid #e2e8f0;
+}
+
+/* Input Area */
+.chat-input-wrap {
+    background: #f1f5f9;
+    border-radius: 50px;
+    padding: 0.25rem;
+}
+
+.chat-input-wrap .form-control {
+    background: transparent;
+    box-shadow: none !important;
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+    .chat-container-wrapper {
+        height: auto;
+    }
+    .chat-list-card {
+        height: 300px;
+    }
+    .chat-window-card {
+        height: 500px;
+    }
+}

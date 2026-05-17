@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Talento Inclusivo - Iniciar Sesión</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Iconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- CSS del Login -->
+  <link rel="stylesheet" href="User/login.css">
+</head>
+
+<body class="bg-primary">
+
+  <!-- CONTENIDO CENTRADO -->
+  <div class="login-wrapper">
+    <div class="container">
+      <div class="row align-items-center justify-content-center">
+
+        <!-- Panel informativo -->
+        <div class="col-lg-6 text-light mb-4 mb-lg-0">
+          <h1 class="fw-bold display-5">Talento Inclusivo</h1>
+          <p class="lead">Conectando talento con oportunidades, construyendo un futuro laboral sin barreras.</p>
+
+          <div class="d-flex align-items-start mb-3">
+            <span class="info-circle me-3"></span>
+            <div>
+              <strong>Para candidatos</strong><br>
+              Encuentra empleos que valoran tu talento y respetan tus necesidades.
+            </div>
+          </div>
+
+          <div class="d-flex align-items-start">
+            <span class="info-circle me-3"></span>
+            <div>
+              <strong>Para empresas</strong><br>
+              Accede a talento diverso comprometido con la inclusión.
+            </div>
+          </div>
+        </div>
+
+        <!-- Caja de Login -->
+        <div class="col-lg-5 col-md-8">
+          <div class="card shadow-lg rounded-4 p-4" id="loginBox" data-login-mode="user">
+
+            <h3 class="mb-4 text-center">Iniciar Sesión</h3>
+
+            <!-- Switch -->
+            <div class="d-flex bg-light rounded-pill p-1 mb-4 w-100" role="group">
+
+              <input type="radio" class="btn-check" name="loginMode" id="btnUser" autocomplete="off" checked>
+              <label class="btn rounded-pill flex-fill fw-semibold border-0" id="labelUser" for="btnUser"
+                style="color: #6c757d;">
+                <i class="fa-regular fa-user"></i> Usuario
+              </label>
+
+              <input type="radio" class="btn-check" name="loginMode" id="btnCompany" autocomplete="off">
+              <label class="btn rounded-pill flex-fill fw-semibold border-0" id="labelCompany" for="btnCompany"
+                style="color: #6c757d;">
+                <i class="fa-regular fa-building"></i> Empresa
+              </label>
+
+              <input type="radio" class="btn-check" name="loginMode" id="btnAdmin" autocomplete="off">
+              <label class="btn rounded-pill flex-fill fw-semibold border-0" id="labelAdmin" for="btnAdmin"
+                style="color: #6c757d;">
+                <i class="fa-solid fa-shield-halved"></i> Administrador
+              </label>
+            </div>
+
+            <!-- Email -->
+            <label class="form-label">Correo electrónico</label>
+            <div class="input-group mb-1">
+              <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
+              <input type="email" id="email" class="form-control" placeholder="tu@email.com" maxlength="100">
+            </div>
+            <div id="emailError" class="text-danger small mb-3 d-none" style="font-size: 0.8rem; font-weight: 500;"></div>
+
+            <!-- Password -->
+            <label class="form-label">Contraseña</label>
+            <div class="input-group mb-1">
+              <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+              <input type="password" id="password" class="form-control" maxlength="50">
+              <span class="input-group-text" id="togglePassword" style="cursor:pointer;">
+                <i class="fa-solid fa-eye"></i>
+              </span>
+            </div>
+            <div id="passwordError" class="text-danger small mb-3 d-none" style="font-size: 0.8rem; font-weight: 500;"></div>
+
+            <!-- Captcha de Seguridad Avanzado -->
+            <label class="form-label">Verificación de Seguridad</label>
+            <div class="input-group mb-1">
+              <span class="input-group-text bg-white p-0 overflow-hidden">
+                <canvas id="captchaCanvas" width="130" height="38"></canvas>
+              </span>
+              <input type="text" id="captchaAnswer" class="form-control" placeholder="Texto de la imagen" required maxlength="6">
+              <button class="btn btn-outline-secondary" type="button" id="refreshCaptcha" title="Cambiar imagen">
+                <i class="fa-solid fa-arrows-rotate"></i>
+              </button>
+            </div>
+            <div id="captchaError" class="text-danger small mb-3 d-none" style="font-size: 0.8rem; font-weight: 500;"></div>
+
+            <!-- Usuario Normal -->
+            <div id="userOptions" class="d-flex justify-content-between mb-3">
+              <div>
+                <input class="form-check-input" type="checkbox" id="remember">
+                <label class="ms-1" for="remember">Recordarme</label>
+              </div>
+              <a href="#" id="forgotPasswordLink" style="text-decoration: none;" data-bs-toggle="modal"
+                data-bs-target="#recoverModal">
+                ¿Olvidaste tu contraseña?
+              </a>
+            </div>
+
+            <!-- Mensaje Admin -->
+            <div id="restrictedMessage" class="alert alert-success d-none text-center">
+              Acceso exclusivo para administradores del sistema.
+            </div>
+
+            <!-- Botón login -->
+            <button id="loginBtn" class="btn btn-primary w-100 py-2 fw-bold rounded-3">
+              Iniciar Sesión
+            </button>
+
+            <div id="adminExtra" class="d-none"></div>
+
+            <!-- Link registro -->
+            <div id="registerLink" class="text-center mt-3 text-muted">
+              <span id="registerPrompt">¿No tienes cuenta?</span>
+              <a href="registro.html" id="showRegister" class="fw-semibold" style="text-decoration: none;">Regístrate
+                aquí</a>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="text-center text-light py-3">
+    © 2025 Talento Inclusivo. Construyendo un futuro laboral más inclusivo.
+  </footer>
+
+  <!-- Modal Recuperar Contraseña -->
+  <div class="modal fade" id="recoverModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">Recuperar contraseña</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <p class="text-secondary small mb-4">Ingresa tu correo electrónico registrado y te enviaremos un enlace para restablecer tu contraseña.</p>
+
+          <div class="mb-3">
+            <label class="form-label fw-bold">Correo registrado</label>
+            <input type="email" id="recoverEmail" class="form-control" placeholder="tu@email.com">
+          </div>
+        </div>
+
+        <div class="modal-footer border-0 pb-4 px-4">
+          <button class="btn btn-light rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Cancelar</button>
+          <button id="btnRecoverPassword" class="btn btn-primary rounded-pill px-4 fw-bold">
+            Enviar enlace
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS (necesario para modales y dropdowns) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- SCRIPTS DE FIREBASE (Modo Compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="BD/firebase-config.js"></script>
+
+  <script src="BD/auth.js"></script>
+  <script src="BD/data.js"></script>
+
+  <script>
+    // SCRIPT DE SEMBRADO Y REPARACIÓN SILENCIOSA (QA Testing)
+    async function repairCloudData() {
+        const demoAccounts = [
+            { correo: "admin@talentoinclusivo.com", pass: "admin123", rol: "admin", nombre: "Administrador Demo" },
+            { 
+               correo: "empresa@talentoinclusivo.com", pass: "empresa123", rol: "empresa", nombre: "Empresa Inclusiva S.A.",
+               sector: "Tecnología e Informática", tamanio: "51-250 empleados", sitioWeb: "https://www.google.com" 
+            },
+            { correo: "usuario@talentoinclusivo.com", pass: "usuario123", rol: "usuario", nombre: "Usuario Candidato Demo" }
+        ];
+
+        try {
+            // Guardamos un tracking interno del login para no desestabilizar la UI del cliente actual
+            const currentUser = authFirebase.currentUser;
+            let neededReset = false;
+
+            for (const acc of demoAccounts) {
+                try {
+                    // Sembrar en Firebase Auth
+                    await authFirebase.createUserWithEmailAndPassword(acc.correo, acc.pass);
+                    console.log(`✅ Cuenta Demo creada en Auth: ${acc.correo}`);
+                    neededReset = true;
+
+                    // Extender en Firebase Cloud Firestore (Perfil Base)
+                    let docData = { nombre: acc.nombre, correo: acc.correo, rol: acc.rol, fechaRegistro: new Date().toLocaleDateString() };
+                    await dbFirestore.collection("usuarios").doc(acc.correo).set(docData);
+                    
+                    if(acc.rol === "empresa") {
+                       await dbFirestore.collection("empresas").doc(acc.correo).set({ ...docData, sector: acc.sector, tamanio: acc.tamanio, sitioWeb: acc.sitioWeb });
+                    }
+                } catch (e) {
+                    if (e.code !== 'auth/email-already-in-use') {
+                        console.warn("Issue in QA Seeding:", e.code);
+                    }
+                }
+            }
+
+            // Si creamos cuentas nuevas, el Auth por defecto nos "inicia sesión" con la última cuenta creada. Esto nos cierra limpiamente esa sesión fantasma.
+            if(neededReset && !currentUser) {
+                await authFirebase.signOut();
+            }
+
+        } catch (e) {
+            console.error("Error en rutina QA Seed:", e);
+        }
+    }
+    // Ejecutar silenciosamente al cargar el módulo DOM
+    window.addEventListener('load', repairCloudData);
+  </script>
+
+  <script src="User/login.js"></script>
+
+</body>
+
+</html>

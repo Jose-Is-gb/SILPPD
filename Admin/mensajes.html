@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensajes - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="mensajes.css">
+</head>
+
+<body class="bg-light">
+
+    <div class="d-flex">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="sidebar-header text-center pt-4 pb-3">
+                <div class="d-inline-flex align-items-center justify-content-center bg-white text-primary rounded-circle shadow-sm mb-3"
+                    style="width: 55px; height: 55px;">
+                    <i class="fa fa-shield-halved fa-2x"></i>
+                </div>
+                <h5 class="text-white fw-bold mb-1" style="letter-spacing: 1px;">ADMINISTRADOR</h5>
+                <p class="text-white-50 small mb-0">Talento Inclusivo</p>
+                <hr class="border-white opacity-25 mt-4 mx-3">
+            </div>
+
+            <ul class="sidebar-menu">
+                <li onclick="location.href='admin.html'"><i class="fa fa-chart-line"></i> Dashboard</li>
+                <li onclick="location.href='usuario.html'"><i class="fa fa-users"></i> Usuarios</li>
+                <li onclick="location.href='gestion.html'"><i class="fa fa-briefcase"></i> Ofertas</li>
+                <li onclick="location.href='validacion_empresas.html'"><i class="fa fa-clipboard-check"></i> Validación</li>
+                <li class="active"><i class="fa fa-envelope"></i> Mensajes</li>
+                <li onclick="location.href='reporte.html'"><i class="fa fa-chart-pie"></i> Reportes</li>
+                <li onclick="location.href='config_admin.html'"><i class="fa fa-gear"></i> Configuración</li>
+                <li id="logoutBtnTop" class="logout"><i class="fa fa-right-from-bracket"></i> Salir</li>
+            </ul>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content flex-grow-1"
+            style="height: 100vh; overflow: hidden; display: flex; flex-direction: column; padding: 0;">
+            <!-- TOPBAR -->
+            <nav class="navbar navbar-expand-lg bg-white shadow-sm px-4 flex-shrink-0"
+                style="border-radius: 0; padding: 15px 0;">
+                <div class="container-fluid">
+                    <span class="navbar-brand fw-bold text-primary">Centro de Mensajes</span>
+                    <div class="ms-auto d-flex align-items-center">
+                        <span class="me-3 fw-semibold">Administrador</span>
+                        <i class="fa fa-user-circle fa-2x text-primary"></i>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="container-fluid custom-layout px-4 py-4 flex-grow-1 overflow-hidden"
+                style="max-height: calc(100vh - 75px); display: flex; flex-direction: column;">
+
+                <div class="row g-4 m-0" style="flex: 1; min-height: 0;">
+                    <!-- SIDEBAR CONTACTOS -->
+                    <div class="col-lg-4 col-xl-4 pb-2" style="height: 100%;">
+                        <div class="bg-white rounded-4 shadow-sm contacts-container d-flex flex-column h-100">
+                            <div class="p-3 border-bottom">
+                                <div class="input-group search-bar">
+                                    <span class="input-group-text bg-light border-0"><i
+                                            class="fa fa-search text-muted"></i></span>
+                                    <input type="text" class="form-control bg-light border-0" id="searchChats"
+                                        placeholder="Buscar conversaciones...">
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between p-3 border-bottom tabs-container">
+                                <button class="btn btn-success rounded-pill px-3 py-1 btn-sm fw-semibold filter-btn" data-filter="Todos" id="btnFilterTodos">Todos</button>
+                                <button class="btn btn-light rounded-pill px-3 py-1 btn-sm text-dark filter-btn" data-filter="Usuario" id="btnFilterUsuarios">Usuarios</button>
+                                <button class="btn btn-light rounded-pill px-3 py-1 btn-sm text-dark filter-btn" data-filter="Empresa" id="btnFilterEmpresas">Empresas</button>
+                            </div>
+
+                            <div class="contacts-list flex-grow-1 overflow-auto" id="contactsList">
+                                <!-- Generado por JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CHAT MAIN -->
+                    <div class="col-lg-8 col-xl-8 pb-2" style="height: 100%;">
+                        <div
+                            class="bg-white rounded-4 shadow-sm chat-main-container d-flex flex-column justify-content-between h-100">
+
+                            <div id="chatHeaderContainer" class="d-none flex-column h-100">
+                                <!-- HEADER CHAT -->
+                                <div
+                                    class="d-flex justify-content-between align-items-center p-3 border-bottom flex-shrink-0">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="avatar-lg bg-orange text-white rounded-circle d-flex align-items-center justify-content-center fw-bold fs-4"
+                                            id="chatAvatar">
+                                            T
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0 fw-bold d-flex align-items-center gap-2">
+                                                <span id="chatName">Tech Solutions S.A.</span>
+                                                <span
+                                                    class="badge bg-warning-subtle text-warning rounded-pill px-2 py-1"
+                                                    id="chatTag">Empresa</span>
+                                            </h6>
+                                            <small class="text-success fw-semibold">En línea</small>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <button id="btnMarcarChat"
+                                            class="btn btn-light border btn-sm rounded-pill fw-semibold text-dark"><i
+                                                class="fa-regular fa-flag me-1"></i> Marcar</button>
+                                        <div class="dropdown">
+                                            <button class="btn btn-light btn-sm text-muted border-0 bg-transparent" data-bs-toggle="dropdown">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                                                <li><a class="dropdown-item" href="#" id="btnEliminarChat"><i class="fa fa-trash-can text-danger me-2"></i>Eliminar conversación</a></li>
+                                                <li><a class="dropdown-item" href="#" id="btnExportarChat"><i class="fa fa-download text-primary me-2"></i>Exportar chat</a></li>
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li><a class="dropdown-item" href="#" id="btnCerrarChat"><i class="fa fa-xmark text-muted me-2"></i>Cerrar chat</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- INFO BAR -->
+                                <div
+                                    class="d-flex align-items-center gap-4 px-4 py-2 bg-light text-muted border-bottom small header-info-bar flex-shrink-0">
+                                    <span><span id="chatDocLabel">DNI</span>: <span class="text-dark" id="chatDocValue">12345678</span></span>
+                                    <span>Estado: <span class="text-success" id="chatEmpresaEstado">Verificada</span></span>
+                                </div>
+
+                                <!-- CHAT MESSAGES BODY -->
+                                <div class="chat-messages-body flex-grow-1 overflow-auto p-4 bg-chat-bg"
+                                    id="chatMessages">
+                                    <div class="text-center mb-4">
+                                        <span class="badge bg-light text-muted rounded-pill px-3 py-2 border">Hoy, 15 de
+                                            Abril 2026</span>
+                                    </div>
+                                    <!-- Mensajes generados por JS -->
+                                </div>
+
+                                <!-- CHAT INPUT -->
+                                <div class="p-3 border-top bg-white rounded-bottom-4 flex-shrink-0">
+                                    <div class="d-flex gap-2 mb-2 action-pills">
+                                        <button id="btnPlantilla" class="btn btn-light border btn-sm rounded-pill text-dark"><i class="fa fa-file-lines me-1"></i>Usar
+                                            plantilla de respuesta</button>
+                                        <button id="btnAdjuntarGuia" class="btn btn-light border btn-sm rounded-pill text-dark"><i class="fa fa-book me-1"></i>Adjuntar
+                                            guía</button>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-2 py-2">
+                                        <input type="file" id="fileInput" class="d-none" multiple accept="image/*,.pdf,.doc,.docx,.txt">
+                                        <button class="btn text-muted p-0 ms-1 me-1" id="btnAdjuntarArchivo" title="Adjuntar archivo"><i
+                                                class="fa-solid fa-paperclip fs-5"></i></button>
+                                        <input type="text" class="form-control bg-light border-0 rounded-3 py-2 fs-6"
+                                            id="adminMsgInput" placeholder="Escribe tu respuesta como administrador...">
+                                        <button class="btn btn-success text-white rounded-3 px-3 py-2"
+                                            id="adminSendBtn"><i class="fa fa-paper-plane"></i></button>
+                                    </div>
+                                    <div id="filePreview" class="d-none d-flex gap-2 flex-wrap mt-2 mb-1"></div>
+                                    <small class="text-muted ms-5 ps-3 d-block mt-1" style="font-size: 0.75rem;">Las
+                                        respuestas administrativas son archivadas para auditoría según ISO 27001</small>
+                                </div>
+                            </div>
+
+                            <div id="noChatSelected"
+                                class="d-flex flex-column align-items-center justify-content-center h-100 text-muted">
+                                <i class="fa fa-comments fa-3x mb-3 text-light" style="color: #dee2e6!important;"></i>
+                                <h5 class="fw-normal">Selecciona una conversación</h5>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- SCRIPTS DE FIREBASE (Modo Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="../BD/firebase-config.js"></script>
+
+    <script src="../BD/data.js"></script>
+    <script src="../BD/auth.js"></script>
+    <script src="mensajes.js"></script>
+</body>
+
+</html>

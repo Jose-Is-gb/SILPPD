@@ -1,0 +1,100 @@
+body {
+    background-color: #0d6efd;
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.progress-bar-custom {
+    height: 6px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    margin: 0 4px;
+    flex-grow: 1;
+    transition: all 0.3s ease;
+}
+
+.progress-bar-custom.active {
+    background-color: white;
+}
+
+.top-nav {
+    padding: 2rem 0;
+}
+
+.top-nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.top-nav a:hover {
+    color: #d1e7dd;
+}
+
+.form-card {
+    background: white;
+    color: #212529;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.step-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #0d6efd;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.step-container {
+    display: none;
+}
+
+.step-container.active {
+    display: block;
+    animation: fadeIn 0.4s ease-out;
+}
+
+.form-label {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #495057;
+}
+
+.form-control,
+.form-select {
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+}
+
+.form-control:focus,
+.form-select:focus {
+    background-color: #fff;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+}
+
+.info-box {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

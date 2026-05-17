@@ -1,0 +1,227 @@
+/* GENERAL */
+body {
+    background: #f1f5f9;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background: #1976d2;
+    color: white;
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    z-index: 10;
+}
+
+.sidebar-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-bottom: 0;
+}
+
+.sidebar-menu li {
+    padding: 15px 25px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.sidebar-menu li:hover,
+.sidebar-menu li.active {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.sidebar-menu i {
+    margin-right: 10px;
+}
+
+.sidebar-menu .logout {
+    margin-top: auto;
+    color: #ffdddd;
+}
+
+/* CONTENIDO PRINCIPAL */
+.main-content {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* CONFIG TABS */
+.config-tabs .nav-link {
+    color: #64748b;
+    border-radius: 10px !important;
+    padding: 10px 18px;
+    font-weight: 500;
+    font-size: 0.88rem;
+    transition: all 0.2s;
+}
+
+.config-tabs .nav-link:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+.config-tabs .nav-link.active {
+    background: #1976d2;
+    color: white;
+    font-weight: 600;
+}
+
+/* CONFIG CARD */
+.config-card {
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    background: white;
+    overflow: hidden;
+}
+
+.card-header-custom {
+    padding: 24px 28px 8px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.card-header-custom h5 {
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.card-footer-custom {
+    padding: 16px 28px;
+    background: #f8fafc;
+    border-top: 1px solid #f1f5f9;
+    text-align: right;
+}
+
+/* FORM ELEMENTS */
+.form-control, .form-select {
+    border-radius: 10px;
+    padding: 10px 14px;
+    border: 1px solid #e2e8f0;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #1976d2;
+    box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+}
+
+.form-label {
+    font-size: 0.88rem;
+    color: #475569;
+}
+
+/* Switch styling */
+.form-check-input:checked {
+    background-color: #1976d2;
+    border-color: #1976d2;
+}
+
+.form-switch .form-check-input {
+    width: 44px;
+    height: 22px;
+    cursor: pointer;
+}
+
+/* NOTIFICATION ITEMS */
+.notif-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.notif-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.notif-item:last-child {
+    border-bottom: none;
+}
+
+/* ADMIN AVATAR */
+.admin-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1976d2, #42a5f5);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(25, 118, 210, 0.3);
+}
+
+.admin-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* DATA STAT CARDS */
+.data-stat-card {
+    border-radius: 14px;
+    padding: 24px;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.data-stat-card:hover {
+    transform: translateY(-2px);
+}
+
+/* ACTION CARDS */
+.action-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 24px;
+    text-align: center;
+    transition: all 0.2s;
+    background: #fafbfc;
+}
+
+.action-card:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+
+/* PASSWORD STRENGTH */
+.progress {
+    border-radius: 3px;
+    background: #e2e8f0;
+}
+
+/* Logo preview */
+.logo-preview-box {
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Toggle password btn */
+.toggle-pass {
+    border-radius: 0 10px 10px 0 !important;
+}

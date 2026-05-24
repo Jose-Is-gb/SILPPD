@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     (m.remitente === email && m.destinatario === user.correo)
                 ).pop();
 
-                li.innerHTML = `
+                li.innerHTML = Security.sanitizeHTML(`
                     <div class="d-flex align-items-center">
                         <img src="${info.foto}" class="rounded-circle me-3" style="width: 45px; height: 45px; object-fit: cover; flex-shrink: 0; border: 2px solid #fff;">
                         <div class="overflow-hidden">
@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                             <p class="mb-0 text-truncate small text-muted">${lastMsg ? lastMsg.texto : 'Sin mensajes'}</p>
                         </div>
                     </div>
-                `;
+                `);
                 li.onclick = () => openChat(email, info.nombre, info.foto);
                 chatList.appendChild(li);
             }
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Header Icon (Simulación)
         const headerIconWrap = document.querySelector("#chatHeader .bg-orange-light");
         if (headerIconWrap) {
-            headerIconWrap.innerHTML = `<img src="${foto}" class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover;">`;
+            headerIconWrap.innerHTML = Security.sanitizeHTML(`<img src="${foto}" class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover;">`);
         }
 
         // Real-time listener para mensajes
@@ -95,12 +95,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     function renderMessages(msgs) {
         chatBody.innerHTML = "";
         if (msgs.length === 0) {
-            chatBody.innerHTML = `
+            chatBody.innerHTML = Security.sanitizeHTML(`
                 <div class="empty-chat text-center my-auto py-5 opacity-50">
                     <i class="fa fa-comment-dots fa-4x mb-3 text-orange opacity-25"></i>
                     <p class="fw-medium">No hay mensajes previos. ¡Inicia la conversación!</p>
                 </div>
-            `;
+            `);
             return;
         }
 
@@ -108,12 +108,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             const isMe = msg.remitente === user.correo;
             const div = document.createElement("div");
             div.className = `message ${isMe ? 'me shadow-sm' : 'other'}`;
-            div.innerHTML = `
+            div.innerHTML = Security.sanitizeHTML(`
                 <div class="msg-text">${msg.texto}</div>
                 <div class="msg-time ${isMe ? 'text-end' : ''}" style="font-size: 0.65rem; opacity: 0.6; margin-top: 4px;">
                     ${msg.fecha || "Ahora"}
                 </div>
-            `;
+            `);
             chatBody.appendChild(div);
         });
 

@@ -176,10 +176,10 @@ document.addEventListener("DOMContentLoaded", () => {
             const timeLeftMs = lockoutTime - new Date().getTime();
             if (timeLeftMs > 60000) {
                 const minutes = Math.ceil(timeLeftMs / 60000);
-                loginBtn.innerHTML = `<i class="fa-solid fa-lock"></i> Bloqueado (${minutes}m restantes)`;
+                loginBtn.innerHTML = Security.sanitizeHTML(`<i class="fa-solid fa-lock"></i> Bloqueado (${minutes}m restantes)`);
             } else {
                 const seconds = Math.ceil(timeLeftMs / 1000);
-                loginBtn.innerHTML = `<i class="fa-solid fa-lock"></i> Bloqueado (${seconds}s restantes)`;
+                loginBtn.innerHTML = Security.sanitizeHTML(`<i class="fa-solid fa-lock"></i> Bloqueado (${seconds}s restantes)`);
             }
             
             // Re-chequear cada segundo para actualización dinámica
@@ -479,6 +479,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (!email) {
                 alert("Por favor, ingresa tu correo electrónico.");
+                return;
+            }
+            if (typeof Security !== 'undefined' && !Security.isValidEmailStrict(email)) {
+                alert("Formato de correo inválido o contiene caracteres no permitidos.");
                 return;
             }
 

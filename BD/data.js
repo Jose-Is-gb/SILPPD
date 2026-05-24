@@ -28,11 +28,13 @@ const Data = {
     // ===============================
 
     async getUserByEmail(email) {
+        if (typeof email !== 'string') return null; // Prevención NoSQL Injection
         const doc = await dbFirestore.collection("usuarios").doc(email).get();
         return doc.exists ? doc.data() : null;
     },
 
     async updateUser(email, newData) {
+        if (typeof email !== 'string') return false; // Prevención NoSQL Injection
         try {
             await dbFirestore.collection("usuarios").doc(email).update(newData);
             return true;
@@ -43,6 +45,7 @@ const Data = {
     },
 
     async deleteUser(email) {
+        if (typeof email !== 'string') return; // Prevención NoSQL Injection
         await dbFirestore.collection("usuarios").doc(email).delete();
     },
 
@@ -161,6 +164,7 @@ const Data = {
     // Escuchar mensajes en tiempo real (Bidireccional)
     // Usa dos queries simples (==) para evitar índices compuestos en Firestore
     listenConversacion(email1, email2, callback) {
+        if (typeof email1 !== 'string' || typeof email2 !== 'string') return () => {}; // Prevención NoSQL Injection
         let msgs1 = [];
         let msgs2 = [];
 
@@ -205,6 +209,7 @@ const Data = {
     },
 
     async getMensajesByUser(email) {
+        if (typeof email !== 'string') return []; // Prevención NoSQL Injection
         const snap1 = await dbFirestore.collection("mensajes").where("de", "==", email).get();
         const snap2 = await dbFirestore.collection("mensajes").where("para", "==", email).get();
         const all = [...snap1.docs.map(d => d.data()), ...snap2.docs.map(d => d.data())];

@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         listaActividad.innerHTML = "";
 
         if (recientes.length === 0) {
-            listaActividad.innerHTML = `<li class="list-group-item text-muted">No hay actividad reciente.</li>`;
+            listaActividad.innerHTML = Security.sanitizeHTML(`<li class="list-group-item text-muted">No hay actividad reciente.</li>`);
             return;
         }
 
@@ -74,13 +74,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const info = await Data.getContactInfo(a.email);
                 const li = document.createElement("li");
                 li.className = "list-group-item d-flex align-items-center justify-content-between py-3";
-                li.innerHTML = `
+                li.innerHTML = Security.sanitizeHTML(`
                     <div class="d-flex align-items-center">
                         <img src="${info.foto}" class="rounded-circle me-3" style="width: 32px; height: 32px; object-fit: cover;">
                         <span>${a.mensaje}</span>
                     </div>
                     <small class="text-muted pe-2">${a.fecha ? a.fecha.toLocaleDateString("es-PE") : "—"}</small>
-                `;
+                `);
                 listaActividad.appendChild(li);
             } catch (err) {
                 console.error("Error al renderizar actividad:", err);

@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // 3. Renderizar Lista de Contactos — muestra TODOS los usuarios/empresas de Firestore
     async function renderContacts(query = "") {
-        contactsList.innerHTML = `<div class="p-4 text-center text-muted small"><div class="spinner-border spinner-border-sm me-2" role="status"></div>Cargando...</div>`;
+        contactsList.innerHTML = Security.sanitizeHTML(`<div class="p-4 text-center text-muted small"><div class="spinner-border spinner-border-sm me-2" role="status"></div>Cargando...</div>`);
         const db = await Data.getDB();
         contactsList.innerHTML = "";
 
@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
         if (contacts.length === 0) {
-            contactsList.innerHTML = `<div class="p-4 text-center text-muted small">No se encontraron contactos.</div>`;
+            contactsList.innerHTML = Security.sanitizeHTML(`<div class="p-4 text-center text-muted small">No se encontraron contactos.</div>`);
             return;
         }
 
@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const preview = c.lastMsg ? c.lastMsg.texto : 'Sin mensajes previos';
             const badgeClass = c.rol === 'empresa' ? 'bg-warning text-dark' : 'bg-primary';
 
-            div.innerHTML = `
+            div.innerHTML = Security.sanitizeHTML(`
                 <img src="${c.foto}" class="rounded-circle flex-shrink-0" style="width:42px;height:42px;object-fit:cover;">
                 <div class="flex-grow-1 overflow-hidden">
                     <div class="d-flex justify-content-between align-items-center mb-1">
@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <p class="mb-1 text-muted small text-truncate" style="font-size:0.78rem;">${preview}</p>
                     <span class="badge ${badgeClass} rounded-pill" style="font-size:0.65rem;">${c.rol.toUpperCase()}</span>
                 </div>
-            `;
+            `);
             contactsList.appendChild(div);
         });
     }
@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         chatHeaderContainer.classList.add("d-flex");
  
         document.getElementById("chatName").textContent = nombre;
-        document.getElementById("chatAvatar").innerHTML = `<img src="${foto}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+        document.getElementById("chatAvatar").innerHTML = Security.sanitizeHTML(`<img src="${foto}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`);
 
         // Cargar datos dinámicos del contacto
         const info = await Data.getContactInfo(email);
@@ -163,14 +163,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             const isMe = m.remitente === soporteEmail;
             const div = document.createElement("div");
             div.className = `d-flex mb-3 ${isMe ? 'justify-content-end' : 'justify-content-start'}`;
-            div.innerHTML = `
+            div.innerHTML = Security.sanitizeHTML(`
                 <div class="${isMe ? 'msg-sent' : 'msg-received'} shadow-sm">
                     <div class="p-2 px-3 rounded-4 ${isMe ? 'bg-primary text-white' : 'bg-white text-dark border'}">
                         ${m.texto}
                         <div class="text-end x-small mt-1 opacity-75">${m.fecha.split(',')[1]?.trim() || ''}</div>
                     </div>
                 </div>
-            `;
+            `);
             chatMessages.appendChild(div);
         });
         chatMessages.scrollTop = chatMessages.scrollHeight;

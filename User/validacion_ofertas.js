@@ -56,14 +56,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         offersContainer.innerHTML = "";
 
         if (lista.length === 0) {
-            offersContainer.innerHTML = `
+            offersContainer.innerHTML = Security.sanitizeHTML(`
                 <div class="col-12 text-center text-muted py-5 mt-4">
                     <div class="bg-white d-inline-block p-5 rounded-5 shadow-sm">
                         <i class="fa fa-search-minus fa-3x mb-3 text-primary opacity-25"></i>
                         <h4 class="fw-bold text-dark">No hay resultados</h4>
                         <p class="mb-0">Prueba con otros filtros o palabras clave.</p>
                     </div>
-                </div>`;
+                </div>`);
             return;
         }
 
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const info = await Data.getContactInfo(oferta.empresaEmail || oferta.empresa);
             const logo = info.foto || "https://cdn-icons-png.flaticon.com/512/186/186100.png";
 
-            card.innerHTML = `
+            card.innerHTML = Security.sanitizeHTML(`
                 <div class="card offer-card shadow-sm h-100 p-4 border-0 position-relative">
                     ${featuredHtml}
                     <div class="mb-3 d-flex align-items-center">
@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         </div>
                     </div>
                 </div>
-            `;
+            `);
 
             card.querySelector(".offer-card").addEventListener("click", () => openModal(oferta));
             offersContainer.appendChild(card);

@@ -41,9 +41,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         sideFounded.textContent = user.fundacion ? `Fundada en ${user.fundacion}` : "Año no especificado";
 
         if (user.fotoEmpresa || user.foto) {
-            logoContainer.innerHTML = `<img src="${user.fotoEmpresa || user.foto}" style="width:100%; height:100%; object-fit:cover;" class="rounded-circle shadow-sm">`;
+            logoContainer.innerHTML = Security.sanitizeHTML(`<img src="${user.fotoEmpresa || user.foto}" style="width:100%; height:100%; object-fit:cover;" class="rounded-circle shadow-sm">`);
         } else {
-            logoContainer.innerHTML = `<i class="fa fa-building"></i>`;
+            logoContainer.innerHTML = Security.sanitizeHTML(`<i class="fa fa-building"></i>`);
         }
 
         // Stats dinámicas de la nube
@@ -179,9 +179,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (file) {
                 try {
                     logoContainer.style.opacity = "0.5";
-                    const url = await Data.uploadFile(`empresas/${user.correo}/logo_${Date.now()}`, file);
+                    const url = await Data.uploadFile(`empresas/${user.correo}/logo_${crypto.randomUUID()}`, file);
                     
-                    logoContainer.innerHTML = `<img src="${url}" style="width:100%; height:100%; object-fit:cover;" class="rounded-circle shadow-sm">`;
+                    logoContainer.innerHTML = Security.sanitizeHTML(`<img src="${url}" style="width:100%; height:100%; object-fit:cover;" class="rounded-circle shadow-sm">`);
                     await saveAndReload({ fotoEmpresa: url, foto: url }, "Logo actualizado correctamente en la nube.");
                     logoContainer.style.opacity = "1";
                 } catch (err) {

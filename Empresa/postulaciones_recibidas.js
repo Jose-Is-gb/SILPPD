@@ -64,11 +64,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if (postulaciones.length === 0) {
                 if (currentRenderId === renderCounter) {
-                    candidatesList.innerHTML = `
+                    candidatesList.innerHTML = Security.sanitizeHTML(`
                         <div class="col-12 text-center py-5">
                             <p class="text-muted">No hay postulaciones en esta categoría.</p>
                         </div>
-                    `;
+                    `);
                 }
                 return;
             }
@@ -145,16 +145,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if (candidate && candidate.cv && candidate.cv.url) {
                 // El campo 'url' ahora contiene el string Base64 del PDF
-                modalBody.innerHTML = `<iframe src="${candidate.cv.url}" width="100%" height="500px" style="border: none;"></iframe>`;
+                modalBody.innerHTML = Security.sanitizeHTML(`<iframe src="${candidate.cv.url}" width="100%" height="500px" style="border: none;"></iframe>`);
             } else if (candidate && candidate.cv && candidate.cv.data) {
                 // Compatibilidad con registros antiguos que usaban .data
-                modalBody.innerHTML = `<iframe src="${candidate.cv.data}" width="100%" height="500px" style="border: none;"></iframe>`;
+                modalBody.innerHTML = Security.sanitizeHTML(`<iframe src="${candidate.cv.data}" width="100%" height="500px" style="border: none;"></iframe>`);
             } else {
-                modalBody.innerHTML = `
+                modalBody.innerHTML = Security.sanitizeHTML(`
                     <div class="text-center py-5">
                         <i class="fa fa-file-circle-exclamation fa-3x text-warning mb-3"></i>
                         <p class="text-muted">El candidato no ha subido su currículum aún.</p>
-                    </div>`;
+                    </div>`);
             }
             
             new bootstrap.Modal(document.getElementById('modalCV')).show();

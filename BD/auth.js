@@ -71,6 +71,7 @@ const Auth = {
 
     // Iniciar sesión con Firebase
     async login(email, password) {
+        if (typeof email !== 'string' || typeof password !== 'string') return null; // Prevención Injection
         try {
             const userCredential = await authFirebase.signInWithEmailAndPassword(email, password);
             const fbUser = userCredential.user;
@@ -96,6 +97,7 @@ const Auth = {
 
     // Registrar usuario en Firebase Auth + Firestore
     async registerUser(nombre, email, password, discapacidad = "", rol = "usuario", extraData = {}) {
+        if (typeof email !== 'string' || typeof password !== 'string') return false; // Prevención Injection
         try {
             // 1. Crear usuario en Firebase Auth
             const userCredential = await authFirebase.createUserWithEmailAndPassword(email, password);
@@ -136,6 +138,7 @@ const Auth = {
 
     // Login Admin (desglosado para diagnóstico)
     async loginAdmin(email, password) {
+        if (typeof email !== 'string' || typeof password !== 'string') return { success: false, error: "Invalid input types" }; // Prevención Injection
         try {
             const userCredential = await authFirebase.signInWithEmailAndPassword(email, password);
             const fbUser = userCredential.user;

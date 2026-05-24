@@ -59,26 +59,26 @@ document.addEventListener("DOMContentLoaded", async () => {
             // Asegurar que soporte esté en la lista
             contactosSet.add(soporteEmail);
 
-            chatList.innerHTML = `
+            chatList.innerHTML = Security.sanitizeHTML(`
                 <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
                     <strong>Conversaciones</strong>
                     <button class="btn btn-sm btn-success" id="newChatBtn">
                         <i class="fa fa-plus"></i>
                     </button>
                 </li>
-            `;
+            `);
 
             for (const contactoCorreo of contactosSet) {
                 const info = await Data.getContactInfo(contactoCorreo);
                 const li = document.createElement("li");
                 li.className = `list-group-item list-group-item-action d-flex align-items-center ${activeChat === contactoCorreo ? 'active bg-primary text-white border-primary' : ''}`;
-                li.innerHTML = `
+                li.innerHTML = Security.sanitizeHTML(`
                     <div class="position-relative me-3">
                         <img src="${info.foto}" class="rounded-circle" style="width: 35px; height: 35px; object-fit: cover;">
                         <span class="position-absolute bottom-0 end-0 p-1 bg-success border border-light rounded-circle" style="padding: 4px !important;"></span>
                     </div>
                     <span>${info.nombre}</span>
-                `;
+                `);
                 li.onclick = () => openChat(contactoCorreo, info.nombre, info.foto);
                 chatList.appendChild(li);
             }
@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         activeChat = contactEmail;
         const info = foto ? { nombre, foto } : await Data.getContactInfo(contactEmail);
         
-        chatHeader.innerHTML = `
+        chatHeader.innerHTML = Security.sanitizeHTML(`
             <div class="d-flex align-items-center">
                 <img src="${info.foto}" class="rounded-circle me-3" style="width: 40px; height: 40px; object-fit: cover;">
                 <div>
@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <small class="text-success" style="font-size: 0.75rem;">Online</small>
                 </div>
             </div>
-        `;
+        `);
 
         // ESCUCHAR EN TIEMPO REAL CON FIRESTORE
         unsubscribeMessages = Data.listenConversacion(user.correo, activeChat, (msgs) => {
@@ -128,7 +128,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         chatBody.innerHTML = "";
         
         if (msgs.length === 0) {
-            chatBody.innerHTML = `<div class="text-center py-5 opacity-50"><p>No hay mensajes todavía. ¡Saluda primero! 👋</p></div>`;
+            chatBody.innerHTML = Security.sanitizeHTML(`<div class="text-center py-5 opacity-50"><p>No hay mensajes todavía. ¡Saluda primero! 👋</p></div>`);
             return;
         }
 
@@ -137,7 +137,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const div = document.createElement("div");
             div.className = isMe ? "text-end mb-3" : "text-start mb-3";
 
-            div.innerHTML = `
+            div.innerHTML = Security.sanitizeHTML(`
                 <div class="d-inline-block p-3 rounded-4 shadow-sm" style="max-width: 80%; ${isMe
                     ? "background-color: #0d6efd; color: white; border-bottom-right-radius: 2px;"
                     : "background-color: #f8f9fa; color: #333; border-bottom-left-radius: 2px;"
@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <p class="mb-1" style="font-size: 0.95rem;">${msg.texto}</p>
                     <small class="opacity-75" style="font-size: 0.7rem;">${msg.fecha || "Ahora mismo"}</small>
                 </div>
-            `;
+            `);
             chatBody.appendChild(div);
         });
 

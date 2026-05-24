@@ -30,11 +30,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         if (ofertas.length === 0) {
-            offersList.innerHTML = `
+            offersList.innerHTML = Security.sanitizeHTML(`
                 <div class="col-12 text-center py-5">
                     <p class="text-muted">No se encontraron ofertas que coincidan con los filtros.</p>
                 </div>
-            `;
+            `);
             return;
         }
 
@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if(!o) return;
 
         const body = document.getElementById("modalDetalleBody");
-        body.innerHTML = `
+        body.innerHTML = Security.sanitizeHTML(`
             <div class="mb-3">
                 <h4 class="fw-bold text-orange mb-1">${o.titulo}</h4>
                 <span class="badge ${o.estado === 'Activa' ? 'bg-success' : 'bg-warning'} rounded-pill">${o.estado}</span>
@@ -135,7 +135,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <p class="fw-bold mb-0">${o.discapacidad}</p>
                 </div>
             </div>
-        `;
+        `);
         
         const modal = new bootstrap.Modal(document.getElementById('modalDetalle'));
         modal.show();

@@ -35,18 +35,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         tablaOfertas.innerHTML = "";
 
         if (lista.length === 0) {
-            tablaOfertas.innerHTML = `
+            tablaOfertas.innerHTML = Security.sanitizeHTML(`
             <tr>
                 <td colspan="7" class="text-center text-muted py-4">
                     <i class="fa fa-info-circle me-2"></i>No hay ofertas registradas.
                 </td>
-            </tr>`;
+            </tr>`);
             return;
         }
 
         lista.forEach(o => {
             const tr = document.createElement("tr");
-            tr.innerHTML = `
+            tr.innerHTML = Security.sanitizeHTML(`
             <td>${o.titulo}</td>
             <td>${o.empresa}</td>
             <td>${o.ciudad}</td>
@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <i class="fa fa-trash"></i>
                 </button>
             </td>
-            `;
+            `);
             tablaOfertas.appendChild(tr);
         });
     }

@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // 3. Modificar el DOM de un solo golpe (innerHTML)
         if (list.length === 0) {
-            empresasContainer.innerHTML = `<tr><td colspan="7" class="text-center py-5 text-muted">No se encontraron empresas con esos criterios.</td></tr>`;
+            empresasContainer.innerHTML = Security.sanitizeHTML(`<tr><td colspan="7" class="text-center py-5 text-muted">No se encontraron empresas con esos criterios.</td></tr>`);
         } else {
             empresasContainer.innerHTML = rowsHtml.join('');
         }
@@ -107,7 +107,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!empresaSeleccionada) return;
 
         document.getElementById("modalEmpresaTitulo").textContent = empresaSeleccionada.nombre;
-        document.getElementById("modalEmpresaContenido").innerHTML = `
+        document.getElementById("modalEmpresaContenido").innerHTML = Security.sanitizeHTML(`
             <div class="row g-3">
                 <div class="col-md-6"><label class="text-muted small">RUC</label><div>${empresaSeleccionada.ruc || "—"}</div></div>
                 <div class="col-md-6"><label class="text-muted small">Representante</label><div>${empresaSeleccionada.representante || "—"}</div></div>
@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 <div class="col-12 mt-3 p-2 bg-light rounded text-center">
                     Estado Actual: <span class="fw-bold ${empresaSeleccionada.estado === 'Verificada' ? 'text-success' : 'text-warning'}">${empresaSeleccionada.estado}</span>
                 </div>
-            </div>`;
+            </div>`);
         modalDetalle.show();
     };
 

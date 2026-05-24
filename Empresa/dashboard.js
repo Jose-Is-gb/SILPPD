@@ -36,11 +36,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             const recientes = [...ofertas].reverse().slice(0, 3);
             
             if (recientes.length === 0) {
-                recentOffersList.innerHTML = `
+                recentOffersList.innerHTML = Security.sanitizeHTML(`
                     <div class="col-12 text-center py-5">
                         <p class="text-muted">No has publicado ofertas recientemente.</p>
                     </div>
-                `;
+                `);
                 return;
             }
 

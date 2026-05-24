@@ -233,7 +233,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         try {
             // Mostrar estado de carga (opcional UX)
             profilePhoto.style.opacity = "0.5";
-            const url = await Data.uploadFile(`usuarios/${user.correo}/foto_perfil_${Date.now()}`, file);
+            const url = await Data.uploadFile(`usuarios/${user.correo}/foto_perfil_${crypto.randomUUID()}`, file);
             
             profilePhoto.src = url;
             user.foto = url;
@@ -259,7 +259,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             try {
                 if (cvFileName) cvFileName.textContent = "Subiendo archivo...";
-                const url = await Data.uploadFile(`usuarios/${user.correo}/cv_${Date.now()}.pdf`, file);
+                const url = await Data.uploadFile(`usuarios/${user.correo}/cv_${crypto.randomUUID()}.pdf`, file);
                 
                 const date = new Date().toLocaleDateString();
                 const size = (file.size / 1024).toFixed(0) + " KB";

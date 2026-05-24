@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!container) return;
         const toast = document.createElement("div");
         toast.className = `alert alert-${type} alert-dismissible fade show shadow`;
-        toast.innerHTML = `<i class="fa fa-info-circle me-2"></i>${msg}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
+        toast.innerHTML = Security.sanitizeHTML(`<i class="fa fa-info-circle me-2"></i>${msg}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>`);
         container.appendChild(toast);
         setTimeout(() => toast.remove(), 3000);
     }
@@ -62,6 +62,36 @@ document.addEventListener("DOMContentLoaded", async () => {
         a.href = url;
         a.download = "backup_silppd.json";
         a.click();
+    };
+
+    document.getElementById("btnImportarDB").onclick = () => {
+        document.getElementById("importFile").click();
+    };
+
+    document.getElementById("importFile").onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        // XML/XXE Prevention: Ensure only JSON is processed
+        if (file.type !== "application/json" && !file.name.endsWith('.json')) {
+            alert("Solo se admiten archivos JSON.");
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+            try {
+                // Strict JSON Parsing, will fail if XML
+                const importedData = JSON.parse(event.target.result);
+                await Data.saveDB(importedData);
+                showToast("Base de datos importada correctamente.");
+                setTimeout(() => location.reload(), 1500);
+            } catch (err) {
+                console.error("Error parsing JSON:", err);
+                alert("Error: El archivo no es un JSON válido o está corrupto.");
+            }
+        };
+        reader.readAsText(file);
     };
 
     document.getElementById("btnResetDB").onclick = async () => {

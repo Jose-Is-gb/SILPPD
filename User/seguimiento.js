@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 p.estado === "En revisión" ? "bg-primary-subtle text-primary" :
                 "bg-warning-subtle text-warning";
 
-            tr.innerHTML = `
+            tr.innerHTML = Security.sanitizeHTML(`
                 <td class="ps-4">
                     <div class="fw-bold text-dark">${p.titulo}</div>
                     <div class="text-muted small">${p.empresa}</div>
@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         <i class="fa fa-eye me-1"></i> Detalles
                     </button>
                 </td>
-            `;
+            `);
 
             tableBody.appendChild(tr);
         });

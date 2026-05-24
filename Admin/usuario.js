@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (lista.length === 0) {
             if (currentRenderId === renderCounter) {
-                tablaUsuarios.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">No hay resultados.</td></tr>`;
+                tablaUsuarios.innerHTML = Security.sanitizeHTML(`<tr><td colspan="6" class="text-center py-4 text-muted">No hay resultados.</td></tr>`);
             }
             return;
         }

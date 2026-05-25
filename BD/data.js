@@ -19,7 +19,7 @@ const Data = {
             usuarios: snaps[0].docs.map(d => d.data()),
             ofertas: snaps[1].docs.map(d => d.data()),
             empresas: snaps[2].docs.map(d => d.data()),
-            postulaciones: snaps[3].docs.map(d => d.data())
+            postulaciones: snaps[3].docs.map(d => ({ id: d.id, ...d.data() }))
         };
     },
 
@@ -227,7 +227,20 @@ const Data = {
 
     async getPostulaciones() {
         const snap = await dbFirestore.collection("postulaciones").get();
-        return snap.docs.map(d => d.data());
+        return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    },
+
+    async updatePostulacionEstado(id, nuevoEstado) {
+        if (typeof id !== 'string') return false;
+        try {
+            await dbFirestore.collection("postulaciones").doc(id).update({
+                estado: nuevoEstado
+            });
+            return true;
+        } catch (e) {
+            console.error("Error al actualizar estado de postulación:", e);
+            return false;
+        }
     },
 
     // ===============================

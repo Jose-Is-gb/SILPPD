@@ -76,9 +76,19 @@ function nextStep(stepNumber) {
             return;
         }
 
-        // Validación de Caracteres Especiales
-        const hasSpecialChar = /[^a-zA-Z0-9]/.test(pwd);
-        if (!hasSpecialChar) {
+        if (!/[A-Z]/.test(pwd)) {
+            errorBox.textContent = "La contraseña debe incluir al menos una letra mayúscula.";
+            errorBox.classList.remove('d-none');
+            return;
+        }
+
+        if (/\s/.test(pwd)) {
+            errorBox.textContent = "La contraseña no debe contener espacios en blanco.";
+            errorBox.classList.remove('d-none');
+            return;
+        }
+
+        if (!/[!@#$%^&*(),.?":{}|<>_+\-=\[\]\\/]/.test(pwd)) {
             errorBox.textContent = "La contraseña debe incluir al menos un carácter especial (ejemplo: !, @, #, $, %, *).";
             errorBox.classList.remove('d-none');
             return;

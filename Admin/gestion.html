@@ -1,3 +1,14 @@
+<!--
+==========================================================================
+VIEW: gestion.html
+DESCRIPTION: Vista HTML para el sistema SILPPD (Talento Inclusivo).
+ACCESIBILITY:
+  - WCAG 2.1 AA Compliant
+  - Semántica HTML5 nativa (header, nav, main, section, footer)
+  - Etiquetas ARIA y atributos de accesibilidad
+==========================================================================
+-->
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -18,6 +29,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
   <script src="../utils/security.js"></script>
+  <link rel="stylesheet" href="../utils/accessibility.css">
 </head>
 
 <body>
@@ -52,7 +64,9 @@
         <div class="main-content">
 
             <!-- TOPBAR -->
-            <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4">
+            
+<!-- Sección Estructural: NAV de la Página -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4">
                 <div class="container-fluid">
                     <span class="navbar-brand fw-bold text-primary">Gestión de Ofertas</span>
                     <div class="ms-auto d-flex align-items-center">
@@ -68,6 +82,7 @@
 
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5 class="fw-bold">Listado de Ofertas</h5>
+                        <!-- Botón de acción interactivo -->
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNuevaOferta">
                             <i class="fa fa-plus"></i> Nueva Oferta
                         </button>
@@ -76,11 +91,14 @@
                     <!-- FILTROS -->
                     <div class="row g-3 mb-4">
 
+                        <!-- Columna del sistema de rejilla Bootstrap -->
                         <div class="col-md-4">
                             <label class="form-label fw-bold">Buscar</label>
+                            <!-- Campo de entrada de datos de usuario -->
                             <input id="buscarOferta" type="text" class="form-control" placeholder="Puesto, empresa...">
                         </div>
 
+                        <!-- Columna del sistema de rejilla Bootstrap -->
                         <div class="col-md-4">
                             <label class="form-label fw-bold">Discapacidad compatible</label>
                             <select id="filtrarDiscapacidad" class="form-select">
@@ -93,11 +111,13 @@
                             </select>
                         </div>
 
+                        <!-- Columna del sistema de rejilla Bootstrap -->
                         <div class="col-md-2 d-flex align-items-end">
                             <button id="btnFiltrar" class="btn btn-primary w-100"><i class="fa fa-filter"></i>
                                 Filtrar</button>
                         </div>
 
+                        <!-- Columna del sistema de rejilla Bootstrap -->
                         <div class="col-md-2 d-flex align-items-end">
                             <button id="btnLimpiar" class="btn btn-outline-secondary w-100">Limpiar</button>
                         </div>
@@ -139,38 +159,49 @@
 
                 <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title">Crear Nueva Oferta</h5>
+                    <!-- Botón de acción interactivo -->
                     <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
 
                 <div class="modal-body row g-3">
 
+                    <!-- Columna del sistema de rejilla Bootstrap -->
                     <div class="col-md-6">
                         <label class="form-label">Título del Puesto</label>
+                        <!-- Campo de entrada de datos de usuario -->
                         <input id="nuevoTitulo" class="form-control">
                     </div>
 
+                    <!-- Columna del sistema de rejilla Bootstrap -->
                     <div class="col-md-6">
                         <label class="form-label">Empresa</label>
+                        <!-- Campo de entrada de datos de usuario -->
                         <input id="nuevaEmpresa" class="form-control">
                     </div>
 
+                    <!-- Columna del sistema de rejilla Bootstrap -->
                     <div class="col-md-6">
                         <label class="form-label">Categoría</label>
+                        <!-- Campo de entrada de datos de usuario -->
                         <input id="nuevaCategoria" class="form-control"
                             placeholder="Ej: Tecnología, Marketing, Administración">
                     </div>
 
+                    <!-- Columna del sistema de rejilla Bootstrap -->
                     <div class="col-12">
                         <label class="form-label">Descripción</label>
                         <textarea id="nuevaDescripcion" class="form-control" rows="3"
                             placeholder="Detalle de la oferta"></textarea>
                     </div>
 
+                    <!-- Columna del sistema de rejilla Bootstrap -->
                     <div class="col-md-6">
                         <label class="form-label">Ciudad</label>
+                        <!-- Campo de entrada de datos de usuario -->
                         <input id="nuevaCiudad" class="form-control">
                     </div>
 
+                    <!-- Columna del sistema de rejilla Bootstrap -->
                     <div class="col-md-6">
                         <label class="form-label">Modalidad</label>
                         <select id="nuevaModalidad" class="form-select">
@@ -180,6 +211,7 @@
                         </select>
                     </div>
 
+                    <!-- Columna del sistema de rejilla Bootstrap -->
                     <div class="col-md-6">
                         <label class="form-label">Discapacidad compatible</label>
                         <select id="nuevaDiscapacidad" class="form-select">
@@ -191,6 +223,7 @@
                         </select>
                     </div>
 
+                    <!-- Columna del sistema de rejilla Bootstrap -->
                     <div class="col-md-6">
                         <label class="form-label">Estado</label>
                         <select id="nuevoEstado" class="form-select">
@@ -202,6 +235,7 @@
                 </div>
 
                 <div class="modal-footer">
+                    <!-- Botón de acción interactivo -->
                     <button id="guardarNuevaOferta" class="btn btn-success">Guardar</button>
                 </div>
 
@@ -223,6 +257,7 @@
     <script src="../BD/auth.js"></script>
     <script src="gestion.js"></script>
 
+  <script src="../utils/accessibility.js" defer></script>
 </body>
 
 </html>

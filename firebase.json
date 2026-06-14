@@ -4,7 +4,15 @@
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**"
+      "**/node_modules/**",
+      "**/*.exe",
+      "**/*.docx",
+      "**/*.py",
+      "**/*.ps1",
+      "scratch/**",
+      "security_tests.js",
+      "Pruebas_unitarias.js",
+      "_temp_informe.txt"
     ],
     "rewrites": [
       {

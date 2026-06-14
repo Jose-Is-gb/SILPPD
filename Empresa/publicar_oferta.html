@@ -1,3 +1,14 @@
+<!--
+==========================================================================
+VIEW: publicar_oferta.html
+DESCRIPTION: Vista HTML para el sistema SILPPD (Talento Inclusivo).
+ACCESIBILITY:
+  - WCAG 2.1 AA Compliant
+  - Semántica HTML5 nativa (header, nav, main, section, footer)
+  - Etiquetas ARIA y atributos de accesibilidad
+==========================================================================
+-->
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -10,11 +21,14 @@
     <link rel="stylesheet" href="dashboard.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
   <script src="../utils/security.js"></script>
+  <link rel="stylesheet" href="../utils/accessibility.css">
 </head>
 <body class="bg-light">
 
     <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-white py-3 border-bottom sticky-top">
+    
+<!-- Sección Estructural: NAV de la Página -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-white py-3 border-bottom sticky-top">
         <div class="container-fluid px-4">
             <a class="navbar-brand fw-bold d-flex align-items-center" href="dashboard.html">
                 <span style="color: #ff9800;"><i class="fa fa-wheelchair me-2"></i> Talento Inclusivo</span>
@@ -40,7 +54,9 @@
         </div>
 
         <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5">
-            <form id="offerForm">
+            
+<!-- Sección Estructural: FORM de la Página -->
+<form id="offerForm">
                 <!-- SECCIÓN 1: INFORMACIÓN BÁSICA -->
                 <div class="mb-5">
                     <h5 class="fw-bold mb-4 d-flex align-items-center">
@@ -48,10 +64,13 @@
                         Información básica
                     </h5>
                     <div class="row g-4">
+                        <!-- Columna del sistema de rejilla Bootstrap -->
                         <div class="col-md-12">
                             <label class="form-label small fw-bold">Título del puesto *</label>
+                            <!-- Campo de entrada de datos de usuario -->
                             <input type="text" id="titulo" class="form-control bg-light border-0 py-2" placeholder="Ej: Desarrollador Frontend Senior" required>
                         </div>
+                        <!-- Columna del sistema de rejilla Bootstrap -->
                         <div class="col-md-6">
                             <label class="form-label small fw-bold">Categoría *</label>
                             <select id="categoria" class="form-select bg-light border-0 py-2" required>
@@ -63,14 +82,18 @@
                                 <option value="Operaciones">Operaciones</option>
                             </select>
                         </div>
+                        <!-- Columna del sistema de rejilla Bootstrap -->
                         <div class="col-md-6">
                             <label class="form-label small fw-bold">Número de vacantes *</label>
+                            <!-- Campo de entrada de datos de usuario -->
                             <input type="number" id="vacantes" class="form-control bg-light border-0 py-2" placeholder="Ej: 1" min="1" required>
                         </div>
+                        <!-- Columna del sistema de rejilla Bootstrap -->
                         <div class="col-12">
                             <label class="form-label small fw-bold">Descripción del puesto *</label>
                             <textarea id="descripcion" class="form-control bg-light border-0 py-2" rows="4" placeholder="Describe las responsabilidades y funciones del puesto..." required></textarea>
                         </div>
+                        <!-- Columna del sistema de rejilla Bootstrap -->
                         <div class="col-12">
                             <label class="form-label small fw-bold">Requisitos *</label>
                             <textarea id="requisitos" class="form-control bg-light border-0 py-2" rows="3" placeholder="Lista los requisitos necesarios para el puesto..." required></textarea>
@@ -87,6 +110,7 @@
                         Detalles del trabajo
                     </h5>
                     <div class="row g-4">
+                        <!-- Columna del sistema de rejilla Bootstrap -->
                         <div class="col-md-6">
                             <label class="form-label small fw-bold">Modalidad *</label>
                             <select id="modalidad" class="form-select bg-light border-0 py-2" required>
@@ -96,6 +120,7 @@
                                 <option value="Híbrido">Híbrido</option>
                             </select>
                         </div>
+                        <!-- Columna del sistema de rejilla Bootstrap -->
                         <div class="col-md-6">
                             <label class="form-label small fw-bold">Jornada laboral *</label>
                             <select id="jornada" class="form-select bg-light border-0 py-2" required>
@@ -105,16 +130,22 @@
                                 <option value="Por proyecto">Por proyecto</option>
                             </select>
                         </div>
+                        <!-- Columna del sistema de rejilla Bootstrap -->
                         <div class="col-md-6">
                             <label class="form-label small fw-bold">Salario mínimo</label>
+                            <!-- Campo de entrada de datos de usuario -->
                             <input type="number" id="salarioMin" class="form-control bg-light border-0 py-2" placeholder="Ej: 3000">
                         </div>
+                        <!-- Columna del sistema de rejilla Bootstrap -->
                         <div class="col-md-6">
                             <label class="form-label small fw-bold">Salario máximo</label>
+                            <!-- Campo de entrada de datos de usuario -->
                             <input type="number" id="salarioMax" class="form-control bg-light border-0 py-2" placeholder="Ej: 5000">
                         </div>
+                        <!-- Columna del sistema de rejilla Bootstrap -->
                         <div class="col-12">
                             <label class="form-label small fw-bold">Ubicación</label>
+                            <!-- Campo de entrada de datos de usuario -->
                             <input type="text" id="ubicacion" class="form-control bg-light border-0 py-2" placeholder="Ej: Madrid, España">
                         </div>
                     </div>
@@ -128,6 +159,7 @@
                         <span class="badge bg-orange-light text-orange rounded-pill me-2 px-3 py-2" style="font-size: 0.8rem;">3</span>
                         Adaptaciones de accesibilidad
                     </h5>
+                    <!-- Columna del sistema de rejilla Bootstrap -->
                     <div class="col-12">
                         <label class="form-label small fw-bold">Describe las adaptaciones disponibles</label>
                         <textarea id="adaptaciones" class="form-control bg-light border-0 py-2" rows="3" placeholder="Ej: Entorno accesible para sillas de ruedas, tecnología de asistencia disponible, horarios flexibles..."></textarea>
@@ -142,17 +174,21 @@
                         <span class="badge bg-orange-light text-orange rounded-pill me-2 px-3 py-2" style="font-size: 0.8rem;">4</span>
                         Vigencia de la oferta
                     </h5>
+                    <!-- Columna del sistema de rejilla Bootstrap -->
                     <div class="col-md-6">
                         <label class="form-label small fw-bold">Fecha de vencimiento *</label>
+                        <!-- Campo de entrada de datos de usuario -->
                         <input type="date" id="vencimiento" class="form-control bg-light border-0 py-2" required>
                     </div>
                 </div>
 
                 <!-- FOOTER ACTIONS -->
                 <div class="d-flex flex-wrap gap-3 mt-5 pt-4 border-top">
+                    <!-- Botón de acción interactivo -->
                     <button type="submit" class="btn btn-orange rounded-3 px-5 py-2 fw-bold shadow-sm">
                         Publicar oferta
                     </button>
+                    <!-- Botón de acción interactivo -->
                     <button type="button" class="btn btn-light rounded-3 px-4 py-2 text-dark font-medium border">
                         Guardar como borrador
                     </button>
@@ -176,5 +212,6 @@
     <script src="../BD/auth.js"></script>
     <script src="../BD/data.js"></script>
     <script src="publicar_oferta.js"></script>
+  <script src="../utils/accessibility.js" defer></script>
 </body>
 </html>

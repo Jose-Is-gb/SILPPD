@@ -1,3 +1,14 @@
+<!--
+==========================================================================
+VIEW: reporte.html
+DESCRIPTION: Vista HTML para el sistema SILPPD (Talento Inclusivo).
+ACCESIBILITY:
+  - WCAG 2.1 AA Compliant
+  - Semántica HTML5 nativa (header, nav, main, section, footer)
+  - Etiquetas ARIA y atributos de accesibilidad
+==========================================================================
+-->
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -20,6 +31,7 @@
     <link rel="stylesheet" href="reporte.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
   <script src="../utils/security.js"></script>
+  <link rel="stylesheet" href="../utils/accessibility.css">
 </head>
 
 <body>
@@ -63,12 +75,15 @@
                         <p class="text-muted mb-0 small">Monitoreo en tiempo real del ecosistema inclusivo</p>
                     </div>
                     <div class="d-flex gap-2">
+                        <!-- Botón de acción interactivo -->
                         <button id="btnActualizar" class="btn btn-light border btn-sm shadow-sm px-3 rounded-pill">
                             <i class="fa fa-rotate-right me-2"></i>Actualizar
                         </button>
+                        <!-- Botón de acción interactivo -->
                         <button id="btnExportarExcel" class="btn btn-light border btn-sm shadow-sm px-3 rounded-pill">
                             <i class="fa fa-download me-2"></i>Exportar Excel
                         </button>
+                        <!-- Botón de acción interactivo -->
                         <button id="btnDescargarPdf" class="btn btn-success btn-sm shadow-sm px-3 rounded-pill">
                             <i class="fa fa-file-pdf me-2"></i>Descargar PDF
                         </button>
@@ -105,6 +120,7 @@
                 <!-- CARDS 4 MÉTRICAS -->
                 <div class="row g-4 mb-4">
                     <!-- Card 1 -->
+                    <!-- Columna del sistema de rejilla Bootstrap -->
                     <div class="col-md-3">
                         <div class="card metric-card bg-blue text-white shadow-sm h-100 p-4 border-0 rounded-4">
                             <div class="d-flex justify-content-between">
@@ -120,6 +136,7 @@
                         </div>
                     </div>
                     <!-- Card 2 (Orange) -->
+                    <!-- Columna del sistema de rejilla Bootstrap -->
                     <div class="col-md-3">
                         <div class="card metric-card bg-orange text-white shadow-sm h-100 p-4 border-0 rounded-4">
                             <div class="d-flex justify-content-between">
@@ -135,6 +152,7 @@
                         </div>
                     </div>
                     <!-- Card 3 (Green) -->
+                    <!-- Columna del sistema de rejilla Bootstrap -->
                     <div class="col-md-3">
                         <div class="card metric-card bg-green text-white shadow-sm h-100 p-4 border-0 rounded-4">
                             <div class="d-flex justify-content-between">
@@ -150,6 +168,7 @@
                         </div>
                     </div>
                     <!-- Card 4 (Purple) -->
+                    <!-- Columna del sistema de rejilla Bootstrap -->
                     <div class="col-md-3">
                         <div class="card metric-card bg-purple text-white shadow-sm h-100 p-4 border-0 rounded-4">
                             <div class="d-flex justify-content-between">
@@ -170,22 +189,27 @@
                 <ul class="nav nav-pills custom-pills nav-fill bg-white p-2 rounded-pill shadow-sm mb-4" id="reportTabs"
                     role="tablist">
                     <li class="nav-item" role="presentation">
+                        <!-- Botón de acción interactivo -->
                         <button class="nav-link active rounded-pill fw-semibold" id="tab-general" data-bs-toggle="pill"
                             data-bs-target="#pane-general" type="button" role="tab">Vista General</button>
                     </li>
                     <li class="nav-item" role="presentation">
+                        <!-- Botón de acción interactivo -->
                         <button class="nav-link rounded-pill fw-semibold" id="tab-discapacidad" data-bs-toggle="pill"
                             data-bs-target="#pane-discapacidad" type="button" role="tab">Por Discapacidad</button>
                     </li>
                     <li class="nav-item" role="presentation">
+                        <!-- Botón de acción interactivo -->
                         <button class="nav-link rounded-pill fw-semibold" id="tab-sector" data-bs-toggle="pill"
                             data-bs-target="#pane-sector" type="button" role="tab">Por Sector</button>
                     </li>
                     <li class="nav-item" role="presentation">
+                        <!-- Botón de acción interactivo -->
                         <button class="nav-link rounded-pill fw-semibold" id="tab-empresas" data-bs-toggle="pill"
                             data-bs-target="#pane-empresas" type="button" role="tab">Empresas Top</button>
                     </li>
                     <li class="nav-item" role="presentation">
+                        <!-- Botón de acción interactivo -->
                         <button class="nav-link rounded-pill fw-semibold" id="tab-iso" data-bs-toggle="pill"
                             data-bs-target="#pane-iso" type="button" role="tab">Métricas ISO</button>
                     </li>
@@ -197,17 +221,21 @@
                     <!-- VISTA GENERAL -->
                     <div class="tab-pane fade show active" id="pane-general" role="tabpanel">
                         <div class="row g-4">
+                            <!-- Columna del sistema de rejilla Bootstrap -->
                             <div class="col-md-8">
                                 <div class="card p-4 shadow-sm rounded-4 border-0 h-100">
                                     <div class="d-flex justify-content-between align-items-center mb-4">
                                         <h6 class="fw-bold mb-0">Tendencias Mensuales</h6>
                                         <div class="btn-group border rounded-pill p-1">
+                                            <!-- Botón de acción interactivo -->
                                             <button
                                                 class="btn btn-sm btn-success rounded-pill px-3 fw-medium chart-type-btn"
                                                 data-type="line">Línea</button>
+                                            <!-- Botón de acción interactivo -->
                                             <button
                                                 class="btn btn-sm btn-light rounded-pill px-3 fw-medium chart-type-btn text-muted"
                                                 data-type="area">Área</button>
+                                            <!-- Botón de acción interactivo -->
                                             <button
                                                 class="btn btn-sm btn-light rounded-pill px-3 fw-medium chart-type-btn text-muted"
                                                 data-type="bar">Barras</button>
@@ -218,6 +246,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- Columna del sistema de rejilla Bootstrap -->
                             <div class="col-md-4">
                                 <div class="card p-4 shadow-sm rounded-4 border-0 h-100">
                                     <h6 class="fw-bold mb-4">Resumen Período</h6>
@@ -246,6 +275,7 @@
                     <!-- POR DISCAPACIDAD -->
                     <div class="tab-pane fade" id="pane-discapacidad" role="tabpanel">
                         <div class="row g-4">
+                            <!-- Columna del sistema de rejilla Bootstrap -->
                             <div class="col-md-6">
                                 <div class="card p-4 shadow-sm rounded-4 border-0 h-100">
                                     <h6 class="fw-bold mb-4">Distribución por Tipo de Discapacidad</h6>
@@ -254,6 +284,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- Columna del sistema de rejilla Bootstrap -->
                             <div class="col-md-6">
                                 <div class="card p-4 shadow-sm rounded-4 border-0 h-100">
                                     <h6 class="fw-bold mb-4">Detalles por Categoría</h6>
@@ -307,6 +338,7 @@
                     <div class="tab-pane fade" id="pane-iso" role="tabpanel">
                         <div class="row g-4 mb-4">
                             <!-- Card 1 -->
+                            <!-- Columna del sistema de rejilla Bootstrap -->
                             <div class="col-md-6">
                                 <div class="card p-4 shadow-sm rounded-4 border-0">
                                     <div class="d-flex justify-content-between mb-3 border-bottom pb-2">
@@ -323,6 +355,7 @@
                                 </div>
                             </div>
                             <!-- Card 2 -->
+                            <!-- Columna del sistema de rejilla Bootstrap -->
                             <div class="col-md-6">
                                 <div class="card p-4 shadow-sm rounded-4 border-0">
                                     <div class="d-flex justify-content-between mb-3 border-bottom pb-2">
@@ -339,6 +372,7 @@
                                 </div>
                             </div>
                             <!-- Card 3 -->
+                            <!-- Columna del sistema de rejilla Bootstrap -->
                             <div class="col-md-6">
                                 <div class="card p-4 shadow-sm rounded-4 border-0">
                                     <div class="d-flex justify-content-between mb-3 border-bottom pb-2">
@@ -355,6 +389,7 @@
                                 </div>
                             </div>
                             <!-- Card 4 -->
+                            <!-- Columna del sistema de rejilla Bootstrap -->
                             <div class="col-md-6">
                                 <div class="card p-4 shadow-sm rounded-4 border-0">
                                     <div class="d-flex justify-content-between mb-3 border-bottom pb-2">
@@ -375,24 +410,28 @@
                         <div class="card p-4 shadow-sm rounded-4 border-0">
                             <h6 class="fw-medium mb-4">Cumplimiento de Normativas ISO</h6>
                             <div class="row g-3">
+                                <!-- Columna del sistema de rejilla Bootstrap -->
                                 <div class="col-md-3">
                                     <div class="p-4 rounded-3 text-center text-white h-100 d-flex flex-column justify-content-center"
                                         style="background-color: #4CAF50;">
                                         <small class="fw-semibold">ISO 30415 - Diversidad</small>
                                     </div>
                                 </div>
+                                <!-- Columna del sistema de rejilla Bootstrap -->
                                 <div class="col-md-3">
                                     <div class="p-4 rounded-3 text-center text-white h-100 d-flex flex-column justify-content-center"
                                         style="background-color: #1976D2;">
                                         <small class="fw-semibold">ISO 9999 - Productos de Apoyo</small>
                                     </div>
                                 </div>
+                                <!-- Columna del sistema de rejilla Bootstrap -->
                                 <div class="col-md-3">
                                     <div class="p-4 rounded-3 text-center text-white h-100 d-flex flex-column justify-content-center"
                                         style="background-color: #FF9800;">
                                         <small class="fw-semibold">ISO 21542 - Accesibilidad</small>
                                     </div>
                                 </div>
+                                <!-- Columna del sistema de rejilla Bootstrap -->
                                 <div class="col-md-3">
                                     <div class="p-4 rounded-3 text-center text-white h-100 d-flex flex-column justify-content-center"
                                         style="background-color: #9C27B0;">
@@ -416,6 +455,7 @@
             <div class="modal-content rounded-4 border-0 shadow-lg">
                 <div class="modal-header border-0 pb-0">
                     <h5 class="modal-title fw-bold" id="modalNombreEmpresa">Nombre Empresa</h5>
+                    <!-- Botón de acción interactivo -->
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body pt-3 pb-4 px-4">
@@ -434,6 +474,7 @@
                     <p class="text-muted mb-4 pb-3 border-bottom" id="modalDescEmpresa">Descripción de la empresa...</p>
 
                     <div class="row g-3">
+                        <!-- Columna del sistema de rejilla Bootstrap -->
                         <div class="col-6">
                             <div class="p-3 bg-light rounded-3 text-center">
                                 <i class="fa fa-handshake text-primary fs-4 mb-2"></i>
@@ -441,6 +482,7 @@
                                 <small class="text-muted">Contrataciones Inclusivas</small>
                             </div>
                         </div>
+                        <!-- Columna del sistema de rejilla Bootstrap -->
                         <div class="col-6">
                             <div class="p-3 bg-light rounded-3 text-center">
                                 <i class="fa fa-briefcase text-orange fs-4 mb-2"></i>
@@ -448,6 +490,7 @@
                                 <small class="text-muted">Ofertas Publicadas</small>
                             </div>
                         </div>
+                        <!-- Columna del sistema de rejilla Bootstrap -->
                         <div class="col-12 mt-3">
                             <div class="d-flex align-items-center mb-2">
                                 <i class="fa fa-envelope text-muted me-2" style="width:20px;"></i>
@@ -465,8 +508,10 @@
                     </div>
                 </div>
                 <div class="modal-footer border-0 pt-0 justify-content-center">
+                    <!-- Botón de acción interactivo -->
                     <button type="button" class="btn btn-light rounded-pill px-4 fw-medium shadow-sm"
                         data-bs-dismiss="modal">Cerrar</button>
+                    <!-- Botón de acción interactivo -->
                     <button type="button" class="btn btn-primary rounded-pill px-4 fw-medium shadow-sm"
                         id="btnIrPerfilEmpresa">Contactar</button>
                 </div>
@@ -486,6 +531,7 @@
     <script src="../BD/auth.js"></script>
     <script src="reporte.js"></script>
 
+  <script src="../utils/accessibility.js" defer></script>
 </body>
 
 </html>

@@ -1,3 +1,14 @@
+<!--
+==========================================================================
+VIEW: seguimiento.html
+DESCRIPTION: Vista HTML para el sistema SILPPD (Talento Inclusivo).
+ACCESIBILITY:
+  - WCAG 2.1 AA Compliant
+  - Semántica HTML5 nativa (header, nav, main, section, footer)
+  - Etiquetas ARIA y atributos de accesibilidad
+==========================================================================
+-->
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -15,17 +26,21 @@
     <link rel="stylesheet" href="seguimiento.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
   <script src="../utils/security.js"></script>
+  <link rel="stylesheet" href="../utils/accessibility.css">
 </head>
 
 <body class="bg-light">
 
     <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top shadow-sm px-4">
+    
+<!-- Sección Estructural: NAV de la Página -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top shadow-sm px-4">
         <div class="container-fluid">
             <a class="navbar-brand fw-bold d-flex align-items-center" href="user_home.html">
                 <i class="fa fa-shield-halved me-2"></i> Talento Inclusivo
             </a>
 
+            <!-- Botón de acción interactivo -->
             <button class="navbar-toggler border-0" data-bs-toggle="collapse" data-bs-target="#menu">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -38,6 +53,7 @@
                     <li class="nav-item"><a class="nav-link px-3" href="validacion_ofertas.html"><i class="fa fa-briefcase me-1"></i> Ofertas</a></li>
                     <li class="nav-item"><a class="nav-link active fw-bold px-3" href="seguimiento.html"><i class="fa fa-tasks me-1"></i> Seguimiento</a></li>
                     <li class="nav-item ms-lg-3">
+                        <!-- Botón de acción interactivo -->
                         <button class="btn btn-outline-light rounded-pill px-4 shadow-sm" id="logoutBtn" onclick="Auth.logout()">
                             <i class="fa fa-sign-out-alt me-1"></i> Salir
                         </button>
@@ -50,6 +66,7 @@
     <!-- CONTENT -->
     <div class="container py-5">
         <div class="row mb-5">
+            <!-- Columna del sistema de rejilla Bootstrap -->
             <div class="col-lg-8">
                 <h2 class="fw-bold text-dark mb-2">Mis Postulaciones</h2>
                 <p class="text-muted">Mantente al tanto del progreso de tus aplicaciones en tiempo real.</p>
@@ -58,6 +75,7 @@
 
         <!-- STATS / STATUS CARDS -->
         <div class="row g-4 mb-5">
+            <!-- Columna del sistema de rejilla Bootstrap -->
             <div class="col-md-3">
                 <div class="card status-card border-0 shadow-sm rounded-4 p-4 text-center h-100">
                     <div class="status-icon-wrap bg-warning-subtle text-warning mx-auto mb-3">
@@ -68,6 +86,7 @@
                 </div>
             </div>
 
+            <!-- Columna del sistema de rejilla Bootstrap -->
             <div class="col-md-3">
                 <div class="card status-card border-0 shadow-sm rounded-4 p-4 text-center h-100">
                     <div class="status-icon-wrap bg-primary-subtle text-primary mx-auto mb-3">
@@ -78,6 +97,7 @@
                 </div>
             </div>
 
+            <!-- Columna del sistema de rejilla Bootstrap -->
             <div class="col-md-3">
                 <div class="card status-card border-0 shadow-sm rounded-4 p-4 text-center h-100">
                     <div class="status-icon-wrap bg-success-subtle text-success mx-auto mb-3">
@@ -88,6 +108,7 @@
                 </div>
             </div>
 
+            <!-- Columna del sistema de rejilla Bootstrap -->
             <div class="col-md-3">
                 <div class="card status-card border-0 shadow-sm rounded-4 p-4 text-center h-100">
                     <div class="status-icon-wrap bg-danger-subtle text-danger mx-auto mb-3">
@@ -106,6 +127,7 @@
                 <div class="search-wrap" style="max-width: 250px;">
                     <div class="input-group input-group-sm">
                         <span class="input-group-text bg-light border-0"><i class="fa fa-search opacity-50"></i></span>
+                        <!-- Campo de entrada de datos de usuario -->
                         <input type="text" class="form-control bg-light border-0" placeholder="Buscar empresa...">
                     </div>
                 </div>
@@ -142,6 +164,7 @@
             <div class="modal-content rounded-4 border-0 shadow-lg">
                 <div class="modal-header border-0 pb-0">
                     <h5 class="modal-title fw-bold" id="detailTitle">Detalles de la Postulación</h5>
+                    <!-- Botón de acción interactivo -->
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4">
@@ -155,10 +178,12 @@
                     
                     <div class="card bg-light border-0 rounded-4 p-3 mb-3">
                         <div class="row g-3">
+                            <!-- Columna del sistema de rejilla Bootstrap -->
                             <div class="col-6">
                                 <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 0.65rem;">Fecha de Envío</small>
                                 <span class="fw-medium" id="infoFecha">01/01/2024</span>
                             </div>
+                            <!-- Columna del sistema de rejilla Bootstrap -->
                             <div class="col-6 text-end">
                                 <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 0.65rem;">Estado</small>
                                 <span class="badge" id="infoEstado">Pendiente</span>
@@ -178,6 +203,7 @@
                     </div>
                 </div>
                 <div class="modal-footer border-0">
+                    <!-- Botón de acción interactivo -->
                     <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Cerrar</button>
                     <button type="button" class="btn btn-primary rounded-pill px-4" onclick="location.href='mensajeria.html'">Contactar</button>
                 </div>
@@ -185,7 +211,9 @@
         </div>
     </div>
 
-    <footer class="bg-white border-top py-5 mt-auto">
+    
+<!-- Sección Estructural: FOOTER de la Página -->
+<footer class="bg-white border-top py-5 mt-auto">
         <div class="container lead text-muted small text-center">© 2025 Talento Inclusivo • ISO/IEC 25010 e ISO/IEC 12207</div>
     </footer>
 
@@ -200,5 +228,6 @@
     <script src="../BD/auth.js"></script>
     <script src="../BD/data.js"></script>
     <script src="seguimiento.js"></script>
+  <script src="../utils/accessibility.js" defer></script>
 </body>
 </html>

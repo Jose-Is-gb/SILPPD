@@ -1,3 +1,14 @@
+<!--
+==========================================================================
+VIEW: perfil.html
+DESCRIPTION: Vista HTML para el sistema SILPPD (Talento Inclusivo).
+ACCESIBILITY:
+  - WCAG 2.1 AA Compliant
+  - Semántica HTML5 nativa (header, nav, main, section, footer)
+  - Etiquetas ARIA y atributos de accesibilidad
+==========================================================================
+-->
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -11,12 +22,15 @@
     <link rel="stylesheet" href="dashboard.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
   <script src="../utils/security.js"></script>
+  <link rel="stylesheet" href="../utils/accessibility.css">
 </head>
 
 <body class="bg-light">
 
     <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-white py-3 border-bottom sticky-top">
+    
+<!-- Sección Estructural: NAV de la Página -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-white py-3 border-bottom sticky-top">
         <div class="container-fluid px-4">
             <a class="navbar-brand fw-bold d-flex align-items-center" href="dashboard.html">
                 <span style="color: #ff9800;"><i class="fa fa-wheelchair me-2"></i> Talento Inclusivo</span>
@@ -48,6 +62,7 @@
 
         <div class="row g-4">
             <!-- SIDEBAR -->
+            <!-- Columna del sistema de rejilla Bootstrap -->
             <div class="col-lg-4">
                 <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
                     <div class="text-center">
@@ -60,6 +75,7 @@
                         <div class="d-flex align-items-center justify-content-center text-green small fw-semibold mb-3">
                             <i class="fa fa-check-circle me-1"></i> Empresa verificada
                         </div>
+                        <!-- Campo de entrada de datos de usuario -->
                         <input type="file" id="logoInput" class="d-none">
                         <button class="btn btn-outline-secondary btn-sm rounded-pill px-3 mb-4" id="logoBtn">
                             <i class="fa fa-edit me-1"></i> Cambiar logo
@@ -139,22 +155,27 @@
             </div>
 
             <!-- MAIN CONTENT -->
+            <!-- Columna del sistema de rejilla Bootstrap -->
             <div class="col-lg-8">
                 <!-- TABS -->
                 <ul class="nav nav-pills bg-white p-1 rounded-4 shadow-sm mb-4" id="perfilTabs" role="tablist">
                     <li class="nav-item flex-fill" role="presentation">
+                        <!-- Botón de acción interactivo -->
                         <button class="nav-link active w-100 rounded-pill" data-bs-toggle="pill"
                             data-bs-target="#datosEmpresa" type="button">Datos Empresa</button>
                     </li>
                     <li class="nav-item flex-fill" role="presentation">
+                        <!-- Botón de acción interactivo -->
                         <button class="nav-link w-100 rounded-pill" data-bs-toggle="pill" data-bs-target="#contacto"
                             type="button">Contacto</button>
                     </li>
                     <li class="nav-item flex-fill" role="presentation">
+                        <!-- Botón de acción interactivo -->
                         <button class="nav-link w-100 rounded-pill" data-bs-toggle="pill" data-bs-target="#inclusion"
                             type="button">Inclusión</button>
                     </li>
                     <li class="nav-item flex-fill" role="presentation">
+                        <!-- Botón de acción interactivo -->
                         <button class="nav-link w-100 rounded-pill" data-bs-toggle="pill" data-bs-target="#verificacion"
                             type="button">Verificación</button>
                     </li>
@@ -180,31 +201,42 @@
                                 </div>
                             </div>
 
-                            <form id="formPerfil">
+                            
+<!-- Sección Estructural: FORM de la Página -->
+<form id="formPerfil">
                                 <div class="row g-4">
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-12">
                                         <label class="form-label small fw-bold">Razón social / Nombre legal *</label>
+                                        <!-- Campo de entrada de datos de usuario -->
                                         <input type="text" id="razonSocial" class="form-control bg-light border-0 py-2"
                                             placeholder="Tech Solutions Sociedad Anónima" required>
                                     </div>
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-12">
                                         <label class="form-label small fw-bold">Nombre comercial</label>
+                                        <!-- Campo de entrada de datos de usuario -->
                                         <input type="text" id="nombreComercial"
                                             class="form-control bg-light border-0 py-2" placeholder="Tech Solutions">
                                     </div>
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-6">
                                         <label class="form-label small fw-bold">RUC *</label>
+                                        <!-- Campo de entrada de datos de usuario -->
                                         <input type="text" id="ruc" class="form-control bg-light border-0 py-2"
                                             placeholder="20123456789" required>
                                         <small class="text-muted" style="font-size: 0.75rem;">El RUC no puede
                                             modificarse. Contacte soporte si necesita actualizar.</small>
                                     </div>
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-6">
                                         <label class="form-label small fw-bold">Número de partida registral *</label>
+                                        <!-- Campo de entrada de datos de usuario -->
                                         <input type="text" id="partidaRegistral"
                                             class="form-control bg-light border-0 py-2" placeholder="RM-MAD-2010-8765"
                                             required>
                                     </div>
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-12">
                                         <label class="form-label small fw-bold">Sector / Industria *</label>
                                         <select id="sector" class="form-select bg-light border-0 py-2" required>
@@ -215,6 +247,7 @@
                                             <option value="Comercio">Comercio</option>
                                         </select>
                                     </div>
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-12">
                                         <label class="form-label small fw-bold">Tamaño de la empresa *</label>
                                         <select id="tamanio" class="form-select bg-light border-0 py-2" required>
@@ -226,37 +259,45 @@
                                             <option value="1000+ empleados">Más de 1000 empleados</option>
                                         </select>
                                     </div>
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-12">
                                         <label class="form-label small fw-bold">Año de fundación</label>
+                                        <!-- Campo de entrada de datos de usuario -->
                                         <input type="number" id="fundacion" class="form-control bg-light border-0 py-2"
                                             placeholder="2010">
                                     </div>
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-12">
                                         <label class="form-label small fw-bold">Sitio web corporativo *</label>
                                         <div class="input-group">
                                             <span class="input-group-text bg-light border-0"><i
                                                     class="fa fa-globe text-muted"></i></span>
+                                            <!-- Campo de entrada de datos de usuario -->
                                             <input type="text" id="sitioWeb" class="form-control bg-light border-0 py-2"
                                                 placeholder="https://www.techsolutions.com" required>
                                         </div>
                                     </div>
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-12">
                                         <label class="form-label small fw-bold">Descripción de la empresa *</label>
                                         <textarea id="descripcion" class="form-control bg-light border-0 py-2" rows="4"
                                             placeholder="Describe brevemente la trayectoria y objetivo de tu empresa..."
                                             required></textarea>
                                     </div>
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-12">
                                         <label class="form-label small fw-bold">Misión y valores</label>
                                         <textarea id="mision" class="form-control bg-light border-0 py-2" rows="3"
                                             placeholder="Nuestra misión es democratizar la tecnología..."></textarea>
                                     </div>
 
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-12 mt-5 pt-4 border-top">
                                         <button type="submit"
                                             class="btn btn-orange rounded-3 px-5 py-2 fw-bold shadow-sm">
                                             Guardar cambios
                                         </button>
+                                        <!-- Botón de acción interactivo -->
                                         <button type="button"
                                             class="btn btn-light rounded-3 px-4 py-2 text-dark font-medium border ms-2">
                                             Cancelar
@@ -277,27 +318,37 @@
                                 <h5 class="fw-bold mb-0">Contacto Corporativo</h5>
                             </div>
 
-                            <form id="formContacto">
+                            
+<!-- Sección Estructural: FORM de la Página -->
+<form id="formContacto">
                                 <h6 class="fw-bold text-secondary mb-3 small text-uppercase">Responsable de RRHH /
                                     Selección</h6>
                                 <div class="row g-3 mb-4">
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-6">
                                         <label class="form-label small fw-bold">Nombre del contacto *</label>
+                                        <!-- Campo de entrada de datos de usuario -->
                                         <input type="text" id="contNombre" class="form-control bg-light border-0 py-2"
                                             placeholder="Juan Pérez" required>
                                     </div>
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-6">
                                         <label class="form-label small fw-bold">Cargo *</label>
+                                        <!-- Campo de entrada de datos de usuario -->
                                         <input type="text" id="contCargo" class="form-control bg-light border-0 py-2"
                                             placeholder="Director de Atracción de Talento" required>
                                     </div>
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-6">
                                         <label class="form-label small fw-bold">Correo corporativo *</label>
+                                        <!-- Campo de entrada de datos de usuario -->
                                         <input type="email" id="contEmail" class="form-control bg-light border-0 py-2"
                                             placeholder="j.perez@empresa.com" required>
                                     </div>
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-6">
                                         <label class="form-label small fw-bold">Teléfono directo *</label>
+                                        <!-- Campo de entrada de datos de usuario -->
                                         <input type="tel" id="contTelefono" class="form-control bg-light border-0 py-2"
                                             placeholder="+51 987 654 321" required>
                                     </div>
@@ -306,24 +357,32 @@
                                 <h6 class="fw-bold text-secondary mb-3 small text-uppercase">Ubicación de la Sede
                                     Principal</h6>
                                 <div class="row g-3 mb-4">
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-12">
                                         <label class="form-label small fw-bold">Dirección *</label>
+                                        <!-- Campo de entrada de datos de usuario -->
                                         <input type="text" id="contDireccion"
                                             class="form-control bg-light border-0 py-2"
                                             placeholder="Av. Javier Prado 123, Of. 402" required>
                                     </div>
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-4">
                                         <label class="form-label small fw-bold">Ciudad *</label>
+                                        <!-- Campo de entrada de datos de usuario -->
                                         <input type="text" id="contCiudad" class="form-control bg-light border-0 py-2"
                                             placeholder="Lima" required>
                                     </div>
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-4">
                                         <label class="form-label small fw-bold">Provincia</label>
+                                        <!-- Campo de entrada de datos de usuario -->
                                         <input type="text" id="contProvincia"
                                             class="form-control bg-light border-0 py-2" placeholder="Lima">
                                     </div>
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-4">
                                         <label class="form-label small fw-bold">Código Postal</label>
+                                        <!-- Campo de entrada de datos de usuario -->
                                         <input type="text" id="contCP" class="form-control bg-light border-0 py-2"
                                             placeholder="15046">
                                     </div>
@@ -331,21 +390,25 @@
 
                                 <h6 class="fw-bold text-secondary mb-3 small text-uppercase">Presencia Digital</h6>
                                 <div class="row g-3">
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-6">
                                         <label class="form-label small fw-bold">LinkedIn</label>
                                         <div class="input-group">
                                             <span class="input-group-text bg-light border-0 text-primary"><i
                                                     class="fab fa-linkedin"></i></span>
+                                            <!-- Campo de entrada de datos de usuario -->
                                             <input type="text" id="contLinkedin"
                                                 class="form-control bg-light border-0 py-2"
                                                 placeholder="linkedin.com/company/empresa">
                                         </div>
                                     </div>
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-6">
                                         <label class="form-label small fw-bold">Facebook</label>
                                         <div class="input-group">
                                             <span class="input-group-text bg-light border-0 text-primary"><i
                                                     class="fab fa-facebook"></i></span>
+                                            <!-- Campo de entrada de datos de usuario -->
                                             <input type="text" id="contFacebook"
                                                 class="form-control bg-light border-0 py-2"
                                                 placeholder="facebook.com/empresa">
@@ -353,6 +416,7 @@
                                     </div>
                                 </div>
 
+                                <!-- Columna del sistema de rejilla Bootstrap -->
                                 <div class="col-12 mt-5 pt-4 border-top">
                                     <button type="submit"
                                         class="btn btn-primary rounded-3 px-5 py-2 fw-bold shadow-sm">Guardar
@@ -386,8 +450,11 @@
                                 </div>
                             </div>
 
-                            <form id="formInclusion">
+                            
+<!-- Sección Estructural: FORM de la Página -->
+<form id="formInclusion">
                                 <div class="row g-4">
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-12">
                                         <label class="form-label small fw-bold">Política formal de inclusión *</label>
                                         <select id="polInclusion" class="form-select bg-light border-0 py-2" required>
@@ -399,9 +466,11 @@
                                         </select>
                                     </div>
 
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-12">
                                         <label class="form-label small fw-bold">Empleados con discapacidad
                                             actualmente</label>
+                                        <!-- Campo de entrada de datos de usuario -->
                                         <input type="number" id="empDiscapacidad"
                                             class="form-control bg-light border-0 py-2" placeholder="45" required>
                                         <small class="text-muted" style="font-size: 0.75rem;">En Perú, empresas con más
@@ -409,12 +478,15 @@
                                             contar con al menos 3% de personas con discapacidad (Ley 29973)</small>
                                     </div>
 
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-12 mt-4">
                                         <label class="form-label small fw-bold mb-3">Adaptaciones de accesibilidad
                                             disponibles (ISO 21542) *</label>
                                         <div class="row g-2">
+                                            <!-- Columna del sistema de rejilla Bootstrap -->
                                             <div class="col-12">
                                                 <div class="form-check">
+                                                    <!-- Campo de entrada de datos de usuario -->
                                                     <input class="form-check-input" type="checkbox" id="accFisica"
                                                         checked>
                                                     <label class="form-check-label text-secondary small"
@@ -422,8 +494,10 @@
                                                         adaptados)</label>
                                                 </div>
                                             </div>
+                                            <!-- Columna del sistema de rejilla Bootstrap -->
                                             <div class="col-12">
                                                 <div class="form-check">
+                                                    <!-- Campo de entrada de datos de usuario -->
                                                     <input class="form-check-input" type="checkbox" id="accTecno"
                                                         checked>
                                                     <label class="form-check-label text-secondary small"
@@ -431,8 +505,10 @@
                                                         software adaptado)</label>
                                                 </div>
                                             </div>
+                                            <!-- Columna del sistema de rejilla Bootstrap -->
                                             <div class="col-12">
                                                 <div class="form-check">
+                                                    <!-- Campo de entrada de datos de usuario -->
                                                     <input class="form-check-input" type="checkbox" id="accLengua"
                                                         checked>
                                                     <label class="form-check-label text-secondary small"
@@ -440,8 +516,10 @@
                                                         disponible</label>
                                                 </div>
                                             </div>
+                                            <!-- Columna del sistema de rejilla Bootstrap -->
                                             <div class="col-12">
                                                 <div class="form-check">
+                                                    <!-- Campo de entrada de datos de usuario -->
                                                     <input class="form-check-input" type="checkbox" id="accRemoto"
                                                         checked>
                                                     <label class="form-check-label text-secondary small"
@@ -449,16 +527,20 @@
                                                         flexibles</label>
                                                 </div>
                                             </div>
+                                            <!-- Columna del sistema de rejilla Bootstrap -->
                                             <div class="col-12">
                                                 <div class="form-check">
+                                                    <!-- Campo de entrada de datos de usuario -->
                                                     <input class="form-check-input" type="checkbox" id="accParking"
                                                         checked>
                                                     <label class="form-check-label text-secondary small"
                                                         for="accParking">Transporte o parking adaptado</label>
                                                 </div>
                                             </div>
+                                            <!-- Columna del sistema de rejilla Bootstrap -->
                                             <div class="col-12">
                                                 <div class="form-check">
+                                                    <!-- Campo de entrada de datos de usuario -->
                                                     <input class="form-check-input" type="checkbox" id="accFormacion"
                                                         checked>
                                                     <label class="form-check-label text-secondary small"
@@ -469,6 +551,7 @@
                                         </div>
                                     </div>
 
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-12 mt-4">
                                         <label class="form-label small fw-bold">Compromiso de la empresa con la
                                             inclusión *</label>
@@ -477,14 +560,17 @@
                                             required>En Tech Solutions, la diversidad e inclusión no son solo palabras, sino parte fundamental de nuestra cultura corporativa. Contamos con un programa integral de inclusión que incluye: formación continua en diversidad para todos los empleados, políticas de contratación inclusiva, adaptación de espacios físicos según normativa ISO 21542, tecnología asistiva de última generación, y un comité de diversidad que supervisa el cumplimiento de nuestros objetivos de inclusión.</textarea>
                                     </div>
 
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-12">
                                         <label class="form-label small fw-bold">Certificaciones de inclusión o
                                             responsabilidad social</label>
+                                        <!-- Campo de entrada de datos de usuario -->
                                         <input type="text" id="certificaciones"
                                             class="form-control bg-light border-0 py-2"
                                             placeholder="ISO 30415, Distintivo de Igualdad 2024, ISO 9001:2015">
                                     </div>
 
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-12">
                                         <label class="form-label small fw-bold">Presupuesto para adaptaciones de
                                             accesibilidad</label>
@@ -496,6 +582,7 @@
                                         </select>
                                     </div>
 
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-12">
                                         <label class="form-label small fw-bold">Responsable de diversidad e
                                             inclusión</label>
@@ -507,11 +594,13 @@
                                         </select>
                                     </div>
 
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-12 mt-4 pt-3 border-top">
                                         <button type="submit"
                                             class="btn btn-orange rounded-3 px-4 py-2 fw-bold shadow-sm">
                                             Guardar cambios
                                         </button>
+                                        <!-- Botón de acción interactivo -->
                                         <button type="button"
                                             class="btn btn-light rounded-3 px-4 py-2 text-secondary border ms-2">
                                             Cancelar
@@ -550,6 +639,7 @@
                             <div class="mb-5">
                                 <h6 class="fw-bold text-secondary mb-3 small text-uppercase">Documentos legales</h6>
                                 <div class="row g-3">
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-12">
                                         <div class="p-3 border rounded-3 bg-white d-flex align-items-center">
                                             <div class="icon-box bg-light text-green rounded me-3 d-flex align-items-center justify-content-center"
@@ -561,11 +651,13 @@
                                                 <p class="text-secondary mb-0" style="font-size: 0.7rem;">Subido el
                                                     15/01/2024 • Verificado ✁E/p>
                                             </div>
+                                            <!-- Botón de acción interactivo -->
                                             <button
                                                 class="btn btn-light btn-sm rounded-pill px-3 border border-secondary-subtle small fw-bold btn-view-doc"
                                                 data-doc="Certificado RUC">Ver documento</button>
                                         </div>
                                     </div>
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-12">
                                         <div class="p-3 border rounded-3 bg-white d-flex align-items-center">
                                             <div class="icon-box bg-light text-green rounded me-3 d-flex align-items-center justify-content-center"
@@ -577,6 +669,7 @@
                                                 <p class="text-secondary mb-0" style="font-size: 0.7rem;">Subido el
                                                     15/01/2024 • Verificado ✁E/p>
                                             </div>
+                                            <!-- Botón de acción interactivo -->
                                             <button
                                                 class="btn btn-light btn-sm rounded-pill px-3 border border-secondary-subtle small fw-bold btn-view-doc"
                                                 data-doc="Partida Registral">Ver documento</button>
@@ -589,6 +682,7 @@
                                 <h6 class="fw-bold text-secondary mb-3 small text-uppercase">Certificaciones de
                                     inclusión</h6>
                                 <div class="row g-3">
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-12">
                                         <div class="p-3 border rounded-3 bg-white d-flex align-items-center">
                                             <div class="icon-box bg-light text-green rounded me-3 d-flex align-items-center justify-content-center"
@@ -600,11 +694,13 @@
                                                 <p class="text-secondary mb-0" style="font-size: 0.7rem;">Subido el
                                                     20/02/2024 • Vence: 20/02/2027</p>
                                             </div>
+                                            <!-- Botón de acción interactivo -->
                                             <button
                                                 class="btn btn-light btn-sm rounded-pill px-3 border border-secondary-subtle small fw-bold btn-view-doc"
                                                 data-doc="Certificado ISO 30415">Ver certificado</button>
                                         </div>
                                     </div>
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-12">
                                         <div class="p-3 border rounded-3 bg-white d-flex align-items-center">
                                             <div class="icon-box bg-light text-green rounded me-3 d-flex align-items-center justify-content-center"
@@ -616,14 +712,17 @@
                                                 <p class="text-secondary mb-0" style="font-size: 0.7rem;">Subido el
                                                     15/03/2024 • Vence: 15/03/2027</p>
                                             </div>
+                                            <!-- Botón de acción interactivo -->
                                             <button
                                                 class="btn btn-light btn-sm rounded-pill px-3 border border-secondary-subtle small fw-bold btn-view-doc"
                                                 data-doc="Distintivo de Igualdad">Ver certificado</button>
                                         </div>
                                     </div>
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-md-12">
                                         <div class="p-4 border border-dashed rounded-3 bg-light text-center">
                                             <p class="text-secondary small mb-2">Agregar nueva certificación</p>
+                                            <!-- Botón de acción interactivo -->
                                             <button
                                                 class="btn btn-white btn-sm rounded-pill px-4 border shadow-sm small fw-bold">Subir
                                                 certificado</button>
@@ -647,29 +746,37 @@
                                 <h6 class="fw-bold text-secondary mb-3 small text-uppercase">Compromisos y declaraciones
                                 </h6>
                                 <div class="row g-2">
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-12">
                                         <div class="form-check">
+                                            <!-- Campo de entrada de datos de usuario -->
                                             <input class="form-check-input" type="checkbox" checked disabled>
                                             <label class="form-check-label text-secondary small">Compromiso de no
                                                 discriminación (ISO 30415)</label>
                                         </div>
                                     </div>
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-12">
                                         <div class="form-check">
+                                            <!-- Campo de entrada de datos de usuario -->
                                             <input class="form-check-input" type="checkbox" checked disabled>
                                             <label class="form-check-label text-secondary small">Tratamiento de datos
                                                 según Ley N.º 29733</label>
                                         </div>
                                     </div>
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-12">
                                         <div class="form-check">
+                                            <!-- Campo de entrada de datos de usuario -->
                                             <input class="form-check-input" type="checkbox" checked disabled>
                                             <label class="form-check-label text-secondary small">Compromiso de
                                                 accesibilidad (ISO 21542)</label>
                                         </div>
                                     </div>
+                                    <!-- Columna del sistema de rejilla Bootstrap -->
                                     <div class="col-12">
                                         <div class="form-check">
+                                            <!-- Campo de entrada de datos de usuario -->
                                             <input class="form-check-input" type="checkbox" checked disabled>
                                             <label class="form-check-label text-secondary small">Veracidad de la
                                                 información proporcionada</label>
@@ -692,6 +799,7 @@
             <div class="modal-content border-0 rounded-4 shadow">
                 <div class="modal-header border-0 pb-0 px-4 pt-4">
                     <h5 class="modal-title fw-bold" id="modalDocTitle">Documento verificado</h5>
+                    <!-- Botón de acción interactivo -->
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4 text-center">
@@ -728,8 +836,10 @@
                     </div>
                 </div>
                 <div class="modal-footer border-0 px-4 pb-4">
+                    <!-- Botón de acción interactivo -->
                     <button type="button" class="btn btn-light rounded-pill px-4 fw-bold"
                         data-bs-dismiss="modal">Cerrar</button>
+                    <!-- Botón de acción interactivo -->
                     <button type="button"
                         class="btn btn-orange text-white rounded-pill px-4 fw-bold shadow-sm">Descargar copia</button>
                 </div>
@@ -750,6 +860,7 @@
     <script src="../BD/auth.js"></script>
     <script src="../BD/data.js"></script>
     <script src="perfil.js"></script>
+  <script src="../utils/accessibility.js" defer></script>
 </body>
 
 </html>

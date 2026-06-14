@@ -19,3 +19,13 @@ antigravity/
 node_modules/
 dist/
 build/
+
+# Archivos innecesarios para producción
+*.exe
+*.py
+*.ps1
+scratch/
+.firebase/
+security_tests.js
+sanitize_js.js
+cloc-2.02.exe

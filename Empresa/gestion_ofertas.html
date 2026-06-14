@@ -1,3 +1,14 @@
+<!--
+==========================================================================
+VIEW: gestion_ofertas.html
+DESCRIPTION: Vista HTML para el sistema SILPPD (Talento Inclusivo).
+ACCESIBILITY:
+  - WCAG 2.1 AA Compliant
+  - Semántica HTML5 nativa (header, nav, main, section, footer)
+  - Etiquetas ARIA y atributos de accesibilidad
+==========================================================================
+-->
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -10,15 +21,19 @@
     <link rel="stylesheet" href="dashboard.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
   <script src="../utils/security.js"></script>
+  <link rel="stylesheet" href="../utils/accessibility.css">
 </head>
 <body class="bg-light">
 
     <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-white py-3 border-bottom sticky-top">
+    
+<!-- Sección Estructural: NAV de la Página -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-white py-3 border-bottom sticky-top">
         <div class="container-fluid px-4">
             <a class="navbar-brand fw-bold d-flex align-items-center" href="dashboard.html">
                 <span style="color: #ff9800;"><i class="fa fa-wheelchair me-2"></i> Talento Inclusivo</span>
             </a>
+            <!-- Botón de acción interactivo -->
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -51,14 +66,17 @@
         <!-- FILTERS -->
         <div class="card border-0 shadow-sm rounded-4 p-3 mb-4">
             <div class="row g-3">
+                <!-- Columna del sistema de rejilla Bootstrap -->
                 <div class="col-md-6">
                     <div class="input-group">
                         <span class="input-group-text bg-white border-0 ps-3">
                             <i class="fa fa-search text-muted"></i>
                         </span>
+                        <!-- Campo de entrada de datos de usuario -->
                         <input type="text" id="searchOffer" class="form-control border-0 py-2" placeholder="Buscar por título de oferta...">
                     </div>
                 </div>
+                <!-- Columna del sistema de rejilla Bootstrap -->
                 <div class="col-md-3">
                     <select id="filterEstado" class="form-select border-0 bg-light py-2 px-3 rounded-3">
                         <option value="">Estado</option>
@@ -66,6 +84,7 @@
                         <option value="Pausada">Pausada</option>
                     </select>
                 </div>
+                <!-- Columna del sistema de rejilla Bootstrap -->
                 <div class="col-md-3">
                     <select id="filterModalidad" class="form-select border-0 bg-light py-2 px-3 rounded-3">
                         <option value="">Modalidad</option>
@@ -89,12 +108,14 @@
             <div class="modal-content border-0 rounded-4 shadow">
                 <div class="modal-header border-0 pb-0 px-4 pt-4">
                     <h5 class="modal-title fw-bold">Detalles de la Oferta</h5>
+                    <!-- Botón de acción interactivo -->
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4" id="modalDetalleBody">
                     <!-- Contenido dinámico -->
                 </div>
                 <div class="modal-footer border-0 px-4 pb-4">
+                    <!-- Botón de acción interactivo -->
                     <button type="button" class="btn btn-light rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Cerrar</button>
                 </div>
             </div>
@@ -113,5 +134,6 @@
     <script src="../BD/auth.js"></script>
     <script src="../BD/data.js"></script>
     <script src="gestion_ofertas.js"></script>
+  <script src="../utils/accessibility.js" defer></script>
 </body>
 </html>

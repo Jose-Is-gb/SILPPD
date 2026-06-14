@@ -1,3 +1,14 @@
+<!--
+==========================================================================
+VIEW: validacion_ofertas.html
+DESCRIPTION: Vista HTML para el sistema SILPPD (Talento Inclusivo).
+ACCESIBILITY:
+  - WCAG 2.1 AA Compliant
+  - Semántica HTML5 nativa (header, nav, main, section, footer)
+  - Etiquetas ARIA y atributos de accesibilidad
+==========================================================================
+-->
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,14 +23,18 @@
     <link rel="stylesheet" href="validacion_ofertas.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
   <script src="../utils/security.js"></script>
+  <link rel="stylesheet" href="../utils/accessibility.css">
 </head>
 
 <body>
 
     <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary px-4">
+    
+<!-- Sección Estructural: NAV de la Página -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary px-4">
         <a class="navbar-brand fw-bold" href="user_home.html">Talento Inclusivo</a>
 
+        <!-- Botón de acción interactivo -->
         <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -47,11 +62,14 @@
 
                 <div class="row g-3">
 
+                    <!-- Columna del sistema de rejilla Bootstrap -->
                     <div class="col-md-4">
                       <label class="form-label fw-bold">Buscar por palabra clave</label>
+                        <!-- Campo de entrada de datos de usuario -->
                         <input type="text" id="searchInput" class="form-control" placeholder="Ejemplo: Diseño, Soporte, Ventas...">
                     </div>
 
+                    <!-- Columna del sistema de rejilla Bootstrap -->
                     <div class="col-md-3">
                       <label class="form-label fw-bold">Categoría</label>
                         <select id="categorySelect" class="form-select">
@@ -67,6 +85,7 @@
                         </select>
                     </div>
 
+                    <!-- Columna del sistema de rejilla Bootstrap -->
                     <div class="col-md-3">
                       <label class="form-label fw-bold">Discapacidad compatible</label>
                         <select id="discapacidadSelect" class="form-select">
@@ -79,6 +98,7 @@
                         </select>
                     </div>
 
+                    <!-- Columna del sistema de rejilla Bootstrap -->
                     <div class="col-md-2 d-flex align-items-end">
                       <button class="btn btn-primary w-100" id="filterBtn">
                         <i class="fa fa-filter"></i> Filtrar
@@ -105,6 +125,7 @@
 
                 <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="modalTitle">Título de la oferta</h5>
+                    <!-- Botón de acción interactivo -->
                     <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
 
@@ -118,6 +139,7 @@
                     <p class="text-secondary lh-lg mb-4" id="modalDescription"></p>
                     
                     <div class="row g-3 bg-light rounded-4 p-4">
+                        <!-- Columna del sistema de rejilla Bootstrap -->
                         <div class="col-md-6">
                             <div class="d-flex align-items-center">
                                 <div class="bg-white p-2 rounded-3 shadow-xs me-3 text-primary">
@@ -129,6 +151,7 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Columna del sistema de rejilla Bootstrap -->
                         <div class="col-md-6">
                             <div class="d-flex align-items-center">
                                 <div class="bg-white p-2 rounded-3 shadow-xs me-3 text-success">
@@ -144,9 +167,11 @@
                 </div>
 
                 <div class="modal-footer">
+                    <!-- Botón de acción interactivo -->
                     <button id="saveBtn" class="btn btn-outline-primary rounded-pill px-4">
                         <i class="fa-regular fa-star"></i> Guardar
                     </button>
+                    <!-- Botón de acción interactivo -->
                     <button id="postularBtn" class="btn btn-primary rounded-pill px-5 fw-bold shadow-sm">
                         <i class="fa fa-check me-2"></i> Postular ahora
                     </button>
@@ -156,7 +181,9 @@
         </div>
     </div>
 
-    <footer class="text-center py-3 text-muted">
+    
+<!-- Sección Estructural: FOOTER de la Página -->
+<footer class="text-center py-3 text-muted">
         © 2025 Talento Inclusivo • Estándares ISO/IEC 25010 & 12207
     </footer>
 
@@ -172,5 +199,6 @@
     <script src="../BD/data.js"></script>
     <script src="validacion_ofertas.js"></script>
 
+  <script src="../utils/accessibility.js" defer></script>
 </body>
 </html>

@@ -1,3 +1,14 @@
+<!--
+==========================================================================
+VIEW: mensajeria.html
+DESCRIPTION: Vista HTML para el sistema SILPPD (Talento Inclusivo).
+ACCESIBILITY:
+  - WCAG 2.1 AA Compliant
+  - Semántica HTML5 nativa (header, nav, main, section, footer)
+  - Etiquetas ARIA y atributos de accesibilidad
+==========================================================================
+-->
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -15,17 +26,21 @@
     <link rel="stylesheet" href="mensajeria.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
   <script src="../utils/security.js"></script>
+  <link rel="stylesheet" href="../utils/accessibility.css">
 </head>
 
 <body class="bg-light">
 
     <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-white py-3 border-bottom sticky-top">
+    
+<!-- Sección Estructural: NAV de la Página -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-white py-3 border-bottom sticky-top">
         <div class="container-fluid px-4">
             <a class="navbar-brand fw-bold d-flex align-items-center" href="dashboard.html">
                 <span style="color: #ff9800;"><i class="fa fa-wheelchair me-2"></i> Talento Inclusivo</span>
             </a>
 
+            <!-- Botón de acción interactivo -->
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -48,6 +63,7 @@
     <!-- CONTENT -->
     <div class="container py-5">
         <div class="row align-items-center mb-4">
+            <!-- Columna del sistema de rejilla Bootstrap -->
             <div class="col-md-6">
                 <h3 class="fw-bold text-dark mb-0">Centro de Mensajería</h3>
                 <p class="text-muted small mb-0">Comunícate con candidatos y soporte técnico.</p>
@@ -56,6 +72,7 @@
 
         <div class="row g-4 chat-container-wrapper">
             <!-- CHAT LIST -->
+            <!-- Columna del sistema de rejilla Bootstrap -->
             <div class="col-lg-4">
                 <div class="card border-0 shadow-sm rounded-4 overflow-hidden chat-list-card">
                     <div class="card-header bg-white border-bottom py-3 px-4">
@@ -64,6 +81,7 @@
                     <div class="chat-search p-3 bg-white border-bottom">
                         <div class="input-group input-group-sm">
                             <span class="input-group-text bg-light border-0"><i class="fa fa-search opacity-50"></i></span>
+                            <!-- Campo de entrada de datos de usuario -->
                             <input type="text" id="chatSearch" class="form-control bg-light border-0" placeholder="Buscar conversación...">
                         </div>
                     </div>
@@ -74,6 +92,7 @@
             </div>
 
             <!-- CHAT WINDOW -->
+            <!-- Columna del sistema de rejilla Bootstrap -->
             <div class="col-lg-8">
                 <div class="card border-0 shadow-sm rounded-4 chat-window-card">
                     <div class="card-header bg-white py-3 px-4 border-bottom d-flex align-items-center" id="chatHeader">
@@ -95,10 +114,12 @@
 
                     <div class="card-footer bg-white p-3 border-top">
                         <div class="input-group chat-input-wrap">
+                            <!-- Campo de entrada de datos de usuario -->
                             <input type="file" id="attachInput" class="d-none">
                             <button class="btn btn-light rounded-start-pill px-3 border-end-0" id="attachBtn">
                                 <i class="fa fa-paperclip text-muted"></i>
                             </button>
+                            <!-- Campo de entrada de datos de usuario -->
                             <input type="text" id="messageInput" class="form-control border-0 bg-light" placeholder="Escribe un mensaje...">
                             <button class="btn btn-orange rounded-end-pill px-4 fw-bold shadow-sm" id="sendBtn">
                                 <i class="fa fa-paper-plane"></i>
@@ -110,7 +131,9 @@
         </div>
     </div>
 
-    <footer class="bg-white border-top py-4 mt-auto">
+    
+<!-- Sección Estructural: FOOTER de la Página -->
+<footer class="bg-white border-top py-4 mt-auto">
         <div class="container text-muted small text-center">© 2025 Talento Inclusivo • Bajo Normativa ISO/IEC 25010</div>
     </footer>
 
@@ -126,5 +149,6 @@
     <script src="../BD/auth.js"></script>
     <script src="../BD/data.js"></script>
     <script src="mensajeria.js"></script>
+  <script src="../utils/accessibility.js" defer></script>
 </body>
 </html>

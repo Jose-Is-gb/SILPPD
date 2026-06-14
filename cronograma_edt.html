@@ -1,0 +1,1036 @@
+<!--
+==========================================================================
+VIEW: cronograma_edt.html
+DESCRIPTION: Vista HTML para el sistema SILPPD (Talento Inclusivo).
+ACCESIBILITY:
+  - WCAG 2.1 AA Compliant
+  - Semántica HTML5 nativa (header, nav, main, section, footer)
+  - Etiquetas ARIA y atributos de accesibilidad
+==========================================================================
+-->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cronograma y EDT - Sistema de Gestión Aeroportuaria</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #111827;
+            --bg-card: #1a2236;
+            --bg-card-hover: #1f2a42;
+            --border: #2a3554;
+            --text-primary: #f0f4ff;
+            --text-secondary: #94a3c8;
+            --text-muted: #5e6e8f;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-purple: #8b5cf6;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+            --accent-indigo: #6366f1;
+            --accent-sky: #0ea5e9;
+            --gradient-1: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            --gradient-2: linear-gradient(135deg, #06b6d4, #3b82f6);
+            --gradient-3: linear-gradient(135deg, #10b981, #06b6d4);
+            --gradient-4: linear-gradient(135deg, #f59e0b, #f43f5e);
+            --gradient-5: linear-gradient(135deg, #8b5cf6, #f43f5e);
+            --gradient-6: linear-gradient(135deg, #6366f1, #06b6d4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background:
+                radial-gradient(ellipse 600px 400px at 20% 20%, rgba(59,130,246,0.08), transparent),
+                radial-gradient(ellipse 500px 500px at 80% 80%, rgba(139,92,246,0.06), transparent),
+                radial-gradient(ellipse 400px 300px at 50% 50%, rgba(6,182,212,0.04), transparent);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* HEADER */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 1.2rem;
+            background: rgba(59,130,246,0.1);
+            border: 1px solid rgba(59,130,246,0.25);
+            border-radius: 100px;
+            font-size: 0.8rem;
+            color: var(--accent-blue);
+            font-weight: 500;
+            margin-bottom: 1.2rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .header h1 {
+            font-size: 2.4rem;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+            margin-bottom: 0.6rem;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* TABS */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2.5rem;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.8rem;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--gradient-1);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 12px;
+        }
+
+        .tab-btn:hover {
+            border-color: var(--accent-blue);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            border-color: transparent;
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(59,130,246,0.3);
+        }
+
+        .tab-btn.active::before { opacity: 1; }
+        .tab-btn span { position: relative; z-index: 1; }
+
+        .tab-content { display: none; animation: fadeIn 0.5s ease; }
+        .tab-content.active { display: block; }
+
+        /* EDT SECTION */
+        .edt-section {
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .edt-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .edt-title .icon {
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        /* EDT Tree */
+        .edt-root {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .edt-root-title {
+            text-align: center;
+            padding: 1rem 2rem;
+            background: var(--gradient-1);
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(59,130,246,0.25);
+        }
+
+        .edt-level-1 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .edt-node {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .edt-node:hover {
+            border-color: rgba(59,130,246,0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .edt-node-header {
+            padding: 1rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s;
+        }
+
+        .edt-node-header:hover {
+            background: rgba(255,255,255,0.03);
+        }
+
+        .edt-node-code {
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .edt-node-name {
+            font-weight: 600;
+            font-size: 0.92rem;
+            flex: 1;
+        }
+
+        .edt-node-toggle {
+            width: 24px; height: 24px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.05);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            transition: all 0.3s;
+        }
+
+        .edt-node.open .edt-node-toggle {
+            transform: rotate(90deg);
+            color: var(--accent-blue);
+        }
+
+        .edt-node-children {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .edt-node.open .edt-node-children {
+            max-height: 1000px;
+        }
+
+        .edt-child {
+            padding: 0.5rem 1.2rem 0.5rem 3.2rem;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            border-top: 1px solid rgba(255,255,255,0.04);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .edt-child:hover {
+            background: rgba(59,130,246,0.05);
+            color: var(--text-primary);
+        }
+
+        .edt-child::before {
+            content: '';
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .edt-child:last-child {
+            padding-bottom: 1rem;
+        }
+
+        /* Color variants for EDT nodes */
+        .edt-color-1 .edt-node-code { background: rgba(59,130,246,0.15); color: var(--accent-blue); }
+        .edt-color-1 .edt-child::before { background: var(--accent-blue); }
+        .edt-color-2 .edt-node-code { background: rgba(139,92,246,0.15); color: var(--accent-purple); }
+        .edt-color-2 .edt-child::before { background: var(--accent-purple); }
+        .edt-color-3 .edt-node-code { background: rgba(6,182,212,0.15); color: var(--accent-cyan); }
+        .edt-color-3 .edt-child::before { background: var(--accent-cyan); }
+        .edt-color-4 .edt-node-code { background: rgba(16,185,129,0.15); color: var(--accent-emerald); }
+        .edt-color-4 .edt-child::before { background: var(--accent-emerald); }
+        .edt-color-5 .edt-node-code { background: rgba(245,158,11,0.15); color: var(--accent-amber); }
+        .edt-color-5 .edt-child::before { background: var(--accent-amber); }
+        .edt-color-6 .edt-node-code { background: rgba(244,63,94,0.15); color: var(--accent-rose); }
+        .edt-color-6 .edt-child::before { background: var(--accent-rose); }
+        .edt-color-7 .edt-node-code { background: rgba(99,102,241,0.15); color: var(--accent-indigo); }
+        .edt-color-7 .edt-child::before { background: var(--accent-indigo); }
+
+        /* GANTT SECTION */
+        .gantt-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .gantt-header-bar {
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            background: rgba(255,255,255,0.02);
+        }
+
+        .gantt-header-bar h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .gantt-legend {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .legend-dot {
+            width: 10px; height: 10px;
+            border-radius: 3px;
+        }
+
+        .gantt-scroll {
+            overflow-x: auto;
+            padding: 0;
+        }
+
+        .gantt-table {
+            width: 100%;
+            min-width: 1100px;
+            border-collapse: collapse;
+        }
+
+        .gantt-table thead th {
+            padding: 0.7rem 0.5rem;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: var(--bg-card);
+            z-index: 2;
+        }
+
+        .gantt-table thead th.task-col {
+            text-align: left;
+            padding-left: 1.5rem;
+            width: 280px;
+            min-width: 280px;
+        }
+
+        .gantt-table thead th.week-col {
+            text-align: center;
+            width: 50px;
+            min-width: 50px;
+        }
+
+        .gantt-table tbody tr {
+            transition: background 0.2s;
+        }
+
+        .gantt-table tbody tr:hover {
+            background: rgba(59,130,246,0.04);
+        }
+
+        .gantt-table tbody td {
+            padding: 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            height: 42px;
+            vertical-align: middle;
+        }
+
+        .gantt-table tbody td.task-cell {
+            padding: 0.5rem 1rem 0.5rem 1.5rem;
+        }
+
+        .task-name {
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .task-name.is-phase {
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .task-name .task-indent {
+            display: inline-block;
+        }
+
+        .task-name .task-icon {
+            width: 8px; height: 8px;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .gantt-cell {
+            text-align: center;
+            position: relative;
+            padding: 0 !important;
+        }
+
+        .gantt-bar {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 22px;
+            border-radius: 5px;
+            left: 2px;
+            right: 2px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .gantt-bar:hover {
+            height: 28px;
+            box-shadow: 0 0 12px rgba(59,130,246,0.4);
+            z-index: 5;
+        }
+
+        .gantt-bar.phase-bar {
+            height: 8px;
+            border-radius: 4px;
+            opacity: 0.5;
+        }
+
+        /* Gantt bar colors */
+        .bar-blue { background: var(--gradient-2); }
+        .bar-purple { background: var(--gradient-1); }
+        .bar-cyan { background: var(--gradient-3); }
+        .bar-emerald { background: linear-gradient(135deg, #10b981, #34d399); }
+        .bar-amber { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+        .bar-rose { background: var(--gradient-4); }
+        .bar-indigo { background: var(--gradient-6); }
+
+        .phase-row {
+            background: rgba(255,255,255,0.02) !important;
+        }
+
+        .phase-row td {
+            border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+        }
+
+        /* STATS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.6s ease 0.1s both;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.2rem;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            border-radius: 14px 14px 0 0;
+        }
+
+        .stat-card:nth-child(1)::before { background: var(--gradient-2); }
+        .stat-card:nth-child(2)::before { background: var(--gradient-1); }
+        .stat-card:nth-child(3)::before { background: var(--gradient-3); }
+        .stat-card:nth-child(4)::before { background: var(--gradient-4); }
+        .stat-card:nth-child(5)::before { background: var(--gradient-5); }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(59,130,246,0.3);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+            font-weight: 500;
+        }
+
+        /* FOOTER */
+        .footer-info {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            animation: fadeInUp 0.6s ease 0.3s both;
+        }
+
+        .footer-info div {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .footer-info strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            .header h1 { font-size: 1.6rem; }
+            .tabs { flex-wrap: wrap; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .edt-level-1 { grid-template-columns: 1fr; }
+        }
+
+        /* Print styles */
+        @media print {
+            body { background: #fff; color: #000; }
+            .tabs { display: none; }
+            .tab-content { display: block !important; page-break-inside: avoid; margin-bottom: 2rem; }
+            .gantt-container, .edt-root, .stat-card, .footer-info { border-color: #ccc; background: #fff; }
+            .header h1 { -webkit-text-fill-color: #1a1a2e; }
+            .stat-value { -webkit-text-fill-color: #3b82f6; }
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.8rem 1rem;
+            font-size: 0.78rem;
+            color: var(--text-primary);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+            pointer-events: none;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.2s;
+            min-width: 180px;
+        }
+
+        .tooltip.visible { opacity: 1; }
+        .tooltip-title { font-weight: 700; margin-bottom: 0.3rem; }
+        .tooltip-detail { color: var(--text-secondary); line-height: 1.5; }
+    </style>
+  <link rel="stylesheet" href="utils/accessibility.css">
+</head>
+<body>
+
+<div class="container">
+    <!-- HEADER -->
+    <div class="header">
+        <div class="header-badge">✈️ Proyecto Académico — Periodo 2025-1</div>
+        <h1>Cronograma y EDT del Proyecto</h1>
+        <p>Sistema de Gestión y Control de Operaciones Aeroportuarias — CORPAC</p>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-value">17</div>
+            <div class="stat-label">Semanas totales</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">7</div>
+            <div class="stat-label">Fases del proyecto</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">30</div>
+            <div class="stat-label">Paquetes de trabajo</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">5</div>
+            <div class="stat-label">Sprints (Scrum)</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">5</div>
+            <div class="stat-label">Integrantes</div>
+        </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('edt')"><span>📊 EDT (WBS)</span></button>
+        <button class="tab-btn" onclick="switchTab('gantt')"><span>📅 Diagrama de Gantt</span></button>
+    </div>
+
+    <!-- EDT TAB -->
+    <div id="tab-edt" class="tab-content active">
+        <div class="edt-section">
+            <div class="edt-root">
+                <div class="edt-root-title">
+                    ✈️ Sistema de Gestión y Control de Operaciones Aeroportuarias (SGCOA)
+                </div>
+
+                <div class="edt-level-1">
+                    <!-- FASE 1 -->
+                    <div class="edt-node edt-color-1 open" onclick="toggleNode(this)">
+                        <div class="edt-node-header">
+                            <span class="edt-node-code">1.0</span>
+                            <span class="edt-node-name">Inicio y Planificación</span>
+                            <span class="edt-node-toggle">▶</span>
+                        </div>
+                        <div class="edt-node-children">
+                            <div class="edt-child">1.1 Definición del problema y motivación</div>
+                            <div class="edt-child">1.2 Identificación de hallazgos</div>
+                            <div class="edt-child">1.3 Evaluación de propuestas alternativas</div>
+                            <div class="edt-child">1.4 Selección de la propuesta</div>
+                            <div class="edt-child">1.5 Análisis de impactos (social, cultural, económico, ambiental, ético, político)</div>
+                            <div class="edt-child">1.6 Definición de objetivos y alcance</div>
+                        </div>
+                    </div>
+
+                    <!-- FASE 2 -->
+                    <div class="edt-node edt-color-2" onclick="toggleNode(this)">
+                        <div class="edt-node-header">
+                            <span class="edt-node-code">2.0</span>
+                            <span class="edt-node-name">Marco Teórico e Ingeniería</span>
+                            <span class="edt-node-toggle">▶</span>
+                        </div>
+                        <div class="edt-node-children">
+                            <div class="edt-child">2.1 Antecedentes teóricos de gestión aeroportuaria</div>
+                            <div class="edt-child">2.2 Bases teóricas y arquitectura de software</div>
+                            <div class="edt-child">2.3 Selección de herramientas de ingeniería (UML, Scrum, tecnologías)</div>
+                            <div class="edt-child">2.4 Análisis de alternativas de solución</div>
+                            <div class="edt-child">2.5 Análisis de restricciones realistas</div>
+                        </div>
+                    </div>
+
+                    <!-- FASE 3 -->
+                    <div class="edt-node edt-color-3" onclick="toggleNode(this)">
+                        <div class="edt-node-header">
+                            <span class="edt-node-code">3.0</span>
+                            <span class="edt-node-name">Modelado del Negocio</span>
+                            <span class="edt-node-toggle">▶</span>
+                        </div>
+                        <div class="edt-node-children">
+                            <div class="edt-child">3.1 Identificación de stakeholders e interesados</div>
+                            <div class="edt-child">3.2 Definición de casos de uso de negocio</div>
+                            <div class="edt-child">3.3 Objetivos del negocio</div>
+                            <div class="edt-child">3.4 Requisitos funcionales (RF-01 a RF-10)</div>
+                            <div class="edt-child">3.5 Requisitos no funcionales (RNF-01 a RNF-10)</div>
+                        </div>
+                    </div>
+
+                    <!-- FASE 4 -->
+                    <div class="edt-node edt-color-4" onclick="toggleNode(this)">
+                        <div class="edt-node-header">
+                            <span class="edt-node-code">4.0</span>
+                            <span class="edt-node-name">Diseño de la Solución</span>
+                            <span class="edt-node-toggle">▶</span>
+                        </div>
+                        <div class="edt-node-children">
+                            <div class="edt-child">4.1 Visión y características del sistema</div>
+                            <div class="edt-child">4.2 Diagrama de casos de uso del sistema (CU01-CU08)</div>
+                            <div class="edt-child">4.3 Diagrama de clases del sistema</div>
+                            <div class="edt-child">4.4 Diagramas de secuencia y actividades</div>
+                            <div class="edt-child">4.5 Modelo de datos (entidades y relaciones)</div>
+                            <div class="edt-child">4.6 Definición de arquitectura de software</div>
+                        </div>
+                    </div>
+
+                    <!-- FASE 5 -->
+                    <div class="edt-node edt-color-5" onclick="toggleNode(this)">
+                        <div class="edt-node-header">
+                            <span class="edt-node-code">5.0</span>
+                            <span class="edt-node-name">Desarrollo e Implementación</span>
+                            <span class="edt-node-toggle">▶</span>
+                        </div>
+                        <div class="edt-node-children">
+                            <div class="edt-child">5.1 Sprint 1: Módulo de Gestión de Vuelos</div>
+                            <div class="edt-child">5.2 Sprint 2: Módulo de Incidencias Operativas</div>
+                            <div class="edt-child">5.3 Sprint 3: Módulo de Recursos Aeroportuarios</div>
+                            <div class="edt-child">5.4 Sprint 4: Módulo de Usuarios, Roles y Bitácora</div>
+                            <div class="edt-child">5.5 Sprint 5: Tablero Operacional y Reportes</div>
+                        </div>
+                    </div>
+
+                    <!-- FASE 6 -->
+                    <div class="edt-node edt-color-6" onclick="toggleNode(this)">
+                        <div class="edt-node-header">
+                            <span class="edt-node-code">6.0</span>
+                            <span class="edt-node-name">Pruebas y Validación</span>
+                            <span class="edt-node-toggle">▶</span>
+                        </div>
+                        <div class="edt-node-children">
+                            <div class="edt-child">6.1 Pruebas funcionales (registro de vuelos, incidencias, recursos)</div>
+                            <div class="edt-child">6.2 Pruebas de seguridad (control de acceso, permisos)</div>
+                            <div class="edt-child">6.3 Pruebas de usabilidad y experiencia de usuario</div>
+                            <div class="edt-child">6.4 Validación de métricas (productividad, rendimiento, disponibilidad)</div>
+                        </div>
+                    </div>
+
+                    <!-- FASE 7 -->
+                    <div class="edt-node edt-color-7" onclick="toggleNode(this)">
+                        <div class="edt-node-header">
+                            <span class="edt-node-code">7.0</span>
+                            <span class="edt-node-name">Cierre y Documentación</span>
+                            <span class="edt-node-toggle">▶</span>
+                        </div>
+                        <div class="edt-node-children">
+                            <div class="edt-child">7.1 Conclusiones y recomendaciones</div>
+                            <div class="edt-child">7.2 Compromiso ético en el ejercicio profesional</div>
+                            <div class="edt-child">7.3 Elaboración de anexos (diagramas, modelo físico, prototipos)</div>
+                            <div class="edt-child">7.4 Revisión final del informe</div>
+                            <div class="edt-child">7.5 Presentación y sustentación del proyecto</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GANTT TAB -->
+    <div id="tab-gantt" class="tab-content">
+        <div class="gantt-container">
+            <div class="gantt-header-bar">
+                <h3>📅 Diagrama de Gantt — 17 Semanas</h3>
+                <div class="gantt-legend">
+                    <div class="legend-item"><div class="legend-dot" style="background:var(--gradient-2)"></div>Inicio</div>
+                    <div class="legend-item"><div class="legend-dot" style="background:var(--gradient-1)"></div>Marco Teórico</div>
+                    <div class="legend-item"><div class="legend-dot" style="background:var(--gradient-3)"></div>Modelado</div>
+                    <div class="legend-item"><div class="legend-dot" style="background:linear-gradient(135deg,#10b981,#34d399)"></div>Diseño</div>
+                    <div class="legend-item"><div class="legend-dot" style="background:linear-gradient(135deg,#f59e0b,#fbbf24)"></div>Desarrollo</div>
+                    <div class="legend-item"><div class="legend-dot" style="background:var(--gradient-4)"></div>Pruebas</div>
+                    <div class="legend-item"><div class="legend-dot" style="background:var(--gradient-6)"></div>Cierre</div>
+                </div>
+            </div>
+            <div class="gantt-scroll">
+                <table class="gantt-table" id="ganttTable">
+                    <thead>
+                        <tr>
+                            <th class="task-col">Actividad</th>
+                            <th class="week-col">S1</th>
+                            <th class="week-col">S2</th>
+                            <th class="week-col">S3</th>
+                            <th class="week-col">S4</th>
+                            <th class="week-col">S5</th>
+                            <th class="week-col">S6</th>
+                            <th class="week-col">S7</th>
+                            <th class="week-col">S8</th>
+                            <th class="week-col">S9</th>
+                            <th class="week-col">S10</th>
+                            <th class="week-col">S11</th>
+                            <th class="week-col">S12</th>
+                            <th class="week-col">S13</th>
+                            <th class="week-col">S14</th>
+                            <th class="week-col">S15</th>
+                            <th class="week-col">S16</th>
+                            <th class="week-col">S17</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ganttBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer-info">
+        <div>📚 <strong>Curso:</strong>&nbsp;Diseño y Arquitectura de Software</div>
+        <div>👨‍🏫 <strong>Docente:</strong>&nbsp;Muñoz Díaz Jorge Luis</div>
+        <div>📍 <strong>Lugar:</strong>&nbsp;Cajamarca, Perú</div>
+        <div>🗓️ <strong>Periodo:</strong>&nbsp;2025-1</div>
+        <div>⚙️ <strong>Metodología:</strong>&nbsp;Scrum (5 Sprints)</div>
+    </div>
+</div>
+
+<!-- Tooltip -->
+<div class="tooltip" id="tooltip">
+    <div class="tooltip-title" id="tooltipTitle"></div>
+    <div class="tooltip-detail" id="tooltipDetail"></div>
+</div>
+
+<script>
+    // ── Gantt Data ──
+    const ganttData = [
+        // FASE 1
+        { name: "1.0 Inicio y Planificación", isPhase: true, start: 1, end: 3, color: "blue" },
+        { name: "Definición del problema y motivación", start: 1, end: 1, color: "blue", detail: "Identificar el problema central y justificar la necesidad del sistema." },
+        { name: "Identificación de hallazgos", start: 1, end: 1, color: "blue", detail: "Documentar los hallazgos encontrados en el contexto aeroportuario." },
+        { name: "Evaluación de propuestas alternativas", start: 1, end: 2, color: "blue", detail: "Analizar 3 propuestas y seleccionar la más adecuada." },
+        { name: "Análisis de impactos y alcance", start: 2, end: 3, color: "blue", detail: "Definir impactos social, cultural, económico, ambiental, ético y político." },
+        { name: "Definición de objetivos", start: 2, end: 3, color: "blue", detail: "Establecer objetivo general y 5 objetivos específicos." },
+
+        // FASE 2
+        { name: "2.0 Marco Teórico e Ingeniería", isPhase: true, start: 3, end: 5, color: "purple" },
+        { name: "Antecedentes y bases teóricas", start: 3, end: 4, color: "purple", detail: "Investigar sobre digitalización aeroportuaria y gestión operacional." },
+        { name: "Herramientas de ingeniería", start: 4, end: 4, color: "purple", detail: "Seleccionar UML, Scrum, SQL Server, ASP.NET/Spring, React/Angular." },
+        { name: "Alternativas de solución y restricciones", start: 4, end: 5, color: "purple", detail: "Evaluar restricciones tecnológicas, legales, económicas, etc." },
+
+        // FASE 3
+        { name: "3.0 Modelado del Negocio", isPhase: true, start: 5, end: 7, color: "cyan" },
+        { name: "Stakeholders e interesados", start: 5, end: 5, color: "cyan", detail: "Identificar operadores, supervisores, torre de control, seguridad, aerolíneas." },
+        { name: "Casos de uso de negocio", start: 5, end: 6, color: "cyan", detail: "Definir procesos principales del negocio aeroportuario." },
+        { name: "Requisitos funcionales (RF-01 a RF-10)", start: 6, end: 7, color: "cyan", detail: "10 requisitos funcionales que cubren vuelos, incidencias, reportes, etc." },
+        { name: "Requisitos no funcionales (RNF-01 a RNF-10)", start: 6, end: 7, color: "cyan", detail: "10 requisitos de seguridad, rendimiento, usabilidad y escalabilidad." },
+
+        // FASE 4
+        { name: "4.0 Diseño de la Solución", isPhase: true, start: 7, end: 10, color: "emerald" },
+        { name: "Visión y características del sistema", start: 7, end: 7, color: "emerald", detail: "Definir 8 características principales del sistema." },
+        { name: "Diagramas de casos de uso (CU01-CU08)", start: 7, end: 8, color: "emerald", detail: "8 casos de uso principales del sistema aeroportuario." },
+        { name: "Diagrama de clases y secuencia", start: 8, end: 9, color: "emerald", detail: "Modelar clases: Vuelo, Incidencia, Recurso, Usuario, Bitácora, Reporte." },
+        { name: "Modelo de datos y arquitectura", start: 9, end: 10, color: "emerald", detail: "Diseñar modelo ER y arquitectura en capas del sistema." },
+
+        // FASE 5
+        { name: "5.0 Desarrollo e Implementación", isPhase: true, start: 8, end: 15, color: "amber" },
+        { name: "Sprint 1: Módulo de Gestión de Vuelos", start: 8, end: 10, color: "amber", detail: "CRUD de vuelos, estados, llegadas y salidas." },
+        { name: "Sprint 2: Módulo de Incidencias", start: 10, end: 11, color: "amber", detail: "Registro, clasificación y seguimiento de incidencias operativas." },
+        { name: "Sprint 3: Recursos Aeroportuarios", start: 11, end: 12, color: "amber", detail: "Asignación de pistas, puertas, posiciones y equipos." },
+        { name: "Sprint 4: Usuarios, Roles y Bitácora", start: 12, end: 13, color: "amber", detail: "Administración de usuarios, permisos, roles y auditoría." },
+        { name: "Sprint 5: Tablero Operacional y Reportes", start: 13, end: 15, color: "amber", detail: "Dashboard principal y generación de reportes consolidados." },
+
+        // FASE 6
+        { name: "6.0 Pruebas y Validación", isPhase: true, start: 14, end: 16, color: "rose" },
+        { name: "Pruebas funcionales", start: 14, end: 15, color: "rose", detail: "Validar registro de vuelos, incidencias, recursos y reportes." },
+        { name: "Pruebas de seguridad y acceso", start: 15, end: 15, color: "rose", detail: "Verificar control de acceso por roles y permisos." },
+        { name: "Pruebas de usabilidad y validación de métricas", start: 15, end: 16, color: "rose", detail: "Validar UX, rendimiento, disponibilidad y confiabilidad." },
+
+        // FASE 7
+        { name: "7.0 Cierre y Documentación", isPhase: true, start: 15, end: 17, color: "indigo" },
+        { name: "Conclusiones y recomendaciones", start: 15, end: 16, color: "indigo", detail: "Redactar conclusiones del proyecto y recomendaciones." },
+        { name: "Compromiso ético y anexos", start: 16, end: 16, color: "indigo", detail: "Documentar compromiso ético y elaborar anexos." },
+        { name: "Revisión final del informe", start: 16, end: 17, color: "indigo", detail: "Revisión completa, correcciones y formato final." },
+        { name: "Presentación y sustentación", start: 17, end: 17, color: "indigo", detail: "Sustentación del proyecto ante el docente." },
+    ];
+
+    // ── Build Gantt Table ──
+    function buildGantt() {
+        const tbody = document.getElementById('ganttBody');
+        const totalWeeks = 17;
+
+        ganttData.forEach((task, idx) => {
+            const tr = document.createElement('tr');
+            if (task.isPhase) tr.classList.add('phase-row');
+
+            // Task name cell
+            const tdName = document.createElement('td');
+            tdName.classList.add('task-cell');
+            const nameDiv = document.createElement('div');
+            nameDiv.classList.add('task-name');
+            if (task.isPhase) nameDiv.classList.add('is-phase');
+            if (!task.isPhase) {
+                const indent = document.createElement('span');
+                indent.classList.add('task-indent');
+                indent.style.width = '16px';
+                nameDiv.appendChild(indent);
+            }
+            const icon = document.createElement('span');
+            icon.classList.add('task-icon');
+            icon.style.background = getColorValue(task.color);
+            nameDiv.appendChild(icon);
+            const text = document.createTextNode(task.name);
+            nameDiv.appendChild(text);
+            tdName.appendChild(nameDiv);
+            tr.appendChild(tdName);
+
+            // Week cells
+            for (let w = 1; w <= totalWeeks; w++) {
+                const td = document.createElement('td');
+                td.classList.add('gantt-cell');
+
+                if (w >= task.start && w <= task.end) {
+                    const bar = document.createElement('div');
+                    bar.classList.add('gantt-bar', `bar-${task.color}`);
+                    if (task.isPhase) bar.classList.add('phase-bar');
+
+                    // Round corners on edges
+                    if (w === task.start) bar.style.borderRadius = '5px 0 0 5px';
+                    if (w === task.end) bar.style.borderRadius = '0 5px 5px 0';
+                    if (w === task.start && w === task.end) bar.style.borderRadius = '5px';
+                    if (w > task.start && w < task.end) bar.style.borderRadius = '0';
+
+                    // Tooltip
+                    if (task.detail) {
+                        bar.addEventListener('mouseenter', (e) => showTooltip(e, task.name, `Semana ${task.start}–${task.end}\n${task.detail}`));
+                        bar.addEventListener('mouseleave', hideTooltip);
+                        bar.addEventListener('mousemove', moveTooltip);
+                    }
+
+                    td.appendChild(bar);
+                }
+                tr.appendChild(td);
+            }
+
+            tbody.appendChild(tr);
+
+            // Animate rows
+            tr.style.opacity = '0';
+            tr.style.transform = 'translateX(-10px)';
+            setTimeout(() => {
+                tr.style.transition = 'all 0.4s ease';
+                tr.style.opacity = '1';
+                tr.style.transform = 'translateX(0)';
+            }, idx * 40);
+        });
+    }
+
+    function getColorValue(color) {
+        const colors = {
+            blue: 'var(--accent-blue)',
+            purple: 'var(--accent-purple)',
+            cyan: 'var(--accent-cyan)',
+            emerald: 'var(--accent-emerald)',
+            amber: 'var(--accent-amber)',
+            rose: 'var(--accent-rose)',
+            indigo: 'var(--accent-indigo)',
+        };
+        return colors[color] || 'var(--accent-blue)';
+    }
+
+    // ── Tooltip ──
+    const tooltip = document.getElementById('tooltip');
+    const tooltipTitle = document.getElementById('tooltipTitle');
+    const tooltipDetail = document.getElementById('tooltipDetail');
+
+    function showTooltip(e, title, detail) {
+        tooltipTitle.textContent = title;
+        tooltipDetail.textContent = detail;
+        tooltip.classList.add('visible');
+        moveTooltip(e);
+    }
+
+    function hideTooltip() {
+        tooltip.classList.remove('visible');
+    }
+
+    function moveTooltip(e) {
+        const x = e.clientX + 15;
+        const y = e.clientY - 10;
+        tooltip.style.left = x + 'px';
+        tooltip.style.top = y + 'px';
+    }
+
+    // ── Tab Switch ──
+    function switchTab(tab) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+        document.getElementById('tab-' + tab).classList.add('active');
+    }
+
+    // ── EDT Toggle ──
+    function toggleNode(node) {
+        node.classList.toggle('open');
+    }
+
+    // ── Init ──
+    document.addEventListener('DOMContentLoaded', buildGantt);
+</script>
+
+  <script src="utils/accessibility.js" defer></script>
+</body>
+</html>

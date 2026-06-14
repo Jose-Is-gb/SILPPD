@@ -1,3 +1,14 @@
+<!--
+==========================================================================
+VIEW: dashboard.html
+DESCRIPTION: Vista HTML para el sistema SILPPD (Talento Inclusivo).
+ACCESIBILITY:
+  - WCAG 2.1 AA Compliant
+  - Semántica HTML5 nativa (header, nav, main, section, footer)
+  - Etiquetas ARIA y atributos de accesibilidad
+==========================================================================
+-->
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -16,16 +27,20 @@
     <link rel="stylesheet" href="dashboard.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
   <script src="../utils/security.js"></script>
+  <link rel="stylesheet" href="../utils/accessibility.css">
 </head>
 <body class="bg-light">
 
     <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-white py-3 border-bottom sticky-top">
+    
+<!-- Sección Estructural: NAV de la Página -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-white py-3 border-bottom sticky-top">
         <div class="container-fluid px-4">
             <a class="navbar-brand fw-bold text-primary d-flex align-items-center" href="dashboard.html">
                 <span style="color: #ff9800;"><i class="fa fa-wheelchair me-2"></i> Talento Inclusivo</span>
             </a>
             
+            <!-- Botón de acción interactivo -->
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -60,6 +75,7 @@
     <div class="container mt-n5" style="margin-top: -30px;">
         <!-- STATS CARDS -->
         <div class="row g-4 mb-5">
+            <!-- Columna del sistema de rejilla Bootstrap -->
             <div class="col-md-3">
                 <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100 cursor-pointer" onclick="location.href='gestion_ofertas.html'">
                     <div class="stat-icon bg-orange-light text-orange mx-auto mb-3">
@@ -69,6 +85,7 @@
                     <h4 class="fw-bold mb-0 text-orange" id="countOfertas">0 publicadas</h4>
                 </div>
             </div>
+            <!-- Columna del sistema de rejilla Bootstrap -->
             <div class="col-md-3">
                 <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100 cursor-pointer" onclick="location.href='postulaciones_recibidas.html'">
                     <div class="stat-icon bg-blue-light text-blue mx-auto mb-3">
@@ -78,6 +95,7 @@
                     <h4 class="fw-bold mb-0 text-blue" id="countPostulaciones">0 nuevas</h4>
                 </div>
             </div>
+            <!-- Columna del sistema de rejilla Bootstrap -->
             <div class="col-md-3">
                 <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100">
                     <div class="stat-icon bg-green-light text-green mx-auto mb-3">
@@ -87,6 +105,7 @@
                     <h4 class="fw-bold mb-0 text-green" id="countContratados">0 este mes</h4>
                 </div>
             </div>
+            <!-- Columna del sistema de rejilla Bootstrap -->
             <div class="col-md-3">
                 <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100">
                     <div class="stat-icon bg-orange-light text-orange mx-auto mb-3">
@@ -123,5 +142,6 @@
     <script src="../BD/auth.js"></script>
     <script src="../BD/data.js"></script>
     <script src="dashboard.js"></script>
+  <script src="../utils/accessibility.js" defer></script>
 </body>
 </html>

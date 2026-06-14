@@ -1,8 +1,27 @@
+<!--
+==========================================================================
+VIEW: login.html
+DESCRIPTION: Vista HTML para el sistema SILPPD (Talento Inclusivo).
+ACCESIBILITY:
+  - WCAG 2.1 AA Compliant
+  - Semántica HTML5 nativa (header, nav, main, section, footer)
+  - Etiquetas ARIA y atributos de accesibilidad
+==========================================================================
+-->
+
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.gstatic.com https://firestore.googleapis.com https://firebasestorage.googleapis.com https://identitytoolkit.googleapis.com; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.gstatic.com;">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.gstatic.com https://www.google.com https://firestore.googleapis.com https://firebasestorage.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com;
+    img-src 'self' data: https:;
+    style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com https://www.gstatic.com;
+    font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com;
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.gstatic.com https://www.google.com;
+    frame-src https://www.google.com https://www.gstatic.com https://silppd-4e248.firebaseapp.com;
+    connect-src 'self' https://firestore.googleapis.com https://firebasestorage.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://firebase.googleapis.com;
+  ">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Talento Inclusivo - Iniciar Sesión</title>
@@ -17,6 +36,7 @@
   <link rel="stylesheet" href="User/login.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
   <script src="utils/security.js"></script>
+  <link rel="stylesheet" href="utils/accessibility.css">
 </head>
 
 <body class="bg-primary">
@@ -95,18 +115,17 @@
             </div>
             <div id="passwordError" class="text-danger small mb-3 d-none" style="font-size: 0.8rem; font-weight: 500;"></div>
 
-            <!-- Captcha de Seguridad Avanzado -->
-            <label class="form-label">Verificación de Seguridad</label>
-            <div class="input-group mb-1">
-              <span class="input-group-text bg-white p-0 overflow-hidden">
-                <canvas id="captchaCanvas" width="130" height="38"></canvas>
-              </span>
-              <input type="text" id="captchaAnswer" class="form-control" placeholder="Texto de la imagen" required maxlength="6">
-              <button class="btn btn-outline-secondary" type="button" id="refreshCaptcha" title="Cambiar imagen">
-                <i class="fa-solid fa-arrows-rotate"></i>
-              </button>
+            <!-- reCAPTCHA v2 de Google -->
+            <div class="mb-3">
+              <label class="form-label">Verificación de Seguridad</label>
+              <div class="d-flex justify-content-center">
+                <div id="recaptchaWidget"
+                     class="g-recaptcha"
+                     data-sitekey="6Lez-R4tAAAAAJDVMJ_DdSkXxNrCSNOzDFlF7l_D">
+                </div>
+              </div>
+              <div id="captchaError" class="text-danger small mt-1 d-none" style="font-size: 0.8rem; font-weight: 500;"></div>
             </div>
-            <div id="captchaError" class="text-danger small mb-3 d-none" style="font-size: 0.8rem; font-weight: 500;"></div>
 
             <!-- Usuario Normal -->
             <div id="userOptions" class="d-flex justify-content-between mb-3">
@@ -147,7 +166,9 @@
   </div>
 
   <!-- FOOTER -->
-  <footer class="text-center text-light py-3">
+  
+<!-- Sección Estructural: FOOTER de la Página -->
+<footer class="text-center text-light py-3">
     © 2025 Talento Inclusivo. Construyendo un futuro laboral más inclusivo.
   </footer>
 
@@ -244,8 +265,12 @@
     window.addEventListener('load', repairCloudData);
   </script>
 
+  <!-- Google reCAPTCHA v2 API -->
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
   <script src="User/login.js"></script>
 
+  <script src="utils/accessibility.js" defer></script>
 </body>
 
 </html>

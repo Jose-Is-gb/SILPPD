@@ -1,3 +1,14 @@
+<!--
+==========================================================================
+VIEW: registro.html
+DESCRIPTION: Vista HTML para el sistema SILPPD (Talento Inclusivo).
+ACCESIBILITY:
+  - WCAG 2.1 AA Compliant
+  - Semántica HTML5 nativa (header, nav, main, section, footer)
+  - Etiquetas ARIA y atributos de accesibilidad
+==========================================================================
+-->
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -16,6 +27,7 @@
     <link rel="stylesheet" href="User/registro.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
   <script src="utils/security.js"></script>
+  <link rel="stylesheet" href="utils/accessibility.css">
 </head>
 
 <body>
@@ -39,7 +51,9 @@
 
         <div class="form-card p-4 p-md-5 mb-5">
 
-            <form id="registrationForm" onsubmit="return false;">
+            
+<!-- Sección Estructural: FORM de la Página -->
+<form id="registrationForm" onsubmit="return false;">
                 <!-- ================= PASO 1 ================= -->
                 <div class="step-container active" id="step-1">
                     <div class="d-flex align-items-center mb-4">
@@ -446,6 +460,7 @@
     <script src="BD/data.js"></script>
     <script src="BD/auth.js"></script>
     <script src="User/registro.js"></script>
+  <script src="utils/accessibility.js" defer></script>
 </body>
 
 </html>

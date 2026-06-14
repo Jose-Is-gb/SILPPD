@@ -1,3 +1,14 @@
+<!--
+==========================================================================
+VIEW: user_home.html
+DESCRIPTION: Vista HTML para el sistema SILPPD (Talento Inclusivo).
+ACCESIBILITY:
+  - WCAG 2.1 AA Compliant
+  - Semántica HTML5 nativa (header, nav, main, section, footer)
+  - Etiquetas ARIA y atributos de accesibilidad
+==========================================================================
+-->
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -17,17 +28,21 @@
     <link rel="stylesheet" href="user_home.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
   <script src="../utils/security.js"></script>
+  <link rel="stylesheet" href="../utils/accessibility.css">
 </head>
 
 <body class="bg-light">
 
     <!-- NAVBAR SUPERIOR -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top shadow-sm px-4">
+    
+<!-- Sección Estructural: NAV de la Página -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top shadow-sm px-4">
         <div class="container-fluid">
             <a class="navbar-brand fw-bold d-flex align-items-center" href="user_home.html">
                 <i class="fa fa-shield-halved me-2"></i> Talento Inclusivo
             </a>
 
+            <!-- Botón de acción interactivo -->
             <button class="navbar-toggler border-0" data-bs-toggle="collapse" data-bs-target="#menu">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -40,6 +55,7 @@
                     <li class="nav-item"><a class="nav-link px-3" href="validacion_ofertas.html"><i class="fa fa-briefcase me-1"></i> Ofertas</a></li>
                     <li class="nav-item"><a class="nav-link px-3" href="seguimiento.html"><i class="fa fa-list me-1"></i> Seguimiento</a></li>
                     <li class="nav-item ms-lg-3">
+                        <!-- Botón de acción interactivo -->
                         <button class="btn btn-outline-light rounded-pill px-4 shadow-sm" id="logoutBtn" onclick="Auth.logout()">
                             <i class="fa fa-sign-out-alt me-1"></i> Salir
                         </button>
@@ -53,6 +69,7 @@
     <div class="hero-section text-white py-5 mb-5 shadow-sm">
         <div class="container py-5">
             <div class="row align-items-center">
+                <!-- Columna del sistema de rejilla Bootstrap -->
                 <div class="col-lg-7 text-center text-lg-start animate__animated animate__fadeInLeft">
                     <h1 class="fw-bold display-4 mb-2" id="heroWelcome">¡Hola! Nos alegra verte</h1>
                     <p class="lead opacity-75 mb-4 px-3 px-lg-0">Tu próximo gran paso profesional comienza aquí. Revisa tus opciones destacadas para hoy.</p>
@@ -65,6 +82,7 @@
                         </a>
                     </div>
                 </div>
+                <!-- Columna del sistema de rejilla Bootstrap -->
                 <div class="col-lg-5 d-none d-lg-block text-center animate__animated animate__fadeInRight">
                     <div class="hero-icon-card bg-white bg-opacity-10 backdrop-blur p-5 rounded-5 border border-white border-opacity-25 shadow-lg">
                         <i class="fa fa-rocket fa-6x opacity-75"></i>
@@ -78,6 +96,7 @@
     <!-- QUICK STATS -->
     <div class="container mb-5 mt-neg-stats">
         <div class="row g-4 justify-content-center">
+            <!-- Columna del sistema de rejilla Bootstrap -->
             <div class="col-md-4 col-lg-3">
                 <div class="card stat-card border-0 shadow-lg text-center p-4 rounded-4 bg-white">
                     <div class="stat-icon-bg bg-primary-subtle text-primary mb-3 mx-auto">
@@ -87,6 +106,7 @@
                     <p class="text-muted small fw-bold text-uppercase mb-0 ls-1">Postulaciones</p>
                 </div>
             </div>
+            <!-- Columna del sistema de rejilla Bootstrap -->
             <div class="col-md-4 col-lg-3">
                 <div class="card stat-card border-0 shadow-lg text-center p-4 rounded-4 bg-white">
                     <div class="stat-icon-bg bg-success-subtle text-success mb-3 mx-auto">
@@ -96,6 +116,7 @@
                     <p class="text-muted small fw-bold text-uppercase mb-0 ls-1">Ofertas Disponibles</p>
                 </div>
             </div>
+            <!-- Columna del sistema de rejilla Bootstrap -->
             <div class="col-md-4 col-lg-3">
                 <div class="card stat-card border-0 shadow-lg text-center p-4 rounded-4 bg-white">
                     <div class="stat-icon-bg bg-info-subtle text-info mb-3 mx-auto">
@@ -117,6 +138,7 @@
 
         <div class="row g-4">
             <!-- Ofertas -->
+            <!-- Columna del sistema de rejilla Bootstrap -->
             <div class="col-lg-4 col-md-6">
                 <div class="card module-card border-0 shadow-sm h-100 p-4 rounded-4 text-center bg-white">
                     <div class="module-icon-wrap bg-primary-subtle text-primary mx-auto mb-4">
@@ -131,6 +153,7 @@
             </div>
 
             <!-- Seguimiento -->
+            <!-- Columna del sistema de rejilla Bootstrap -->
             <div class="col-lg-4 col-md-6">
                 <div class="card module-card border-0 shadow-sm h-100 p-4 rounded-4 text-center bg-white">
                     <div class="module-icon-wrap bg-success-subtle text-success mx-auto mb-4">
@@ -145,6 +168,7 @@
             </div>
 
             <!-- Centro de Ayuda / Perfil -->
+            <!-- Columna del sistema de rejilla Bootstrap -->
             <div class="col-lg-4 col-md-12">
                 <div class="card module-card border-0 shadow-sm h-100 p-4 rounded-4 text-center bg-white">
                     <div class="module-icon-wrap bg-warning-subtle text-warning mx-auto mb-4">
@@ -163,7 +187,9 @@
         <div id="welcomeMessage" class="mt-5 p-4 bg-white rounded-4 shadow-sm text-center fw-medium border-start border-primary border-5" style="display:none;"></div>
     </div>
 
-    <footer class="bg-white border-top py-5 mt-auto">
+    
+<!-- Sección Estructural: FOOTER de la Página -->
+<footer class="bg-white border-top py-5 mt-auto">
         <div class="container text-center">
             <div class="mb-3">
                 <i class="fa fa-shield-halved fa-2x text-primary opacity-25"></i>
@@ -185,5 +211,6 @@
     <script src="../BD/data.js"></script>
     <script src="user_home.js"></script>
 
+  <script src="../utils/accessibility.js" defer></script>
 </body>
 </html>

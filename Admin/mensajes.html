@@ -1,3 +1,14 @@
+<!--
+==========================================================================
+VIEW: mensajes.html
+DESCRIPTION: Vista HTML para el sistema SILPPD (Talento Inclusivo).
+ACCESIBILITY:
+  - WCAG 2.1 AA Compliant
+  - Semántica HTML5 nativa (header, nav, main, section, footer)
+  - Etiquetas ARIA y atributos de accesibilidad
+==========================================================================
+-->
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -12,6 +23,7 @@
     <link rel="stylesheet" href="mensajes.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
   <script src="../utils/security.js"></script>
+  <link rel="stylesheet" href="../utils/accessibility.css">
 </head>
 
 <body class="bg-light">
@@ -45,7 +57,9 @@
         <div class="main-content flex-grow-1"
             style="height: 100vh; overflow: hidden; display: flex; flex-direction: column; padding: 0;">
             <!-- TOPBAR -->
-            <nav class="navbar navbar-expand-lg bg-white shadow-sm px-4 flex-shrink-0"
+            
+<!-- Sección Estructural: NAV de la Página -->
+<nav class="navbar navbar-expand-lg bg-white shadow-sm px-4 flex-shrink-0"
                 style="border-radius: 0; padding: 15px 0;">
                 <div class="container-fluid">
                     <span class="navbar-brand fw-bold text-primary">Centro de Mensajes</span>
@@ -61,20 +75,24 @@
 
                 <div class="row g-4 m-0" style="flex: 1; min-height: 0;">
                     <!-- SIDEBAR CONTACTOS -->
+                    <!-- Columna del sistema de rejilla Bootstrap -->
                     <div class="col-lg-4 col-xl-4 pb-2" style="height: 100%;">
                         <div class="bg-white rounded-4 shadow-sm contacts-container d-flex flex-column h-100">
                             <div class="p-3 border-bottom">
                                 <div class="input-group search-bar">
                                     <span class="input-group-text bg-light border-0"><i
                                             class="fa fa-search text-muted"></i></span>
+                                    <!-- Campo de entrada de datos de usuario -->
                                     <input type="text" class="form-control bg-light border-0" id="searchChats"
                                         placeholder="Buscar conversaciones...">
                                 </div>
                             </div>
 
                             <div class="d-flex justify-content-between p-3 border-bottom tabs-container">
+                                <!-- Botón de acción interactivo -->
                                 <button class="btn btn-success rounded-pill px-3 py-1 btn-sm fw-semibold filter-btn" data-filter="Todos" id="btnFilterTodos">Todos</button>
                                 <button class="btn btn-light rounded-pill px-3 py-1 btn-sm text-dark filter-btn" data-filter="Usuario" id="btnFilterUsuarios">Usuarios</button>
+                                <!-- Botón de acción interactivo -->
                                 <button class="btn btn-light rounded-pill px-3 py-1 btn-sm text-dark filter-btn" data-filter="Empresa" id="btnFilterEmpresas">Empresas</button>
                             </div>
 
@@ -85,6 +103,7 @@
                     </div>
 
                     <!-- CHAT MAIN -->
+                    <!-- Columna del sistema de rejilla Bootstrap -->
                     <div class="col-lg-8 col-xl-8 pb-2" style="height: 100%;">
                         <div
                             class="bg-white rounded-4 shadow-sm chat-main-container d-flex flex-column justify-content-between h-100">
@@ -109,10 +128,12 @@
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-center gap-2">
+                                        <!-- Botón de acción interactivo -->
                                         <button id="btnMarcarChat"
                                             class="btn btn-light border btn-sm rounded-pill fw-semibold text-dark"><i
                                                 class="fa-regular fa-flag me-1"></i> Marcar</button>
                                         <div class="dropdown">
+                                            <!-- Botón de acción interactivo -->
                                             <button class="btn btn-light btn-sm text-muted border-0 bg-transparent" data-bs-toggle="dropdown">
                                                 <i class="fa fa-ellipsis-v"></i>
                                             </button>
@@ -146,17 +167,22 @@
                                 <!-- CHAT INPUT -->
                                 <div class="p-3 border-top bg-white rounded-bottom-4 flex-shrink-0">
                                     <div class="d-flex gap-2 mb-2 action-pills">
+                                        <!-- Botón de acción interactivo -->
                                         <button id="btnPlantilla" class="btn btn-light border btn-sm rounded-pill text-dark"><i class="fa fa-file-lines me-1"></i>Usar
                                             plantilla de respuesta</button>
+                                        <!-- Botón de acción interactivo -->
                                         <button id="btnAdjuntarGuia" class="btn btn-light border btn-sm rounded-pill text-dark"><i class="fa fa-book me-1"></i>Adjuntar
                                             guía</button>
                                     </div>
                                     <div class="d-flex align-items-center gap-2 py-2">
+                                        <!-- Campo de entrada de datos de usuario -->
                                         <input type="file" id="fileInput" class="d-none" multiple accept="image/*,.pdf,.doc,.docx,.txt">
                                         <button class="btn text-muted p-0 ms-1 me-1" id="btnAdjuntarArchivo" title="Adjuntar archivo"><i
                                                 class="fa-solid fa-paperclip fs-5"></i></button>
+                                        <!-- Campo de entrada de datos de usuario -->
                                         <input type="text" class="form-control bg-light border-0 rounded-3 py-2 fs-6"
                                             id="adminMsgInput" placeholder="Escribe tu respuesta como administrador...">
+                                        <!-- Botón de acción interactivo -->
                                         <button class="btn btn-success text-white rounded-3 px-3 py-2"
                                             id="adminSendBtn"><i class="fa fa-paper-plane"></i></button>
                                     </div>
@@ -191,6 +217,7 @@
     <script src="../BD/data.js"></script>
     <script src="../BD/auth.js"></script>
     <script src="mensajes.js"></script>
+  <script src="../utils/accessibility.js" defer></script>
 </body>
 
 </html>

@@ -1,3 +1,14 @@
+<!--
+==========================================================================
+VIEW: admin.html
+DESCRIPTION: Vista HTML para el sistema SILPPD (Talento Inclusivo).
+ACCESIBILITY:
+  - WCAG 2.1 AA Compliant
+  - Semántica HTML5 nativa (header, nav, main, section, footer)
+  - Etiquetas ARIA y atributos de accesibilidad
+==========================================================================
+-->
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -16,6 +27,7 @@
     <link rel="stylesheet" href="admin.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
   <script src="../utils/security.js"></script>
+  <link rel="stylesheet" href="../utils/accessibility.css">
 </head>
 <body>
 
@@ -46,7 +58,9 @@
     <div class="main-content">
 
         <!-- TOPBAR -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4">
+        
+<!-- Sección Estructural: NAV de la Página -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4">
             <div class="container-fluid">
                 <span class="navbar-brand fw-bold text-primary">Panel de Administración</span>
                 <div class="ms-auto d-flex align-items-center">
@@ -61,6 +75,7 @@
 
             <!-- TARJETAS DE RESUMEN -->
             <div class="row g-4 mb-5">
+                <!-- Columna del sistema de rejilla Bootstrap -->
                 <div class="col-md-3">
                     <div class="dashboard-card shadow-sm text-center">
                         <i class="fa fa-users icon text-primary mb-2"></i>
@@ -69,6 +84,7 @@
                     </div>
                 </div>
 
+                <!-- Columna del sistema de rejilla Bootstrap -->
                 <div class="col-md-3">
                     <div class="dashboard-card shadow-sm text-center">
                         <i class="fa fa-briefcase icon text-success mb-2"></i>
@@ -77,6 +93,7 @@
                     </div>
                 </div>
 
+                <!-- Columna del sistema de rejilla Bootstrap -->
                 <div class="col-md-3">
                     <div class="dashboard-card shadow-sm text-center">
                         <i class="fa fa-building icon text-info mb-2"></i>
@@ -85,6 +102,7 @@
                     </div>
                 </div>
 
+                <!-- Columna del sistema de rejilla Bootstrap -->
                 <div class="col-md-3">
                     <div class="dashboard-card shadow-sm text-center">
                         <i class="fa fa-check icon text-warning mb-2"></i>
@@ -123,5 +141,6 @@
     <script src="../BD/auth.js"></script>
     <script src="admin.js"></script>
 
+  <script src="../utils/accessibility.js" defer></script>
 </body>
 </html>

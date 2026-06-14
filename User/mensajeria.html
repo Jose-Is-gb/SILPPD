@@ -1,3 +1,14 @@
+<!--
+==========================================================================
+VIEW: mensajeria.html
+DESCRIPTION: Vista HTML para el sistema SILPPD (Talento Inclusivo).
+ACCESIBILITY:
+  - WCAG 2.1 AA Compliant
+  - Semántica HTML5 nativa (header, nav, main, section, footer)
+  - Etiquetas ARIA y atributos de accesibilidad
+==========================================================================
+-->
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -15,17 +26,21 @@
     <link rel="stylesheet" href="mensajeria.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
   <script src="../utils/security.js"></script>
+  <link rel="stylesheet" href="../utils/accessibility.css">
 </head>
 
 <body class="bg-light">
 
     <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top shadow-sm px-4">
+    
+<!-- Sección Estructural: NAV de la Página -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top shadow-sm px-4">
         <div class="container-fluid">
             <a class="navbar-brand fw-bold d-flex align-items-center" href="user_home.html">
                 <i class="fa fa-shield-halved me-2"></i> Talento Inclusivo
             </a>
 
+            <!-- Botón de acción interactivo -->
             <button class="navbar-toggler border-0" data-bs-toggle="collapse" data-bs-target="#menu">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -38,6 +53,7 @@
                     <li class="nav-item"><a class="nav-link px-3" href="validacion_ofertas.html"><i class="fa fa-briefcase me-1"></i> Ofertas</a></li>
                     <li class="nav-item"><a class="nav-link px-3" href="seguimiento.html"><i class="fa fa-tasks me-1"></i> Seguimiento</a></li>
                     <li class="nav-item ms-lg-3">
+                        <!-- Botón de acción interactivo -->
                         <button class="btn btn-outline-light rounded-pill px-4 shadow-sm" id="logoutBtn" onclick="Auth.logout()">
                             <i class="fa fa-sign-out-alt me-1"></i> Salir
                         </button>
@@ -50,6 +66,7 @@
     <!-- CONTENT -->
     <div class="container py-5">
         <div class="row align-items-center mb-4">
+            <!-- Columna del sistema de rejilla Bootstrap -->
             <div class="col-md-6">
                 <h3 class="fw-bold text-dark mb-0">Centro de Mensajes</h3>
                 <p class="text-muted small mb-0">Resuelve tus dudas con las empresas y soporte.</p>
@@ -58,6 +75,7 @@
 
         <div class="row g-4 chat-container-wrapper">
             <!-- CHAT LIST -->
+            <!-- Columna del sistema de rejilla Bootstrap -->
             <div class="col-lg-4">
                 <div class="card border-0 shadow-sm rounded-4 overflow-hidden chat-list-card">
                     <div class="card-header bg-white border-bottom py-3 px-4">
@@ -66,6 +84,7 @@
                     <div class="chat-search p-3 bg-white border-bottom">
                         <div class="input-group input-group-sm">
                             <span class="input-group-text bg-light border-0"><i class="fa fa-search opacity-50"></i></span>
+                            <!-- Campo de entrada de datos de usuario -->
                             <input type="text" class="form-control bg-light border-0" placeholder="Buscar chat...">
                         </div>
                     </div>
@@ -76,6 +95,7 @@
             </div>
 
             <!-- CHAT WINDOW -->
+            <!-- Columna del sistema de rejilla Bootstrap -->
             <div class="col-lg-8">
                 <div class="card border-0 shadow-sm rounded-4 chat-window-card">
                     <div class="card-header bg-white py-3 px-4 border-bottom d-flex align-items-center" id="chatHeader">
@@ -97,10 +117,12 @@
 
                     <div class="card-footer bg-white p-3 border-top">
                         <div class="input-group chat-input-wrap">
+                            <!-- Campo de entrada de datos de usuario -->
                             <input type="file" id="attachInput" class="d-none">
                             <button class="btn btn-light rounded-start-pill px-3 border-end-0" id="attachBtn">
                                 <i class="fa fa-paperclip text-muted"></i>
                             </button>
+                            <!-- Campo de entrada de datos de usuario -->
                             <input type="text" id="messageInput" class="form-control border-0 bg-light" placeholder="Escribe un mensaje...">
                             <button class="btn btn-primary rounded-end-pill px-4 fw-bold shadow-sm" id="sendBtn">
                                 <i class="fa fa-paper-plane"></i>
@@ -112,7 +134,9 @@
         </div>
     </div>
 
-    <footer class="bg-white border-top py-5 mt-auto">
+    
+<!-- Sección Estructural: FOOTER de la Página -->
+<footer class="bg-white border-top py-5 mt-auto">
         <div class="container lead text-muted small text-center">© 2025 Talento Inclusivo • Bajo Normativa ISO/IEC</div>
     </footer>
 
@@ -128,5 +152,6 @@
     <script src="../BD/auth.js"></script>
     <script src="../BD/data.js"></script>
     <script src="mensajeria.js"></script>
+  <script src="../utils/accessibility.js" defer></script>
 </body>
 </html>

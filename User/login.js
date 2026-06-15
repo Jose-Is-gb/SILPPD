@@ -27,69 +27,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const registerLink = document.getElementById("registerLink");
     const showRegisterLink = document.getElementById("showRegister");
     
-    // --- Lógica de Captcha Visual ---
+    // --- Lógica de Captcha Google reCAPTCHA ---
     let captchaCorrectAnswer = "";
     function generateCaptcha() {
-        const canvas = document.getElementById("captchaCanvas");
-        if (!canvas) return;
-        const ctx = canvas.getContext("2d");
-        
-        // Caracteres aleatorios (sin O, 0, I, l para evitar confusión)
-        const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
-        captchaCorrectAnswer = "";
-        for (let i = 0; i < 5; i++) {
-            captchaCorrectAnswer += chars.charAt(Math.floor(Math.random() * chars.length));
+        if (typeof grecaptcha !== 'undefined' && grecaptcha.reset) {
+            try {
+                grecaptcha.reset();
+            } catch (e) {
+                // ignore
+            }
         }
-
-        // Fondo
-        ctx.fillStyle = "#f8f9fa";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        // Ruido visual (Líneas)
-        for (let i = 0; i < 5; i++) {
-            const r = Math.floor(Math.random() * 256);
-            const g = Math.floor(Math.random() * 256);
-            const b = Math.floor(Math.random() * 256);
-            ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, 0.5)`;
-            ctx.beginPath();
-            ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
-            ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
-            ctx.stroke();
-        }
-
-        // Texto distorsionado
-        ctx.font = "bold 24px 'Courier New', Courier, monospace";
-        ctx.textBaseline = "middle";
-        for (let i = 0; i < captchaCorrectAnswer.length; i++) {
-            ctx.save();
-            const char = captchaCorrectAnswer[i];
-            const x = 15 + (i * 20);
-            const y = canvas.height / 2;
-            const angle = (Math.random() - 0.5) * 0.4; // Rotación leve
-            
-            ctx.translate(x, y);
-            ctx.rotate(angle);
-            const r = Math.floor(Math.random() * 100);
-            const g = Math.floor(Math.random() * 100);
-            const b = Math.floor(Math.random() * 100);
-            ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-            ctx.fillText(char, 0, 0);
-            ctx.restore();
-        }
-
-        // Ruido visual (Puntos)
-        for (let i = 0; i < 30; i++) {
-            const r = Math.floor(Math.random() * 256);
-            const g = Math.floor(Math.random() * 256);
-            const b = Math.floor(Math.random() * 256);
-            ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.4)`;
-            ctx.beginPath();
-            ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 2, 0, Math.PI * 2);
-            ctx.fill();
-        }
-
-        const captchaAnswer = document.getElementById("captchaAnswer");
-        if(captchaAnswer) captchaAnswer.value = "";
     }
     
     // Inicializar Captcha
@@ -354,7 +301,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // 2. Extracción y Sanitización de Inputs
         const rawEmail = emailInput.value.trim();
         const rawPassword = passwordInput.value.trim();
-        const captchaAnswerInput = document.getElementById("captchaAnswer").value.trim();
+        const captchaResponse = (typeof grecaptcha !== 'undefined') ? grecaptcha.getResponse() : "";
         
         const email = sanitizeHTML(rawEmail);
         const password = sanitizeHTML(rawPassword);
@@ -377,7 +324,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             hasError = true;
         }
-        if (!captchaAnswerInput) {
+        if (!captchaResponse) {
             if (capErr) {
                 capErr.textContent = "Por favor, completa la verificación de seguridad.";
                 capErr.classList.remove("d-none");
@@ -393,16 +340,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 emailErr.textContent = "El formato del correo electrónico no es válido.";
                 emailErr.classList.remove("d-none");
             }
-            return;
-        }
-
-        // 5. Validación de Captcha (Insensible a mayúsculas)
-        if (captchaAnswerInput.toLowerCase() !== captchaCorrectAnswer.toLowerCase()) {
-            if (capErr) {
-                capErr.textContent = "El código de verificación de seguridad es incorrecto.";
-                capErr.classList.remove("d-none");
-            }
-            generateCaptcha(); // Regenerar para evitar fuerza bruta manual
             return;
         }
 

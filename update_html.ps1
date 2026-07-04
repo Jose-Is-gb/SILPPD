@@ -11,7 +11,7 @@ foreach ($file in $files) {
     }
 
     if ($content -notmatch "purify.min.js") {
-        $purify = "<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>"
+        $purify = "<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.4.0/purify.min.js" integrity="sha384-jo2dKNtkiHrxz1QPbtuID2FGqP9smXxt1yTdRbkMeiG2zWMACmBah43xTKOoguN/" crossorigin="anonymous"></script>"
         $content = $content -replace "</head>", "  $purify
 </head>"
         $modified = $true

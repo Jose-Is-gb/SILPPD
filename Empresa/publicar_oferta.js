@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.getElementById("jornada").value = oferta.jornada || "";
             document.getElementById("salarioMin").value = oferta.salarioMin || "";
             document.getElementById("salarioMax").value = oferta.salarioMax || "";
+            document.getElementById("discapacidad").value = oferta.discapacidad || "";
             document.getElementById("adaptaciones").value = oferta.adaptaciones || "";
             document.getElementById("vencimiento").value = oferta.vencimiento || "";
         }
@@ -52,6 +53,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             salarioMin: document.getElementById("salarioMin").value,
             salarioMax: document.getElementById("salarioMax").value,
             ciudad: document.getElementById("ubicacion").value,
+            discapacidad: document.getElementById("discapacidad").value,
             adaptaciones: document.getElementById("adaptaciones").value,
             vencimiento: document.getElementById("vencimiento").value,
             empresa: user.nombre,

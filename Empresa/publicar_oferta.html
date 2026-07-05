@@ -157,12 +157,27 @@ ACCESIBILITY:
                 <div class="mb-5">
                     <h5 class="fw-bold mb-4 d-flex align-items-center">
                         <span class="badge bg-orange-light text-orange rounded-pill me-2 px-3 py-2" style="font-size: 0.8rem;">3</span>
-                        Adaptaciones de accesibilidad
+                        Inclusión y Adaptaciones
                     </h5>
-                    <!-- Columna del sistema de rejilla Bootstrap -->
-                    <div class="col-12">
-                        <label class="form-label small fw-bold">Describe las adaptaciones disponibles</label>
-                        <textarea id="adaptaciones" class="form-control bg-light border-0 py-2" rows="3" placeholder="Ej: Entorno accesible para sillas de ruedas, tecnología de asistencia disponible, horarios flexibles..."></textarea>
+                    <div class="row g-4">
+                        <!-- Columna del sistema de rejilla Bootstrap -->
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Discapacidad (Opcional)</label>
+                            <select id="discapacidad" class="form-select bg-light border-0 py-2">
+                                <option value="">No específica / Todas son bienvenidas</option>
+                                <option value="Física">Física / Motora</option>
+                                <option value="Sensorial">Sensorial (Visual / Auditiva)</option>
+                                <option value="Intelectual">Intelectual u Cognitiva</option>
+                                <option value="Psíquica">Psíquica</option>
+                                <option value="Múltiple">Múltiple</option>
+                            </select>
+                            <small class="text-muted d-block mt-1" style="font-size: 0.75rem;">Selecciona si la oferta está especialmente adaptada a una discapacidad específica.</small>
+                        </div>
+                        <!-- Columna del sistema de rejilla Bootstrap -->
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Describe las adaptaciones disponibles</label>
+                            <textarea id="adaptaciones" class="form-control bg-light border-0 py-2" rows="3" placeholder="Ej: Entorno accesible, tecnología de asistencia, horarios flexibles..."></textarea>
+                        </div>
                     </div>
                 </div>
 

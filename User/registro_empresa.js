@@ -2,7 +2,87 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     showStep(1);
+
+    // ─── Restricciones de entrada en tiempo real ───
+
+    // RUC: solo dígitos, exactamente 11
+    const rucInput = document.getElementById('emp-ruc');
+    if (rucInput) {
+        rucInput.maxLength = 11;
+        rucInput.inputMode = 'numeric';
+        rucInput.addEventListener('input', () => {
+            rucInput.value = rucInput.value.replace(/\D/g, '');
+        });
+    }
+
+    // Código postal empresa: solo dígitos, máximo 6
+    const cpInput = document.getElementById('emp-cp');
+    if (cpInput) {
+        cpInput.maxLength = 6;
+        cpInput.inputMode = 'numeric';
+        cpInput.addEventListener('input', () => {
+            cpInput.value = cpInput.value.replace(/\D/g, '');
+        });
+    }
+
+    // Teléfono principal: solo dígitos y +
+    const telInput = document.getElementById('emp-telefono');
+    if (telInput) {
+        telInput.maxLength = 15;
+        telInput.addEventListener('input', () => {
+            let val = telInput.value;
+            val = val.replace(/(?!^)\+/g, '');
+            val = val.replace(/[^\d+]/g, '');
+            telInput.value = val;
+        });
+    }
+
+    // Teléfono alternativo: solo dígitos y +
+    const telAltInput = document.getElementById('emp-telefono-alt');
+    if (telAltInput) {
+        telAltInput.maxLength = 15;
+        telAltInput.addEventListener('input', () => {
+            let val = telAltInput.value;
+            val = val.replace(/(?!^)\+/g, '');
+            val = val.replace(/[^\d+]/g, '');
+            telAltInput.value = val;
+        });
+    }
+
+    // Limpiar errores al escribir en campos de paso 1
+    ['emp-razon-social','emp-nombre-comercial','emp-web','emp-descripcion','emp-ruc',
+     'emp-sector','emp-tamano'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('change', () => clearFieldErrorEmp(el));
+        if (el) el.addEventListener('input', () => clearFieldErrorEmp(el));
+    });
+
+    // Limpiar errores al escribir en campos de paso 2
+    ['emp-direccion','emp-ciudad','emp-pais','emp-contacto-nombre','emp-contacto-cargo',
+     'emp-email','emp-password','emp-confirm-password','emp-cp','emp-telefono'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', () => clearFieldErrorEmp(el));
+    });
+
+    // Permitir solo letras en el campo País
+    const empPaisInput = document.getElementById('emp-pais');
+    if (empPaisInput) {
+        empPaisInput.addEventListener('input', () => {
+            empPaisInput.value = empPaisInput.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+        });
+    }
+
+    // Limpiar errores en paso 4 (documentos y checkboxes)
+    const docRuc = document.getElementById('emp-doc-ruc');
+    if (docRuc) docRuc.addEventListener('change', () => clearFieldErrorEmp(docRuc));
+
+    ['emp-chk-terminos','emp-chk-rgpd','emp-chk-nodiscriminacion',
+     'emp-chk-accesibilidad','emp-chk-seguridad','emp-chk-veracidad','emp-chk-verificacion'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('change', () => clearFieldErrorEmp(el));
+    });
 });
+
 
 function showStep(stepNumber) {
     document.querySelectorAll('.step-container').forEach(el => {
@@ -33,17 +113,50 @@ function nextStep(stepNumber) {
     
     // VALIDACIÓN PASO 1
     if (currentStep === 1) {
-        const razonSocial = document.getElementById('emp-razon-social').value.trim();
-        const ruc = document.getElementById('emp-ruc').value.trim();
-        const sector = document.getElementById('emp-sector').value;
-        const tamano = document.getElementById('emp-tamano').value;
-        const web = document.getElementById('emp-web').value.trim();
-        const descripcion = document.getElementById('emp-descripcion').value.trim();
         const errorBox = document.getElementById('error-step-1');
 
-        if (!razonSocial || !ruc || !sector || !tamano || !web || !descripcion) {
-            errorBox.textContent = "Por favor, completa todos los campos obligatorios (*).";
+        const campos1 = [
+            { id: 'emp-razon-social', label: 'Razón social / Nombre legal' },
+            { id: 'emp-ruc',          label: 'RUC' },
+            { id: 'emp-sector',       label: 'Sector / Industria' },
+            { id: 'emp-tamano',       label: 'Tamaño de la empresa' },
+            { id: 'emp-web',          label: 'Sitio web corporativo' },
+            { id: 'emp-descripcion',  label: 'Descripción de la empresa' },
+        ];
+
+        campos1.forEach(c => clearFieldErrorEmp(document.getElementById(c.id)));
+
+        const faltantes1 = [];
+        campos1.forEach(c => {
+            const el = document.getElementById(c.id);
+            if (!el || !el.value.trim()) {
+                faltantes1.push(c.label);
+                markFieldErrorEmp(el);
+            }
+        });
+
+        if (faltantes1.length > 0) {
+            errorBox.innerHTML = `<strong>⚠️ Faltan los siguientes campos obligatorios:</strong><ul class="mb-0 mt-1">${faltantes1.map(f => `<li>${f}</li>`).join('')}</ul>`;
             errorBox.classList.remove('d-none');
+            return;
+        }
+
+        const ruc = document.getElementById('emp-ruc').value.trim();
+        const web = document.getElementById('emp-web').value.trim();
+
+        // RUC: exactamente 11 dígitos numéricos
+        if (!/^\d{11}$/.test(ruc)) {
+            markFieldErrorEmp(document.getElementById('emp-ruc'));
+            showErrorEmp(errorBox, 'El RUC debe contener exactamente 11 dígitos numéricos.');
+            return;
+        }
+
+        // URL del sitio web
+        try {
+            new URL(web);
+        } catch (_) {
+            markFieldErrorEmp(document.getElementById('emp-web'));
+            showErrorEmp(errorBox, 'Ingresa una URL válida para el sitio web (Ej: https://www.empresa.com).');
             return;
         }
 
@@ -52,59 +165,147 @@ function nextStep(stepNumber) {
 
     // VALIDACIÓN PASO 2
     if (currentStep === 2) {
-        const direccion = document.getElementById('emp-direccion').value.trim();
-        const ciudad = document.getElementById('emp-ciudad').value.trim();
-        const cp = document.getElementById('emp-cp').value.trim();
-        const pais = document.getElementById('emp-pais').value.trim();
-        const nombre = document.getElementById('emp-contacto-nombre').value.trim();
-        const cargo = document.getElementById('emp-contacto-cargo').value.trim();
-        const email = document.getElementById('emp-email').value.trim();
-        const telefono = document.getElementById('emp-telefono').value.trim();
-        const pwd = document.getElementById('emp-password').value;
-        const pwdConf = document.getElementById('emp-confirm-password').value;
         const errorBox = document.getElementById('error-step-2');
 
-        if (!direccion || !ciudad || !cp || !pais || !nombre || !cargo || !email || !telefono || !pwd || !pwdConf) {
-            errorBox.textContent = "Por favor, completa todos los campos obligatorios (*).";
+        const campos2 = [
+            { id: 'emp-direccion',        label: 'Dirección de la sede' },
+            { id: 'emp-ciudad',           label: 'Ciudad' },
+            { id: 'emp-cp',               label: 'Código postal' },
+            { id: 'emp-pais',             label: 'País' },
+            { id: 'emp-contacto-nombre',  label: 'Nombre del representante' },
+            { id: 'emp-contacto-cargo',   label: 'Cargo' },
+            { id: 'emp-email',            label: 'Correo electrónico corporativo' },
+            { id: 'emp-telefono',         label: 'Teléfono de contacto' },
+            { id: 'emp-password',         label: 'Contraseña' },
+            { id: 'emp-confirm-password', label: 'Confirmar Contraseña' },
+        ];
+
+        campos2.forEach(c => clearFieldErrorEmp(document.getElementById(c.id)));
+
+        const faltantes2 = [];
+        campos2.forEach(c => {
+            const el = document.getElementById(c.id);
+            if (!el || !el.value.trim()) {
+                faltantes2.push(c.label);
+                markFieldErrorEmp(el);
+            }
+        });
+
+        if (faltantes2.length > 0) {
+            errorBox.innerHTML = `<strong>⚠️ Faltan los siguientes campos obligatorios:</strong><ul class="mb-0 mt-1">${faltantes2.map(f => `<li>${f}</li>`).join('')}</ul>`;
             errorBox.classList.remove('d-none');
+            return;
+        }
+
+        const cp       = document.getElementById('emp-cp').value.trim();
+        const email    = document.getElementById('emp-email').value.trim();
+        const telefono = document.getElementById('emp-telefono').value.trim();
+        const pwd      = document.getElementById('emp-password').value;
+        const pwdConf  = document.getElementById('emp-confirm-password').value;
+
+        // Código postal: solo dígitos, 4-6 caracteres
+        if (!/^\d{4,6}$/.test(cp)) {
+            markFieldErrorEmp(document.getElementById('emp-cp'));
+            showErrorEmp(errorBox, 'El código postal debe contener entre 4 y 6 dígitos numéricos.');
+            return;
+        }
+
+        // Correo electrónico corporativo
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            markFieldErrorEmp(document.getElementById('emp-email'));
+            showErrorEmp(errorBox, 'El correo electrónico no es válido. Ej: rrhh@empresa.com');
+            return;
+        }
+
+        // Teléfono: entre 9 y 15 dígitos
+        const telefonoDigits = telefono.replace(/\D/g, '');
+        if (telefonoDigits.length < 9 || telefonoDigits.length > 15) {
+            markFieldErrorEmp(document.getElementById('emp-telefono'));
+            showErrorEmp(errorBox, 'El teléfono debe contener entre 9 y 15 dígitos (puede incluir + al inicio).');
             return;
         }
 
         if (pwd.length < 8) {
-            errorBox.textContent = "La contraseña debe tener al menos 8 caracteres.";
-            errorBox.classList.remove('d-none');
+            markFieldErrorEmp(document.getElementById('emp-password'));
+            showErrorEmp(errorBox, 'La contraseña debe tener al menos 8 caracteres.');
             return;
         }
-
         if (!/[A-Z]/.test(pwd)) {
-            errorBox.textContent = "La contraseña debe incluir al menos una letra mayúscula.";
-            errorBox.classList.remove('d-none');
+            markFieldErrorEmp(document.getElementById('emp-password'));
+            showErrorEmp(errorBox, 'La contraseña debe incluir al menos una letra mayúscula.');
             return;
         }
-
         if (/\s/.test(pwd)) {
-            errorBox.textContent = "La contraseña no debe contener espacios en blanco.";
-            errorBox.classList.remove('d-none');
+            markFieldErrorEmp(document.getElementById('emp-password'));
+            showErrorEmp(errorBox, 'La contraseña no debe contener espacios en blanco.');
             return;
         }
-
         if (!/[!@#$%^&*(),.?":{}|<>_+\-=\[\]\\/]/.test(pwd)) {
-            errorBox.textContent = "La contraseña debe incluir al menos un carácter especial (ejemplo: !, @, #, $, %, *).";
-            errorBox.classList.remove('d-none');
+            markFieldErrorEmp(document.getElementById('emp-password'));
+            showErrorEmp(errorBox, 'La contraseña debe incluir al menos un carácter especial (ej: !, @, #, $, %).');
             return;
         }
-
-        // Validador Doble de contraseña
         if (pwd !== pwdConf) {
-            errorBox.textContent = "Las contraseñas no coinciden. Por favor, verifícalas.";
-            errorBox.classList.remove('d-none');
+            markFieldErrorEmp(document.getElementById('emp-confirm-password'));
+            showErrorEmp(errorBox, 'Las contraseñas no coinciden. Por favor, verifícalas.');
             return;
         }
 
         errorBox.classList.add('d-none');
     }
 
+    // VALIDACIÓN PASO 3
+    if (currentStep === 3) {
+        const politica   = document.getElementById('emp-politica-inclusion').value;
+        const compromiso = document.getElementById('emp-compromiso').value.trim();
+        const errorBox   = document.getElementById('error-step-3') || createErrorBoxEmp('step-3');
+
+        const faltantes3 = [];
+        if (!politica)   { faltantes3.push('Política formal de inclusión'); markFieldErrorEmp(document.getElementById('emp-politica-inclusion')); }
+        if (!compromiso) { faltantes3.push('Descripción del compromiso con la inclusión'); markFieldErrorEmp(document.getElementById('emp-compromiso')); }
+
+        if (faltantes3.length > 0) {
+            if (errorBox) {
+                errorBox.innerHTML = `<strong>⚠️ Faltan los siguientes campos obligatorios:</strong><ul class="mb-0 mt-1">${faltantes3.map(f => `<li>${f}</li>`).join('')}</ul>`;
+                errorBox.classList.remove('d-none');
+            }
+            return;
+        }
+        if (errorBox) errorBox.classList.add('d-none');
+    }
+
     showStep(stepNumber);
+}
+
+// Crea dinámicamente una caja de error para empresa
+function createErrorBoxEmp(stepId) {
+    const stepEl = document.getElementById(stepId);
+    if (!stepEl) return null;
+    let box = document.createElement('div');
+    box.id = `error-${stepId}`;
+    box.className = 'alert alert-danger small';
+    const rowEl = stepEl.querySelector('.row, .info-box');
+    stepEl.insertBefore(box, rowEl || stepEl.firstChild);
+    return box;
+}
+
+// Marca un campo con borde rojo
+function markFieldErrorEmp(el) {
+    if (!el) return;
+    el.classList.add('is-invalid');
+}
+
+// Quita el borde rojo
+function clearFieldErrorEmp(el) {
+    if (!el) return;
+    el.classList.remove('is-invalid');
+}
+
+// Muestra mensaje de error simple
+function showErrorEmp(errorBox, msg) {
+    errorBox.innerHTML = `<strong>⚠️</strong> ${msg}`;
+    errorBox.classList.remove('d-none');
 }
 
 function togglePasswordEmp(inputId, iconSpan) {
@@ -126,31 +327,39 @@ async function submitEmpresa() {
     const errorBox = document.getElementById('error-step-4');
     const btnSubmit = document.querySelector('button[onclick="submitEmpresa()"]');
     
-    // Validar documento RUC obligatorio
+    // Validar documento RUC y checkboxes obligatorios
     const docRuc = document.getElementById('emp-doc-ruc');
-    if (!docRuc.files || docRuc.files.length === 0) {
-        errorBox.textContent = "Debes subir el documento de RUC.";
-        errorBox.classList.remove('d-none');
-        return;
-    }
-
-    // Validar checkboxes obligatorios
     const requiredChecks = [
-        'emp-chk-terminos',
-        'emp-chk-rgpd',
-        'emp-chk-nodiscriminacion',
-        'emp-chk-accesibilidad',
-        'emp-chk-seguridad',
-        'emp-chk-veracidad',
-        'emp-chk-verificacion'
+        { id: 'emp-chk-terminos',         label: 'Términos y condiciones' },
+        { id: 'emp-chk-rgpd',             label: 'Política de privacidad y protección de datos' },
+        { id: 'emp-chk-nodiscriminacion', label: 'Política de no discriminación' },
+        { id: 'emp-chk-accesibilidad',    label: 'Compromiso de accesibilidad' },
+        { id: 'emp-chk-seguridad',        label: 'Seguridad y salud' },
+        { id: 'emp-chk-veracidad',        label: 'Declaración de veracidad' },
+        { id: 'emp-chk-verificacion',     label: 'Autorización de verificación' }
     ];
 
-    for (const id of requiredChecks) {
-        if (!document.getElementById(id).checked) {
-            errorBox.textContent = "Debes aceptar todos los consentimientos obligatorios (*) para completar el registro.";
-            errorBox.classList.remove('d-none');
-            return;
+    clearFieldErrorEmp(docRuc);
+    requiredChecks.forEach(c => clearFieldErrorEmp(document.getElementById(c.id)));
+
+    const faltantes4 = [];
+    if (!docRuc || !docRuc.files || docRuc.files.length === 0) {
+        faltantes4.push('Documento de RUC (PDF)');
+        markFieldErrorEmp(docRuc);
+    }
+
+    requiredChecks.forEach(c => {
+        const el = document.getElementById(c.id);
+        if (el && !el.checked) {
+            faltantes4.push(c.label);
+            markFieldErrorEmp(el);
         }
+    });
+
+    if (faltantes4.length > 0) {
+        errorBox.innerHTML = `<strong>⚠️ Faltan los siguientes requisitos obligatorios (*):</strong><ul class="mb-0 mt-1">${faltantes4.map(f => `<li>${f}</li>`).join('')}</ul>`;
+        errorBox.classList.remove('d-none');
+        return;
     }
 
     errorBox.classList.add('d-none');

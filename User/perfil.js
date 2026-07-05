@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // Discapacidad
         setInput("reg-tipo-discapacidad", user.discapacidad);
-        setInput("reg-grado-discapacidad", user.gradoDiscapacidad || "33-49");
+        setInput("reg-grado-discapacidad", user.gradoDiscapacidad);
         setInput("reg-num-certificado", user.numCertificado);
         setInput("reg-vencimiento-certificado", user.vencimientoCertificado);
         setInput("reg-adaptaciones", user.adaptaciones);
@@ -77,15 +77,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         setCheckbox("assist-remoto", asistencia.includes("remoto"));
 
         // Información Laboral
-        setInput("reg-educacion", user.nivelEducativo || "Grado universitario");
+        setInput("reg-educacion", user.nivelEducativo);
         setInput("reg-especializacion", user.especializacion);
-        setInput("reg-exp-years", user.experienciaYears || "1-3");
+        setInput("reg-experiencia", user.experienciaYears);
         setInput("reg-habilidades", user.habilidades);
         setInput("reg-idiomas", user.idiomas);
 
         // Preferencias
-        setInput("reg-modalidad", user.modalidadLaboral || "Híbrido");
-        setInput("reg-disponibilidad", user.disponibilidad || "Inmediata");
+        setInput("reg-modalidad", user.modalidadLaboral);
+        setInput("reg-disponibilidad", user.disponibilidad);
         setInput("reg-salario", user.expectativaSalarial);
 
         // CV Info
@@ -203,7 +203,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (form.id === "formLaboral") {
                 user.nivelEducativo = document.getElementById("reg-educacion").value;
                 user.especializacion = document.getElementById("reg-especializacion").value.trim();
-                user.experienciaYears = document.getElementById("reg-exp-years").value;
+                user.experienciaYears = document.getElementById("reg-experiencia").value;
                 user.habilidades = document.getElementById("reg-habilidades").value.trim();
                 user.idiomas = document.getElementById("reg-idiomas").value.trim();
             }

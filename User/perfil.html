@@ -170,8 +170,9 @@ ACCESIBILITY:
                                 <div class="col-md-6">
                                     <label class="form-label">Tipo de documento *</label>
                                     <select class="form-select" id="reg-tipo-doc">
+                                        <option value="" disabled>Seleccionar tipo</option>
                                         <option value="DNI">DNI</option>
-                                        <option value="Carné de extranjería">Carné de extranjería</option>
+                                        <option value="Carnet de Extranjería">Carnet de Extranjería</option>
                                         <option value="Pasaporte">Pasaporte</option>
                                     </select>
                                 </div>
@@ -280,18 +281,25 @@ ACCESIBILITY:
                                 <div class="col-12">
                                     <label class="form-label">Tipo de discapacidad *</label>
                                     <select class="form-select" id="reg-tipo-discapacidad">
-                                        <option value="Visual">Visual</option>
-                                        <option value="Auditiva">Auditiva</option>
-                                        <option value="Fisica">Física / Motora</option>
+                                        <option value="" disabled>Seleccionar tipo</option>
+                                        <option value="Física">Física / Motora</option>
+                                        <option value="Sensorial">Sensorial (Visual / Auditiva)</option>
+                                        <option value="Intelectual">Intelectual u Cognitiva</option>
+                                        <option value="Psíquica">Psíquica</option>
+                                        <option value="Múltiple">Múltiple</option>
+                                        <option value="Otra">Otra</option>
+                                        <option value="Ninguna">Preferiría no decirlo</option>
                                     </select>
                                 </div>
                                 <!-- Columna del sistema de rejilla Bootstrap -->
                                 <div class="col-12">
                                     <label class="form-label">Grado de discapacidad (%) *</label>
                                     <select class="form-select" id="reg-grado-discapacidad">
-                                        <option value="33-49">33% - 49% (Moderada)</option>
-                                        <option value="50-64">50% - 64%</option>
-                                        <option value="65+">65% o más</option>
+                                        <option value="" disabled>Seleccionar grado</option>
+                                        <option value="33% - 49%">Leve (33% - 49%)</option>
+                                        <option value="50% - 64%">Moderada (50% - 64%)</option>
+                                        <option value="65% - 100%">Severa (65% - 100%)</option>
+                                        <option value="No lo sé">No especificado</option>
                                     </select>
                                 </div>
                                 <!-- Columna del sistema de rejilla Bootstrap -->
@@ -380,9 +388,13 @@ ACCESIBILITY:
                                 <div class="col-12">
                                     <label class="form-label">Nivel educativo *</label>
                                     <select class="form-select" id="reg-educacion">
-                                        <option value="Grado universitario">Grado universitario</option>
-                                        <option value="Máster">Máster</option>
-                                        <option value="Bachillerato">Bachillerato</option>
+                                        <option value="" disabled>Seleccionar nivel</option>
+                                        <option value="Básica">Básica / Primaria</option>
+                                        <option value="Secundaria">Secundaria</option>
+                                        <option value="Técnico">Técnico / Formación Profesional</option>
+                                        <option value="Universitario">Universitario</option>
+                                        <option value="Postgrado">Postgrado / Máster</option>
+                                        <option value="Otro">Otro</option>
                                     </select>
                                 </div>
                                 <!-- Columna del sistema de rejilla Bootstrap -->
@@ -394,10 +406,13 @@ ACCESIBILITY:
                                 <!-- Columna del sistema de rejilla Bootstrap -->
                                 <div class="col-12">
                                     <label class="form-label">Años de experiencia laboral *</label>
-                                    <select class="form-select" id="reg-exp-years">
-                                        <option value="3-5">3-5 años</option>
-                                        <option value="1-2">1-2 años</option>
-                                        <option value="5+">Más de 5 años</option>
+                                    <select class="form-select" id="reg-experiencia">
+                                        <option value="" disabled>Seleccionar experiencia</option>
+                                        <option value="Sin experiencia">Sin experiencia previa</option>
+                                        <option value="Menos de 1 año">Menos de 1 año</option>
+                                        <option value="1 a 3 años">1 a 3 años</option>
+                                        <option value="3 a 5 años">3 a 5 años</option>
+                                        <option value="Más de 5 años">Más de 5 años</option>
                                     </select>
                                 </div>
                                 <!-- Columna del sistema de rejilla Bootstrap -->
@@ -469,16 +484,21 @@ ACCESIBILITY:
                                     <div class="mb-4">
                                         <label class="form-label">Modalidad laboral preferida *</label>
                                         <select class="form-select" id="reg-modalidad">
-                                            <option value="Híbrido">Híbrido</option>
-                                            <option value="Remoto">Remoto</option>
+                                            <option value="" disabled>Seleccionar modalidad</option>
                                             <option value="Presencial">Presencial</option>
+                                            <option value="Híbrido">Híbrido (Mixto)</option>
+                                            <option value="Remoto">100% Remoto (Teletrabajo)</option>
+                                            <option value="Indiferente">Indiferente</option>
                                         </select>
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Disponibilidad *</label>
                                         <select class="form-select" id="reg-disponibilidad">
-                                            <option value="Inmediata">Inmediata</option>
-                                            <option value="15 días">Aviso previo (15 días)</option>
+                                            <option value="" disabled>Seleccionar disponibilidad</option>
+                                            <option value="Completa">Tiempo completo</option>
+                                            <option value="Parcial">Tiempo parcial / Medio tiempo</option>
+                                            <option value="Fines de semana">Fines de semana</option>
+                                            <option value="Turnos">Trabajo por turnos</option>
                                         </select>
                                     </div>
                                     <div class="mb-5">

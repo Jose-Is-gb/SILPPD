@@ -70,19 +70,19 @@ ACCESIBILITY:
                     <div class="row g-3">
                         <div class="col-md-12">
                             <label class="form-label">Razón social / Nombre legal de la empresa *</label>
-                            <input type="text" class="form-control" id="emp-razon-social"
+                            <input type="text" class="form-control" id="emp-razon-social" maxlength="150"
                                 placeholder="Ej: Tech Solutions Sociedad Anónima" required>
                         </div>
 
                         <div class="col-md-12">
                             <label class="form-label">Nombre comercial</label>
-                            <input type="text" class="form-control" id="emp-nombre-comercial"
+                            <input type="text" class="form-control" id="emp-nombre-comercial" maxlength="100"
                                 placeholder="Ej: Tech Solutions">
                         </div>
 
                         <div class="col-md-12">
                             <label class="form-label">RUC *</label>
-                            <input type="text" class="form-control" id="emp-ruc" placeholder="Ej: 20123456789" required>
+                            <input type="text" class="form-control" id="emp-ruc" placeholder="Ej: 20123456789" maxlength="11" required>
                         </div>
 
                         <div class="col-md-12">
@@ -125,12 +125,12 @@ ACCESIBILITY:
                         <div class="col-md-12">
                             <label class="form-label">Sitio web corporativo *</label>
                             <input type="url" class="form-control" id="emp-web" placeholder="https://www.ejemplo.com"
-                                required>
+                                maxlength="150" required>
                         </div>
 
                         <div class="col-md-12">
                             <label class="form-label">Descripción de la empresa *</label>
-                            <textarea class="form-control" id="emp-descripcion" rows="3"
+                            <textarea class="form-control" id="emp-descripcion" rows="3" maxlength="500"
                                 placeholder="Breve descripción de las actividades principales de la empresa..."
                                 required></textarea>
                         </div>
@@ -158,27 +158,27 @@ ACCESIBILITY:
                             <label class="form-label">Dirección de la sede principal *</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fa-solid fa-location-dot"></i></span>
-                                <input type="text" class="form-control" id="emp-direccion"
+                                <input type="text" class="form-control" id="emp-direccion" maxlength="150"
                                     placeholder="Calle, número, piso" required>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <label class="form-label">Ciudad *</label>
-                            <input type="text" class="form-control" id="emp-ciudad" placeholder="Lima" required>
+                            <input type="text" class="form-control" id="emp-ciudad" placeholder="Lima" maxlength="50" required>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Provincia/Estado</label>
-                            <input type="text" class="form-control" id="emp-provincia" placeholder="Lima">
+                            <input type="text" class="form-control" id="emp-provincia" maxlength="50" placeholder="Lima">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Código postal *</label>
-                            <input type="text" class="form-control" id="emp-cp" placeholder="15001" required>
+                            <input type="text" class="form-control" id="emp-cp" placeholder="15001" maxlength="6" required>
                         </div>
 
                         <div class="col-md-12">
                             <label class="form-label">País *</label>
-                            <input type="text" class="form-control" id="emp-pais" placeholder="Perú" required>
+                            <input type="text" class="form-control" id="emp-pais" placeholder="Perú" maxlength="50" required>
                         </div>
 
                         <div class="col-12 mt-4">
@@ -187,12 +187,12 @@ ACCESIBILITY:
 
                         <div class="col-md-6">
                             <label class="form-label">Nombre completo *</label>
-                            <input type="text" class="form-control" id="emp-contacto-nombre"
+                            <input type="text" class="form-control" id="emp-contacto-nombre" maxlength="100"
                                 placeholder="Nombre y apellidos" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Cargo *</label>
-                            <input type="text" class="form-control" id="emp-contacto-cargo"
+                            <input type="text" class="form-control" id="emp-contacto-cargo" maxlength="50"
                                 placeholder="Ej: Director de RRHH" required>
                         </div>
 
@@ -201,7 +201,7 @@ ACCESIBILITY:
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fa-regular fa-envelope"></i></span>
                                 <input type="email" class="form-control" id="emp-email" placeholder="rrhh@empresa.com"
-                                    required>
+                                    maxlength="100" required>
                             </div>
                         </div>
 
@@ -210,13 +210,13 @@ ACCESIBILITY:
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fa-solid fa-phone"></i></span>
                                 <input type="tel" class="form-control" id="emp-telefono" placeholder="+51 963 852 741"
-                                    required>
+                                    maxlength="15" required>
                             </div>
                         </div>
 
                         <div class="col-md-12">
                             <label class="form-label">Teléfono alternativo</label>
-                            <input type="tel" class="form-control" id="emp-telefono-alt" placeholder="+51 987 654 321">
+                            <input type="tel" class="form-control" id="emp-telefono-alt" placeholder="+51 987 654 321" maxlength="15">
                         </div>
 
                         <div class="col-md-6">
@@ -224,7 +224,7 @@ ACCESIBILITY:
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
                                 <input type="password" class="form-control" id="emp-password"
-                                    placeholder="Mínimo 8 caracteres" required minlength="8">
+                                    placeholder="Mínimo 8 caracteres" required minlength="8" maxlength="64">
                                 <span class="input-group-text" style="cursor:pointer;"
                                     onclick="togglePasswordEmp('emp-password', this)">
                                     <i class="fa-solid fa-eye"></i>
@@ -238,7 +238,7 @@ ACCESIBILITY:
                                 <span class="input-group-text text-danger border-danger"><i
                                         class="fa-solid fa-shield-halved"></i></span>
                                 <input type="password" class="form-control border-danger" id="emp-confirm-password"
-                                    placeholder="Mínimo 8 caracteres" required minlength="8">
+                                    placeholder="Mínimo 8 caracteres" required minlength="8" maxlength="64">
                                 <span class="input-group-text text-danger border-danger" style="cursor:pointer;"
                                     onclick="togglePasswordEmp('emp-confirm-password', this)">
                                     <i class="fa-solid fa-eye"></i>
@@ -263,6 +263,8 @@ ACCESIBILITY:
                             <small class="text-muted">Políticas de diversidad e inclusión (ISO 30415)</small>
                         </div>
                     </div>
+
+                    <div id="error-step-3" class="alert alert-danger d-none small"></div>
 
                     <div class="info-box" style="background-color: #1565c0; color: white;">
                         <h6 class="fw-bold mb-1">ISO 30415 - Gestión de Diversidad e Inclusión</h6>
@@ -329,14 +331,14 @@ ACCESIBILITY:
 
                         <div class="col-md-12">
                             <label class="form-label">Describe el compromiso de tu empresa con la inclusión *</label>
-                            <textarea class="form-control" id="emp-compromiso" rows="3"
+                            <textarea class="form-control" id="emp-compromiso" rows="3" maxlength="1000"
                                 placeholder="Explica las acciones, programas o iniciativas que tu empresa ha implementado o planea implementar para fomentar un entorno inclusivo..."
                                 required></textarea>
                         </div>
 
                         <div class="col-md-12">
                             <label class="form-label">Certificaciones de inclusión o responsabilidad social</label>
-                            <input type="text" class="form-control" id="emp-certificaciones"
+                            <input type="text" class="form-control" id="emp-certificaciones" maxlength="200"
                                 placeholder="Ej: ISO 30415, Distintivo de Igualdad, B Corp, etc.">
                         </div>
 

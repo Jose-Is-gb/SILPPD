@@ -10,11 +10,17 @@ const Auth = {
     },
 
     // RBAC Seguro: Verificar rol contra Firebase Auth y Firestore para evitar manipulación del cliente
+    // - Sin sesión válida → redirige al login (redirectUrl)
+    // - Sesión válida pero rol incorrecto → redirige a 403.html (Acceso Denegado) sin cerrar sesión
     async requireRole(allowedRole, redirectUrl = "../login.html") {
+        // Calcular ruta al 403.html relativa desde la misma profundidad que redirectUrl
+        const forbiddenUrl = redirectUrl.replace("login.html", "403.html");
+
         return new Promise((resolve) => {
             const unsubscribe = authFirebase.onAuthStateChanged(async (fbUser) => {
                 unsubscribe(); // Solo necesitamos evaluar el estado actual al cargar la página
                 
+                // CASO 1: No hay sesión válida → Redirigir al Login
                 if (!fbUser) {
                     localStorage.removeItem("activeUser");
                     window.location.href = redirectUrl;
@@ -31,14 +37,15 @@ const Auth = {
                             this.setActiveUser(userData); // Actualizar caché
                             resolve(userData);
                         } else {
-                            // Prevención de Elevación de Privilegios
-                            console.warn("Intento de acceso denegado. Rol esperado:", allowedRole, "Actual:", userData.rol);
-                            await authFirebase.signOut();
-                            localStorage.removeItem("activeUser");
-                            window.location.href = redirectUrl;
+                            // CASO 2: Sesión válida pero rol incorrecto → 403 Forbidden
+                            // NO cerramos sesión: el usuario sigue autenticado, solo no tiene permisos aquí
+                            console.warn("Acceso denegado (403). Rol esperado:", allowedRole, "| Rol actual:", userData.rol);
+                            this.setActiveUser(userData); // Actualizar caché para que 403.html muestre info del usuario
+                            window.location.href = forbiddenUrl;
                             resolve(null);
                         }
                     } else {
+                        // Usuario existe en Auth pero no en Firestore → sesión huérfana, cerrar sesión
                         await authFirebase.signOut();
                         localStorage.removeItem("activeUser");
                         window.location.href = redirectUrl;

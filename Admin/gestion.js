@@ -46,27 +46,41 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         lista.forEach(o => {
             const tr = document.createElement("tr");
-            tr.innerHTML = Security.sanitizeHTML(`
-            <td>${o.titulo}</td>
-            <td>${o.empresa}</td>
-            <td>${o.ciudad}</td>
-            <td>${o.modalidad}</td>
-            <td>${o.discapacidad || o.categoria || "—"}</td>
+
+            // Sanitizar valores individuales para evitar XSS
+            const tituloSan = Security.sanitizeHTML(o.titulo || "");
+            const empresaSan = Security.sanitizeHTML(o.empresa || "");
+            const ciudadSan = Security.sanitizeHTML(o.ciudad || "");
+            const modalidadSan = Security.sanitizeHTML(o.modalidad || "");
+            const discapacidadSan = Security.sanitizeHTML(o.discapacidad || o.categoria || "—");
+            const estadoSan = Security.sanitizeHTML(o.estado || "");
+
+            tr.innerHTML = `
+            <td>${tituloSan}</td>
+            <td>${empresaSan}</td>
+            <td>${ciudadSan}</td>
+            <td>${modalidadSan}</td>
+            <td>${discapacidadSan}</td>
             <td class="text-center">
-                <button class="btn btn-sm ${o.estado === "Activa" ? "btn-success" : "btn-warning"} me-1"
-                    onclick="toggleEstado('${o.id}')">
-                    ${o.estado}
+                <button class="btn btn-sm ${estadoSan === "Activa" ? "btn-success" : "btn-warning"} me-1 btn-toggle-estado">
+                    ${estadoSan}
                 </button>
             </td>
             <td>
-                <button class="btn btn-sm btn-primary me-1" onclick="editarOferta('${o.id}')">
+                <button class="btn btn-sm btn-primary me-1 edit-btn">
                     <i class="fa fa-pen"></i>
                 </button>
-                <button class="btn btn-sm btn-danger" onclick="eliminarOferta('${o.id}')">
+                <button class="btn btn-sm btn-danger delete-btn">
                     <i class="fa fa-trash"></i>
                 </button>
             </td>
-            `);
+            `;
+
+            // Asignar manejadores de eventos seguros
+            tr.querySelector(".btn-toggle-estado").addEventListener("click", () => window.toggleEstado(o.id));
+            tr.querySelector(".edit-btn").addEventListener("click", () => window.editarOferta(o.id));
+            tr.querySelector(".delete-btn").addEventListener("click", () => window.eliminarOferta(o.id));
+
             tablaOfertas.appendChild(tr);
         });
     }

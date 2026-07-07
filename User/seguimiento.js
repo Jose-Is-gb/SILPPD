@@ -68,23 +68,30 @@ document.addEventListener("DOMContentLoaded", async () => {
                 p.estado === "En revisión" ? "bg-primary-subtle text-primary" :
                 "bg-warning-subtle text-warning";
 
-            tr.innerHTML = Security.sanitizeHTML(`
+            const tituloSan = Security.sanitizeHTML(p.titulo || "");
+            const empresaSan = Security.sanitizeHTML(p.empresa || "");
+            const fechaSan = Security.sanitizeHTML(p.fecha || "");
+            const estadoSan = Security.sanitizeHTML(p.estado || "");
+
+            tr.innerHTML = `
                 <td class="ps-4">
-                    <div class="fw-bold text-dark">${p.titulo}</div>
-                    <div class="text-muted small">${p.empresa}</div>
+                    <div class="fw-bold text-dark">${tituloSan}</div>
+                    <div class="text-muted small">${empresaSan}</div>
                 </td>
                 <td>
-                    <div class="text-secondary small fw-medium">${p.fecha}</div>
+                    <div class="text-secondary small fw-medium">${fechaSan}</div>
                 </td>
                 <td>
-                    <span class="badge ${badgeClass} text-uppercase px-3">${p.estado}</span>
+                    <span class="badge ${badgeClass} text-uppercase px-3">${estadoSan}</span>
                 </td>
                 <td class="text-end pe-4">
-                    <button class="btn btn-light btn-sm rounded-pill px-3 fw-bold border shadow-xs" onclick="showDetails('${p.idOferta}')">
+                    <button class="btn btn-light btn-sm rounded-pill px-3 fw-bold border shadow-xs btn-detalles">
                         <i class="fa fa-eye me-1"></i> Detalles
                     </button>
                 </td>
-            `);
+            `;
+
+            tr.querySelector(".btn-detalles").addEventListener("click", () => window.showDetails(p.idOferta));
 
             tableBody.appendChild(tr);
         });
